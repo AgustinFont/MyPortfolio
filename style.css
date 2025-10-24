@@ -1,155 +1,45 @@
-:root {
-    --bg: #0f1115;
-    --card: #121216;
-    --text: #e8eef7;
-    --muted: #9aa3b2;
-    --accent: #6ad3ff;
-    --wrap: 1100px;
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-}
-
-* {
-    box-sizing: border-box
-}
-
-html,
-body {
-    height: 100%
-}
-
 body {
     margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    line-height: 1.5;
-}
-
-.wrap {
-    max-width: var(--wrap);
-    margin: 0 auto;
-    padding: 24px
-}
-
-.site-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    padding: 16px 0
-}
-
-.brand {
-    margin: 0;
-    font-size: 18px;
-    display: inline-block
-}
-
-.site-header nav {
-    float: right
-}
-
-.site-header nav a {
-    color: var(--muted);
-    text-decoration: none;
-    margin-left: 16px;
-    font-size: 14px
-}
-
-.hero {
-    padding: 36px 0
-}
-
-.hero h2 {
-    margin: 0 0 8px;
-    font-size: 28px
-}
-
-.lead {
-    color: var(--muted);
-    max-width: 60%
-}
-
-.projects {
-    padding: 24px 0
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px
-}
-
-.card {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
-    padding: 16px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.03)
-}
-
-.media-placeholder {
-    height: 150px;
-    background: rgba(255, 255, 255, 0.02);
+    font-family: 'Press Start 2P', monospace;
+    background: #0f0f0f;
+    color: #0aff0a;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    color: var(--muted);
-    margin-bottom: 10px
+    flex-direction: column;
+    height: 100vh;
 }
 
-.card h4 {
-    margin: 6px 0 4px
+.game-menu {
+    padding: 20px;
+    background: #111;
 }
 
-.role {
-    color: var(--accent);
-    font-size: 13px;
-    margin: 0 0 8px
-}
-
-.links a {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 600
-}
-
-.about {
-    padding: 24px 0;
-    color: var(--muted)
-}
-
-.skills {
-    display: flex;
-    gap: 10px;
+#menu {
     list-style: none;
     padding: 0;
-    margin: 12px 0 0
+    margin: 0;
 }
 
-.skills li {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 6px 8px;
-    border-radius: 6px;
-    font-size: 13px;
-    color: var(--text)
+#menu li {
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 18px;
 }
 
-.site-footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.03);
-    padding: 16px 0;
-    margin-top: 24px;
-    text-align: center;
-    color: var(--muted);
-    font-size: 13px
+#menu li.active {
+    background: #0aff0a;
+    color: #000;
 }
 
-/* responsive tweaks */
-@media (max-width:720px) {
-    .site-header nav {
-        float: none;
-        margin-top: 8px
-    }
+.content {
+    flex: 1;
+    padding: 20px;
+    background: #000;
+}
 
-    .lead {
-        max-width: 100%
-    }
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
 }

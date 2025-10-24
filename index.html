@@ -1,73 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Agus — Game Designer</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanito Portfolio — Game Menu</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <header class="site-header">
-        <div class="wrap">
-            <h1 class="brand">Agustin Gonzalez Font — Game Designer</h1>
-            <nav>
-                <a href="#home">Home</a>
-                <a href="#projects">Proyectos</a>
-                <a href="#about">Sobre mí</a>
-            </nav>
-        </div>
-    </header>
 
-    <main class="wrap">
-        <section id="home" class="hero">
-            <h2>Hello — I design games & interactive experiences</h2>
-            <p class="lead">Game designer con experiencia en prototipos, herramientas interactivas y builds. Abajo tenés
-                ejemplos rápidos de proyectos.</p>
+    <div class="game-menu">
+        <ul id="menu">
+            <li class="active" data-section="about">ABOUT ME</li>
+            <li data-section="projects">PROJECTS</li>
+            <li data-section="easter">EASTER EGGS</li>
+            <li data-section="empty">???</li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <section id="about" class="section active">
+            <h2>ABOUT ME</h2>
+            <p>Hola, soy Tanito, Game Designer. Aquí va un placeholder de la sección.</p>
         </section>
-
-        <section id="projects" class="projects">
-            <h3>Proyectos destacados</h3>
-            <div class="grid">
-                <article class="card">
-                    <div class="media-placeholder">GIF / VIDEO</div>
-                    <h4>Nombre del Proyecto 1</h4>
-                    <p class="role">Rol: Game Designer / Prototipador</p>
-                    <p>Mini descripción: qué buscaba, mecánica clave y tu aporte (2-3 líneas).</p>
-                    <p class="links"><a href="#">Ver más (repo / build)</a></p>
-                </article>
-
-                <article class="card">
-                    <div class="media-placeholder">GIF / VIDEO</div>
-                    <h4>Nombre del Proyecto 2</h4>
-                    <p class="role">Rol: UX & Level Design</p>
-                    <p>Mini descripción: objetivo y resultado breve.</p>
-                    <p class="links"><a href="#">Ver más</a></p>
-                </article>
-            </div>
+        <section id="projects" class="section">
+            <h2>PROJECTS</h2>
+            <p>Aquí aparecerían tus proyectos destacados.</p>
         </section>
-
-        <section id="about" class="about">
-            <h3>Sobre mí</h3>
-            <p>Soy Tanito, me especializo en game design, prototipos rápidos, documentación de mecánicas y creación de
-                herramientas interactivas. Trabajo con Unity, diseño de niveles y prototipos jugables. Hablo español e
-                inglés.</p>
-            <ul class="skills">
-                <li>Game design</li>
-                <li>Prototipado (Unity)</li>
-                <li>Herramientas interactivas</li>
-                <li>Comunicación con equipos</li>
-            </ul>
+        <section id="easter" class="section">
+            <h2>EASTER EGGS</h2>
+            <p>Contenido secreto o divertido placeholder.</p>
         </section>
-    </main>
+        <section id="empty" class="section">
+            <h2>???</h2>
+            <p>Sección futura placeholder.</p>
+        </section>
+    </div>
 
-    <footer class="site-footer">
-        <div class="wrap">
-            <small>© Tanito — <a href="mailto:tuemail@ejemplo.com">tuemail@ejemplo.com</a> — <a href="#">CV</a> — <a
-                    href="#">Itch / GitHub</a></small>
-        </div>
-    </footer>
+    <script src="menu.js"></script>
 </body>
 
 </html>
