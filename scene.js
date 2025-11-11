@@ -6,7 +6,8 @@ scene.fog = new THREE.FogExp2(0x0a0a15, 0.03);
 
 let currentAngle = 0;
 let targetAngle = 0;
-let zoomLevel = 7; // un poco más alejado para ver mejor la rotación
+let zoomLevel = 7;
+let idleOffset = 0;
 
 const camera = new THREE.PerspectiveCamera(
     60,
@@ -21,18 +22,16 @@ camera.lookAt(0, 0, 0);
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor(0x0a0a15, 1); // fondo azul oscuro
+renderer.setClearColor(0x0a0a15, 1);
 document.getElementById("scene-container").appendChild(renderer.domElement);
 
 // --- Luces ---
 const hemiLight = new THREE.HemisphereLight(0xffffff, 0x333333, 0.7);
 scene.add(hemiLight);
-
 const dirLight = new THREE.DirectionalLight(0xffffff, 1);
 dirLight.position.set(5, 10, 7);
 scene.add(dirLight);
-
-const ambient = new THREE.AmbientLight(0x404040, 0.6); // luz ambiental suave
+const ambient = new THREE.AmbientLight(0x404040, 0.6);
 scene.add(ambient);
 
 // --- Grupo principal ---
@@ -41,33 +40,25 @@ scene.add(group);
 
 // --- Objetos placeholder (uno por sección) ---
 const materialBase = new THREE.MeshStandardMaterial({ color: 0x00aaff, roughness: 0.4 });
-
 const meshCube = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 1.2), materialBase.clone());
 meshCube.material.color.set(0x0077cc);
-
 const meshCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 1.6, 24), materialBase.clone());
 meshCyl.material.color.set(0xff6f00);
-
 const meshCone = new THREE.Mesh(new THREE.ConeGeometry(0.8, 1.6, 24), materialBase.clone());
 meshCone.material.color.set(0xffdd33);
-
 const meshTorus = new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.2, 12, 24), materialBase.clone());
 meshTorus.material.color.set(0x55ffdd);
-
 group.add(meshCube, meshCyl, meshCone, meshTorus);
-
-// --- Posiciones iniciales ---
 meshCube.visible = true;
 meshCyl.visible = meshCone.visible = meshTorus.visible = false;
 
-// --- Grid de referencia ---
+// --- Grid y entorno ---
 const grid = new THREE.GridHelper(12, 12, 0x336699, 0x224466);
 grid.position.y = -1.5;
 grid.material.opacity = 0.15;
 grid.material.transparent = true;
 scene.add(grid);
 
-// --- Cubo wireframe de entorno ---
 const envGeo = new THREE.BoxGeometry(20, 20, 20);
 const envMat = new THREE.MeshBasicMaterial({
     color: 0x113366,
@@ -78,7 +69,26 @@ const envMat = new THREE.MeshBasicMaterial({
 const envCube = new THREE.Mesh(envGeo, envMat);
 scene.add(envCube);
 
-// --- Función principal de rotación entre secciones ---
+// --- Partículas flotantes ---
+const particlesGeo = new THREE.BufferGeometry();
+const count = 200;
+const positions = new Float32Array(count * 3);
+for (let i = 0; i < count * 3; i++) positions[i] = (Math.random() - 0.5) * 20;
+particlesGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+const particlesMat = new THREE.PointsMaterial({ color: 0x88ccff, size: 0.05, transparent: true, opacity: 0.5 });
+const particles = new THREE.Points(particlesGeo, particlesMat);
+scene.add(particles);
+
+// --- Cámara idle easing ---
+gsap.to(camera.position, {
+    y: "+=0.2",
+    duration: 3,
+    ease: "sine.inOut",
+    repeat: -1,
+    yoyo: true
+});
+
+// --- Rotación de secciones ---
 function rotateToSection(sectionId) {
     // Ocultar todos los objetos
     meshCube.visible = meshCyl.visible = meshCone.visible = meshTorus.visible = false;
@@ -116,20 +126,50 @@ function rotateToSection(sectionId) {
             }
         }
     );
+
+    // --- Transición de HUD a sección ---
+    gsap.to(".hud", {
+        opacity: 0, duration: 0.8, onComplete: () => {
+            document.querySelector(".hud").style.display = "none";
+            const sec = document.getElementById(sectionId + "-content");
+            if (sec) {
+                sec.style.display = "block";
+                gsap.fromTo(sec, { opacity: 0 }, { opacity: 1, duration: 1 });
+            }
+        }
+    });
+}
+
+// --- Volver al menú principal ---
+function backToMenu() {
+    document.querySelectorAll(".section-content").forEach(sec => {
+        gsap.to(sec, { opacity: 0, duration: 0.6, onComplete: () => sec.style.display = "none" });
+    });
+    gsap.to(".hud", {
+        opacity: 1, duration: 1, delay: 0.5, onStart: () => {
+            document.querySelector(".hud").style.display = "block";
+        }
+    });
 }
 
 // --- Loop de animación ---
 function animate() {
     requestAnimationFrame(animate);
 
-    // Rotación sutil del objeto activo
+    // Rotación continua del objeto visible
     [meshCube, meshCyl, meshCone, meshTorus].forEach((m) => {
         if (m.visible) m.rotation.y += 0.01;
     });
 
+    particles.rotation.y += 0.0005;
+
+    currentAngle += (targetAngle - currentAngle) * 0.02;
+    camera.position.x = zoomLevel * Math.sin(currentAngle);
+    camera.position.z = zoomLevel * Math.cos(currentAngle);
+    camera.lookAt(0, 0, 0);
+
     renderer.render(scene, camera);
 }
-
 animate();
 
 // --- Resize handler ---
@@ -139,10 +179,11 @@ window.addEventListener("resize", () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// --- Exponer globalmente para hud.js ---
+// --- Exponer globalmente ---
 window.rotateToSection = rotateToSection;
+window.backToMenu = backToMenu;
 
-// --- Efecto de aparición inicial ---
+// --- Efecto inicial ---
 gsap.from("#scene-container", { opacity: 0, duration: 1.2 });
 gsap.from(".hud", { opacity: 0, y: -30, duration: 1, delay: 0.3 });
 gsap.from(".sections", { opacity: 0, duration: 1.2, delay: 0.8 });

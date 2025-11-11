@@ -23,6 +23,18 @@
 
     <div id="scene-container"></div>
 
+    <div class="section-content" id="projects-content" style="display:none;">
+        <button class="back-btn" onclick="backToMenu()">← Back</button>
+        <div class="project-card">
+            <video src="videos/demo.mp4" muted autoplay loop></video>
+            <div class="info">
+                <h3>Project Title</h3>
+                <p>Short description of what you did...</p>
+            </div>
+        </div>
+    </div>
+
+
     <div class="sections">
         <section id="about" class="section active">
             <h2>ABOUT ME</h2>
@@ -63,6 +75,8 @@
             <p>Contenido secreto divertido.</p>
         </section>
     </div>
+
+    <div class="crt"></div>
 
     <script src="three.min.js"></script>
     <script src="gsap.min.js"></script>
