@@ -4,6 +4,11 @@
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x000000, 0.03);
 
+let currentAngle = 0;
+let targetAngle = 0;
+let zoomLevel = 6;
+
+
 const camera = new THREE.PerspectiveCamera(
     60,
     window.innerWidth / window.innerHeight,
@@ -58,19 +63,11 @@ grid.material.opacity = 0.12;
 grid.material.transparent = true;
 scene.add(grid);
 
-// --- Variables de control ---
-let currentAngle = 0;
-
-// --- Rotar cámara según sección ---
-
-// variable global arriba de la función si no la tenías ya
-
 function rotateToSection(sectionId) {
-    // Apagar todos los objetos visibles
+    // Ocultar todos los objetos
     meshCube.visible = meshCyl.visible = meshCone.visible = meshTorus.visible = false;
 
-    // Elegir el objeto visible y el ángulo objetivo
-    let targetAngle = 0;
+    // Determinar objeto visible y ángulo objetivo
     switch (sectionId) {
         case "about": meshCube.visible = true; targetAngle = 0; break;
         case "projects": meshCyl.visible = true; targetAngle = Math.PI / 2; break;
@@ -79,28 +76,17 @@ function rotateToSection(sectionId) {
         case "easter": meshCyl.visible = true; targetAngle = Math.PI * 2; break;
     }
 
-    // ✅ Animar correctamente la rotación del ángulo
-    gsap.to(
-        { angle: currentAngle }, // objeto temporal con la variable
+    // Suavizar el movimiento del zoom (efecto in/out)
+    gsap.fromTo(
+        { zoom: 6.5 },
         {
-            duration: 2,
-            angle: targetAngle,
+            zoom: 6,
+            duration: 1.8,
             ease: "power2.inOut",
             onUpdate: function () {
-                currentAngle = this.targets()[0].angle; // actualizar valor global
-                const radius = 6;
-                camera.position.x = radius * Math.sin(currentAngle);
-                camera.position.z = radius * Math.cos(currentAngle);
-                camera.lookAt(0, 0, 0);
+                zoomLevel = this.targets()[0].zoom;
             }
         }
-    );
-
-    // 🔹 Pequeño efecto secundario vertical
-    gsap.fromTo(
-        camera.position,
-        { y: 0.3 },
-        { y: 0, duration: 1.2, ease: "sine.out" }
     );
 }
 
@@ -109,13 +95,22 @@ function rotateToSection(sectionId) {
 function animate() {
     requestAnimationFrame(animate);
 
-    // Rotación sutil en el objeto activo
+    // Suavizar la rotación real en cada frame
+    currentAngle += (targetAngle - currentAngle) * 0.08;
+
+    // Aplicar posición de cámara con interpolación continua
+    camera.position.x = zoomLevel * Math.sin(currentAngle);
+    camera.position.z = zoomLevel * Math.cos(currentAngle);
+    camera.lookAt(0, 0, 0);
+
+    // Rotación sutil del objeto activo
     [meshCube, meshCyl, meshCone, meshTorus].forEach((m) => {
         if (m.visible) m.rotation.y += 0.01;
     });
 
     renderer.render(scene, camera);
 }
+
 animate();
 
 // --- Resize handler ---
