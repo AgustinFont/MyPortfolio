@@ -1,140 +1,141 @@
-// scene.js
-let scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x000000, 0.02);
+// === scene.js ===
 
-let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+// --- Escena y cámara ---
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x000000, 0.03);
+
+const camera = new THREE.PerspectiveCamera(
+    60,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+);
+camera.position.set(0, 0, 6);
+camera.lookAt(0, 0, 0);
+
+// --- Renderizador ---
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-document.getElementById('scene-container').appendChild(renderer.domElement);
+document.getElementById("scene-container").appendChild(renderer.domElement);
 
-// cámara inicial
-camera.position.set(0, 0, 6);
+// --- Luces ---
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x333333, 0.7);
+scene.add(hemiLight);
+const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+dirLight.position.set(5, 10, 7);
+scene.add(dirLight);
 
-// LIGHTS
-const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
-hemi.position.set(0, 1, 0);
-scene.add(hemi);
-const dir = new THREE.DirectionalLight(0xffffff, 0.8);
-dir.position.set(5, 10, 7);
-scene.add(dir);
-
-// OBJETOS placeholders (posicionados a la izquierda para profundidad)
+// --- Grupo principal ---
 const group = new THREE.Group();
 scene.add(group);
 
-// CUBO (ABOUT)
-const geoCube = new THREE.BoxGeometry(1.2, 1.2, 1.2);
-const matCube = new THREE.MeshStandardMaterial({ color: 0x0077cc, metalness: 0.2, roughness: 0.6 });
-const meshCube = new THREE.Mesh(geoCube, matCube);
-meshCube.position.set(-2, 0.5, 0);
+// --- Objetos placeholder (uno por sección) ---
+const materialBase = new THREE.MeshStandardMaterial({ color: 0x00aaff, roughness: 0.4 });
 
-// CYLINDER (PROJECTS)
-const geoCylinder = new THREE.CylinderGeometry(0.6, 0.6, 1.6, 24);
-const matCyl = new THREE.MeshStandardMaterial({ color: 0xff6f00, metalness: 0.1, roughness: 0.6 });
-const meshCyl = new THREE.Mesh(geoCylinder, matCyl);
-meshCyl.position.set(-2, 0.5, 0);
-meshCyl.visible = false;
+const meshCube = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 1.2), materialBase.clone());
+meshCube.material.color.set(0x0077cc);
 
-// CONE/TRI (LOOKING)
-const geoCone = new THREE.ConeGeometry(0.8, 1.6, 24);
-const matCone = new THREE.MeshStandardMaterial({ color: 0xffdd33, metalness: 0.1, roughness: 0.6 });
-const meshCone = new THREE.Mesh(geoCone, matCone);
-meshCone.position.set(-2, 0.5, 0);
-meshCone.visible = false;
+const meshCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 1.6, 24), materialBase.clone());
+meshCyl.material.color.set(0xff6f00);
 
-// extras para contacto/easter
-const geoSmall = new THREE.TorusGeometry(0.6, 0.2, 12, 24);
-const matSmall = new THREE.MeshStandardMaterial({ color: 0x55ffdd });
-const meshSmall = new THREE.Mesh(geoSmall, matSmall);
-meshSmall.position.set(-2, 0.5, 0);
-meshSmall.visible = false;
+const meshCone = new THREE.Mesh(new THREE.ConeGeometry(0.8, 1.6, 24), materialBase.clone());
+meshCone.material.color.set(0xffdd33);
 
-group.add(meshCube, meshCyl, meshCone, meshSmall);
+const meshTorus = new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.2, 12, 24), materialBase.clone());
+meshTorus.material.color.set(0x55ffdd);
 
-// GRID / suelo sutil
+group.add(meshCube, meshCyl, meshCone, meshTorus);
+
+// --- Posiciones iniciales ---
+meshCube.visible = true;
+meshCyl.visible = meshCone.visible = meshTorus.visible = false;
+
+// --- Grid de referencia ---
 const grid = new THREE.GridHelper(12, 12, 0x004466, 0x002233);
 grid.position.y = -1.5;
 grid.material.opacity = 0.12;
 grid.material.transparent = true;
 scene.add(grid);
 
-// Función que anima la cámara y activa el objeto correspondiente
-function rotateToSection(sectionId) {
-    // visibilidad objetos
-    meshCube.visible = meshCyl.visible = meshCone.visible = meshSmall.visible = false;
-    let target = { x: 0, y: 0, z: 6, lookAt: new THREE.Vector3(0, 0, 0) };
-    let activeObj = null;
+// --- Variables de control ---
+let currentAngle = 0;
 
+// --- Rotar cámara según sección ---
+function rotateToSection(sectionId) {
+    // Apagar todos los objetos
+    meshCube.visible = meshCyl.visible = meshCone.visible = meshTorus.visible = false;
+
+    // Definir ángulo destino y objeto visible
+    let targetAngle = 0;
     switch (sectionId) {
-        case 'about':
+        case "about":
             meshCube.visible = true;
-            target.y = 0;
-            activeObj = meshCube;
+            targetAngle = 0;
             break;
-        case 'projects':
+        case "projects":
             meshCyl.visible = true;
-            target.y = Math.PI / 2;
-            activeObj = meshCyl;
+            targetAngle = Math.PI / 2;
             break;
-        case 'looking':
+        case "looking":
             meshCone.visible = true;
-            target.y = Math.PI;
-            activeObj = meshCone;
+            targetAngle = Math.PI;
             break;
-        case 'contact':
-            meshSmall.visible = true;
-            target.y = Math.PI * 1.5;
-            activeObj = meshSmall;
+        case "contact":
+            meshTorus.visible = true;
+            targetAngle = Math.PI * 1.5;
             break;
-        case 'easter':
+        case "easter":
             meshCyl.visible = true;
-            target.y = Math.PI * 2;
-            activeObj = meshCyl;
+            targetAngle = Math.PI * 2;
             break;
-        default:
-            meshCube.visible = true;
-            activeObj = meshCube;
     }
 
-    // animar rotación de cámara (usando GSAP) - duración .8s
-    gsap.to(camera.rotation, { y: target.y, duration: 0.8, ease: "power2.inOut" });
-
-    // opcional: mover ligeramente la posición para sensación de "zoom lateral"
-    const posTarget = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
-    gsap.to(posTarget, {
-        x: 0,
-        y: 0,
-        z: 6,
-        duration: 0.8,
+    // Animar movimiento de cámara alrededor del eje Y
+    gsap.to(this, {
+        duration: 1.2,
+        currentAngle: targetAngle,
         ease: "power2.inOut",
         onUpdate: () => {
-            camera.position.set(posTarget.x, posTarget.y, posTarget.z);
+            const radius = 6;
+            camera.position.x = radius * Math.sin(currentAngle);
+            camera.position.z = radius * Math.cos(currentAngle);
             camera.lookAt(0, 0, 0);
-        }
+        },
     });
+
+    // Pequeño zoom o vibración opcional (da sensación de "input feedback")
+    gsap.fromTo(
+        camera.position,
+        { y: 0.2 },
+        { y: 0, duration: 0.6, ease: "power1.out" }
+    );
 }
 
-// ANIMATE LOOP
+// --- Animación loop ---
 function animate() {
     requestAnimationFrame(animate);
-    // animar rotación suave de objetos visibles
-    group.children.forEach(m => {
+
+    // Rotación sutil en el objeto activo
+    [meshCube, meshCyl, meshCone, meshTorus].forEach((m) => {
         if (m.visible) m.rotation.y += 0.01;
     });
+
     renderer.render(scene, camera);
 }
 animate();
 
-// resize
-window.addEventListener('resize', () => {
+// --- Resize handler ---
+window.addEventListener("resize", () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// expose rotateToSection to global scope so hud.js can call it
+// --- Exponer globalmente para hud.js ---
 window.rotateToSection = rotateToSection;
 
-// inicial: mostrar sección por defecto (si querés, podés sincronizar con el HUD)
-rotateToSection('about');
+// --- Efecto de aparición inicial ---
+gsap.from("#scene-container", { opacity: 0, duration: 1.2 });
+gsap.from(".hud", { opacity: 0, y: -30, duration: 1, delay: 0.3 });
+gsap.from(".sections", { opacity: 0, duration: 1.2, delay: 0.8 });

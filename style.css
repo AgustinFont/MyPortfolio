@@ -6,7 +6,6 @@ body {
     color: #00aaff;
 }
 
-/* three.js canvas container */
 #scene-container {
     position: fixed;
     top: 0;
@@ -16,7 +15,6 @@ body {
     z-index: 0;
 }
 
-/* HUD */
 .hud {
     position: fixed;
     right: 20px;
@@ -48,7 +46,6 @@ body {
     color: #000;
 }
 
-/* sections panel (left-bottom) */
 .sections {
     position: fixed;
     bottom: 20px;
@@ -81,7 +78,6 @@ body {
     border: 1px solid #00aaff;
 }
 
-/* small screens */
 @media (max-width:900px) {
     .sections {
         width: 70%;

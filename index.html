@@ -6,13 +6,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Tanito Portfolio — Game HUD</title>
     <link rel="stylesheet" href="style.css" />
-    <!-- (opcional) font retro, si querés usar Press Start 2P -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-    <!-- HUD flotante derecha -->
     <div class="hud">
         <ul id="menu">
             <li class="active" data-section="about">ABOUT ME</li>
@@ -23,10 +21,8 @@
         </ul>
     </div>
 
-    <!-- Contenedor Three.js -->
     <div id="scene-container"></div>
 
-    <!-- Contenido de secciones (placeholders) -->
     <div class="sections">
         <section id="about" class="section active">
             <h2>ABOUT ME</h2>
@@ -68,13 +64,15 @@
         </section>
     </div>
 
-    <!-- LIBS: Three.js y GSAP -->
+    <!-- LIBRERÍAS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 
-    <!-- Tus scripts: scene primero (define rotateToSection), luego hud -->
+    <!-- TUS SCRIPTS -->
     <script src="scene.js"></script>
     <script src="hud.js"></script>
+
 </body>
+
 
 </html>
