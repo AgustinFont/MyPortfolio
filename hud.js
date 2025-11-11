@@ -1,36 +1,37 @@
-// === hud.js ===
+// === hud.js FINAL ===
 document.addEventListener('DOMContentLoaded', () => {
     const menuItems = document.querySelectorAll("#menu li");
-    const sections = document.querySelectorAll(".section");
     let selectedIndex = 0;
 
-    // --- Actualiza visualmente el ítem activo ---
+    // --- Actualiza qué opción está seleccionada ---
     function updateMenu() {
-        menuItems.forEach((item, i) => item.classList.toggle("active", i === selectedIndex));
+        menuItems.forEach((item, i) => {
+            item.classList.toggle("active", i === selectedIndex);
+        });
     }
 
-    // --- Mostrar sección con animación ---
+    // --- Mostrar una sección ---
     function goToSection(sectionId) {
-        // Llamar a la rotación 3D del cubo
-        if (typeof window.rotateToSection === "function") {
-            window.rotateToSection(sectionId);
-        }
-
-        // Ocultar menú y mostrar sección específica
         const hud = document.querySelector(".hud");
         const content = document.getElementById(sectionId + "-content");
 
+        if (!hud || !content) return;
+
+        // Fade out HUD
         gsap.to(hud, {
             opacity: 0,
-            duration: 0.6,
+            duration: 0.8,
             onComplete: () => {
                 hud.style.display = "none";
-                if (content) {
-                    content.style.display = "block";
-                    gsap.fromTo(content, { opacity: 0 }, { opacity: 1, duration: 0.8 });
-                }
+                content.style.display = "flex";
+                gsap.fromTo(content, { opacity: 0 }, { opacity: 1, duration: 0.8 });
             }
         });
+
+        // Llamar a la rotación 3D (desde scene.js)
+        if (typeof window.rotateToSection === "function") {
+            window.rotateToSection(sectionId);
+        }
     }
 
     // --- Volver al menú principal ---
@@ -41,13 +42,13 @@ document.addEventListener('DOMContentLoaded', () => {
         contents.forEach(c => {
             gsap.to(c, {
                 opacity: 0,
-                duration: 0.5,
+                duration: 0.6,
                 onComplete: () => (c.style.display = "none")
             });
         });
 
         setTimeout(() => {
-            hud.style.display = "block";
+            hud.style.display = "flex";
             gsap.fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.8 });
         }, 600);
     };
@@ -61,12 +62,11 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
             updateMenu();
         } else if (e.key === "Enter") {
-            const sectionId = menuItems[selectedIndex].dataset.section;
-            goToSection(sectionId);
+            goToSection(menuItems[selectedIndex].dataset.section);
         }
     });
 
-    // --- Navegación con mouse ---
+    // --- Navegación con clic ---
     menuItems.forEach((item, i) => {
         item.addEventListener("click", () => {
             selectedIndex = i;
