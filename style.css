@@ -1,4 +1,4 @@
-/* === RESET GLOBAL Y FONDO === */
+/* === RESET === */
 html,
 body {
     margin: 0;
@@ -10,16 +10,17 @@ body {
     color: #00ffff;
 }
 
-/* === HUD (MENÚ PRINCIPAL) === */
+/* === HUD === */
 .hud {
     position: absolute;
-    inset: 0;
+    top: 50%;
+    right: 8%;
+    transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     z-index: 10;
-    background: rgba(0, 0, 0, 0.25);
     opacity: 1;
     transition: opacity 0.5s ease;
 }
@@ -28,25 +29,55 @@ body {
     list-style: none;
     margin: 0;
     padding: 0;
-    text-align: center;
+    text-align: right;
 }
 
+/* === ITEMS DEL MENÚ === */
 #menu li {
     font-family: "Press Start 2P", monospace;
     font-size: 14px;
     color: #00ffff;
     cursor: pointer;
     margin: 12px 0;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
+    transition:
+        color 0.3s ease,
+        text-shadow 0.4s ease,
+        transform 0.3s ease;
+    transform-origin: right center;
+    display: inline-block;
+    perspective: 400px;
 }
 
-/* === GLOW EN OPCIÓN ACTIVA === */
+/* Hover y selección visual */
+#menu li:hover,
 #menu li.active {
     color: #ffffff;
-    text-shadow: 0 0 6px #00ffff, 0 0 12px #00ffff, 0 0 18px #00ffff;
+    text-shadow:
+        0 0 6px #00ffff,
+        0 0 12px #00ffff,
+        0 0 18px #00ffff,
+        0 0 24px #00ffff;
+    transform: scale(1.15) rotateY(-8deg);
 }
 
-/* === CONTENIDO DE SECCIONES === */
+/* Efecto de brillo pulsante en activo */
+#menu li.active {
+    animation: glowPulse 1.8s infinite ease-in-out;
+}
+
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        text-shadow: 0 0 8px #00ffff, 0 0 16px #00ffff, 0 0 24px #00ffff;
+    }
+
+    50% {
+        text-shadow: 0 0 4px #00cccc, 0 0 8px #00cccc, 0 0 12px #00cccc;
+    }
+}
+
+/* === SECCIONES === */
 .section-content {
     position: absolute;
     inset: 0;
@@ -56,7 +87,7 @@ body {
     justify-content: center;
     text-align: center;
     color: white;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.55);
     z-index: 15;
 }
 
@@ -84,9 +115,10 @@ body {
 .back-btn:hover {
     background: #00ffff;
     color: #000;
+    box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
 }
 
-/* === CRT EFECTO OPCIONAL === */
+/* === CRT EFECTO === */
 .crt::after {
     content: "";
     position: fixed;

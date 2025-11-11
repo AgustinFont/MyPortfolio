@@ -1,23 +1,25 @@
-// === hud.js FINAL ===
+// === hud.js (v3.1) ===
 document.addEventListener('DOMContentLoaded', () => {
     const menuItems = document.querySelectorAll("#menu li");
     let selectedIndex = 0;
+    let inSection = false; // <- bloquea navegación si estás dentro de una sección
 
-    // --- Actualiza qué opción está seleccionada ---
     function updateMenu() {
         menuItems.forEach((item, i) => {
             item.classList.toggle("active", i === selectedIndex);
         });
     }
 
-    // --- Mostrar una sección ---
+    // --- Mostrar sección ---
     function goToSection(sectionId) {
+        if (inSection) return; // bloquea si ya estás adentro
+        inSection = true;
+
         const hud = document.querySelector(".hud");
         const content = document.getElementById(sectionId + "-content");
 
         if (!hud || !content) return;
 
-        // Fade out HUD
         gsap.to(hud, {
             opacity: 0,
             duration: 0.8,
@@ -28,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Llamar a la rotación 3D (desde scene.js)
         if (typeof window.rotateToSection === "function") {
             window.rotateToSection(sectionId);
         }
@@ -36,13 +37,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Volver al menú principal ---
     window.backToMenu = function () {
+        if (!inSection) return;
+        inSection = false;
+
         const hud = document.querySelector(".hud");
         const contents = document.querySelectorAll(".section-content");
 
         contents.forEach(c => {
             gsap.to(c, {
                 opacity: 0,
-                duration: 0.6,
+                duration: 0.5,
                 onComplete: () => (c.style.display = "none")
             });
         });
@@ -53,8 +57,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 600);
     };
 
-    // --- Navegación con teclado ---
+    // --- Teclado ---
     document.addEventListener("keydown", (e) => {
+        if (inSection) {
+            // Si estás dentro, solo ESC funciona
+            if (e.key === "Escape") {
+                window.backToMenu();
+            }
+            return;
+        }
+
         if (e.key === "ArrowDown") {
             selectedIndex = (selectedIndex + 1) % menuItems.length;
             updateMenu();
@@ -66,9 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Navegación con clic ---
+    // --- Clic ---
     menuItems.forEach((item, i) => {
         item.addEventListener("click", () => {
+            if (inSection) return;
             selectedIndex = i;
             updateMenu();
             goToSection(item.dataset.section);
