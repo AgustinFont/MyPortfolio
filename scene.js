@@ -66,36 +66,21 @@ function rotateToSection(sectionId) {
     // Apagar todos los objetos
     meshCube.visible = meshCyl.visible = meshCone.visible = meshTorus.visible = false;
 
-    // Definir ángulo destino y objeto visible
+    // Determinar ángulo y objeto activo
     let targetAngle = 0;
     switch (sectionId) {
-        case "about":
-            meshCube.visible = true;
-            targetAngle = 0;
-            break;
-        case "projects":
-            meshCyl.visible = true;
-            targetAngle = Math.PI / 2;
-            break;
-        case "looking":
-            meshCone.visible = true;
-            targetAngle = Math.PI;
-            break;
-        case "contact":
-            meshTorus.visible = true;
-            targetAngle = Math.PI * 1.5;
-            break;
-        case "easter":
-            meshCyl.visible = true;
-            targetAngle = Math.PI * 2;
-            break;
+        case "about": meshCube.visible = true; targetAngle = 0; break;
+        case "projects": meshCyl.visible = true; targetAngle = Math.PI / 2; break;
+        case "looking": meshCone.visible = true; targetAngle = Math.PI; break;
+        case "contact": meshTorus.visible = true; targetAngle = Math.PI * 1.5; break;
+        case "easter": meshCyl.visible = true; targetAngle = Math.PI * 2; break;
     }
 
-    // Animar movimiento de cámara alrededor del eje Y
+    // 🔧 Animar rotación suave y visible
     gsap.to(this, {
-        duration: 1.2,
+        duration: 2.0, // más tiempo = más visible la animación
         currentAngle: targetAngle,
-        ease: "power2.inOut",
+        ease: "power3.inOut",
         onUpdate: () => {
             const radius = 6;
             camera.position.x = radius * Math.sin(currentAngle);
@@ -104,11 +89,11 @@ function rotateToSection(sectionId) {
         },
     });
 
-    // Pequeño zoom o vibración opcional (da sensación de "input feedback")
+    // 🔹 Efecto secundario: leve "shake" o zoom al moverse
     gsap.fromTo(
         camera.position,
-        { y: 0.2 },
-        { y: 0, duration: 0.6, ease: "power1.out" }
+        { y: 0.3 },
+        { y: 0, duration: 1.2, ease: "sine.out" }
     );
 }
 
