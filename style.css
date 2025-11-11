@@ -1,166 +1,67 @@
-body {
-    margin: 0;
-    overflow: hidden;
-    font-family: 'Press Start 2P', monospace;
-    background: #000;
-    color: #00aaff;
-}
-
-#scene-container {
-    position: fixed;
-    top: 0;
+.hud {
+    position: absolute;
+    top: 10%;
     left: 0;
     width: 100%;
-    height: 100%;
-    z-index: 0;
-}
-
-.hud {
-    position: fixed;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.55);
-    padding: 16px;
-    border: 2px solid #0088cc;
-    border-radius: 8px;
-    z-index: 2;
-    min-width: 220px;
-}
-
-.hud ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.hud li {
-    padding: 10px 12px;
-    cursor: pointer;
-    color: #00aaff;
-    user-select: none;
-}
-
-.hud li.active {
-    background: #00aaff;
-    color: #000;
-}
-
-.sections {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    width: 40%;
-    max-width: 640px;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 16px;
-    border-radius: 8px;
-    z-index: 2;
-    color: #fff;
-    font-size: 12px;
-}
-
-.section {
-    display: none;
-}
-
-.section.active {
-    display: block;
-}
-
-.project-sub {
-    margin-top: 12px;
-}
-
-.project-sub img {
-    width: 120px;
-    margin-top: 6px;
-    border: 1px solid #00aaff;
-}
-
-@media (max-width:900px) {
-    .sections {
-        width: 70%;
-        left: 12px;
-        right: 12px;
-    }
-
-    .hud {
-        right: 10px;
-        min-width: 160px;
-        padding: 10px;
-    }
-}
-
-/* --- CRT Overlay --- */
-.crt {
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(0deg,
-            rgba(255, 255, 255, 0.04) 0px,
-            rgba(0, 0, 0, 0.04) 1px);
-    mix-blend-mode: overlay;
-    pointer-events: none;
-    z-index: 5;
-}
-
-/* --- Back Button --- */
-.back-btn {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.2s;
-    font-family: monospace;
-    z-index: 10;
-}
-
-.back-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-/* --- Project cards --- */
-.section-content {
-    position: absolute;
-    inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 9;
+    opacity: 1;
+    z-index: 10;
 }
 
-.project-card {
-    display: flex;
+#menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+#menu li {
+    font-family: "Press Start 2P", monospace;
+    font-size: 14px;
+    color: #00ffff;
+    cursor: pointer;
+    margin: 12px 0;
+    transition: color 0.3s ease;
+}
+
+#menu li.active {
+    color: #ffffff;
+}
+
+.section-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
     flex-direction: column;
     align-items: center;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-}
-
-.project-card video {
-    width: 320px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-.project-card .info {
+    justify-content: center;
     text-align: center;
     color: white;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 15;
 }
 
-.hud {
-    opacity: 1;
-    display: block;
-    z-index: 20;
+.back-btn {
     position: absolute;
-    width: 100%;
-    text-align: center;
+    top: 20px;
+    left: 20px;
+    font-family: "Press Start 2P", monospace;
+    font-size: 12px;
+    background: transparent;
+    color: #00ffff;
+    border: 1px solid #00ffff;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #00ffff;
+    color: #000;
 }

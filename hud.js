@@ -1,9 +1,8 @@
 // === hud.js ===
 window.addEventListener("DOMContentLoaded", () => {
     const menuItems = document.querySelectorAll("#menu li");
-    let selectedIndex = 0;
-
     const hud = document.querySelector(".hud");
+    let selectedIndex = 0;
 
     function updateMenu() {
         menuItems.forEach((item, i) => item.classList.toggle("active", i === selectedIndex));
@@ -17,7 +16,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- Eventos de teclado ---
+    // --- Teclado ---
     document.addEventListener("keydown", (e) => {
         if (e.key === "ArrowDown") {
             selectedIndex = (selectedIndex + 1) % menuItems.length;
@@ -31,7 +30,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // --- Click en menú ---
+    // --- Click ---
     menuItems.forEach((item, i) => {
         item.addEventListener("click", () => {
             selectedIndex = i;
@@ -40,10 +39,11 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Inicializa HUD visible y primer opción
+    // Inicializar HUD visible
     if (hud) {
-        hud.style.display = "block";
+        hud.style.display = "flex";
         hud.style.opacity = "1";
     }
+
     updateMenu();
 });
