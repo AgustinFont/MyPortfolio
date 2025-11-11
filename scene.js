@@ -2,12 +2,11 @@
 
 // --- Escena y cámara ---
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x000000, 0.03);
+scene.fog = new THREE.FogExp2(0x0a0a15, 0.03);
 
 let currentAngle = 0;
 let targetAngle = 0;
-let zoomLevel = 6;
-
+let zoomLevel = 7; // un poco más alejado para ver mejor la rotación
 
 const camera = new THREE.PerspectiveCamera(
     60,
@@ -15,21 +14,26 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     1000
 );
-camera.position.set(0, 0, 6);
+camera.position.set(0, 0, zoomLevel);
 camera.lookAt(0, 0, 0);
 
 // --- Renderizador ---
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x0a0a15, 1); // fondo azul oscuro
 document.getElementById("scene-container").appendChild(renderer.domElement);
 
 // --- Luces ---
 const hemiLight = new THREE.HemisphereLight(0xffffff, 0x333333, 0.7);
 scene.add(hemiLight);
+
 const dirLight = new THREE.DirectionalLight(0xffffff, 1);
 dirLight.position.set(5, 10, 7);
 scene.add(dirLight);
+
+const ambient = new THREE.AmbientLight(0x404040, 0.6); // luz ambiental suave
+scene.add(ambient);
 
 // --- Grupo principal ---
 const group = new THREE.Group();
@@ -57,12 +61,24 @@ meshCube.visible = true;
 meshCyl.visible = meshCone.visible = meshTorus.visible = false;
 
 // --- Grid de referencia ---
-const grid = new THREE.GridHelper(12, 12, 0x004466, 0x002233);
+const grid = new THREE.GridHelper(12, 12, 0x336699, 0x224466);
 grid.position.y = -1.5;
-grid.material.opacity = 0.12;
+grid.material.opacity = 0.15;
 grid.material.transparent = true;
 scene.add(grid);
 
+// --- Cubo wireframe de entorno ---
+const envGeo = new THREE.BoxGeometry(20, 20, 20);
+const envMat = new THREE.MeshBasicMaterial({
+    color: 0x113366,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.25,
+});
+const envCube = new THREE.Mesh(envGeo, envMat);
+scene.add(envCube);
+
+// --- Función principal de rotación entre secciones ---
 function rotateToSection(sectionId) {
     // Ocultar todos los objetos
     meshCube.visible = meshCyl.visible = meshCone.visible = meshTorus.visible = false;
@@ -76,32 +92,35 @@ function rotateToSection(sectionId) {
         case "easter": meshCyl.visible = true; targetAngle = Math.PI * 2; break;
     }
 
-    // Suavizar el movimiento del zoom (efecto in/out)
+    // --- Rotación suave de cámara ---
+    gsap.to(window, {
+        duration: 2.2,
+        ease: "power2.inOut",
+        onUpdate: () => {
+            currentAngle += (targetAngle - currentAngle) * 0.08;
+            camera.position.x = zoomLevel * Math.sin(currentAngle);
+            camera.position.z = zoomLevel * Math.cos(currentAngle);
+            camera.lookAt(0, 0, 0);
+        }
+    });
+
+    // --- Zoom in/out sincronizado ---
     gsap.fromTo(
-        { zoom: 6.5 },
+        { z: zoomLevel + 1.5 },
         {
-            zoom: 6,
-            duration: 1.8,
-            ease: "power2.inOut",
+            z: zoomLevel,
+            duration: 2,
+            ease: "power1.inOut",
             onUpdate: function () {
-                zoomLevel = this.targets()[0].zoom;
+                zoomLevel = this.targets()[0].z;
             }
         }
     );
 }
 
-
-// --- Animación loop ---
+// --- Loop de animación ---
 function animate() {
     requestAnimationFrame(animate);
-
-    // Suavizar la rotación real en cada frame
-    currentAngle += (targetAngle - currentAngle) * 0.08;
-
-    // Aplicar posición de cámara con interpolación continua
-    camera.position.x = zoomLevel * Math.sin(currentAngle);
-    camera.position.z = zoomLevel * Math.cos(currentAngle);
-    camera.lookAt(0, 0, 0);
 
     // Rotación sutil del objeto activo
     [meshCube, meshCyl, meshCone, meshTorus].forEach((m) => {
