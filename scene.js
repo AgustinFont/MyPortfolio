@@ -62,11 +62,14 @@ scene.add(grid);
 let currentAngle = 0;
 
 // --- Rotar cámara según sección ---
+
+// variable global arriba de la función si no la tenías ya
+
 function rotateToSection(sectionId) {
-    // Apagar todos los objetos
+    // Apagar todos los objetos visibles
     meshCube.visible = meshCyl.visible = meshCone.visible = meshTorus.visible = false;
 
-    // Determinar ángulo y objeto activo
+    // Elegir el objeto visible y el ángulo objetivo
     let targetAngle = 0;
     switch (sectionId) {
         case "about": meshCube.visible = true; targetAngle = 0; break;
@@ -76,26 +79,31 @@ function rotateToSection(sectionId) {
         case "easter": meshCyl.visible = true; targetAngle = Math.PI * 2; break;
     }
 
-    // 🔧 Animar rotación suave y visible
-    gsap.to(this, {
-        duration: 2.0, // más tiempo = más visible la animación
-        currentAngle: targetAngle,
-        ease: "power3.inOut",
-        onUpdate: () => {
-            const radius = 6;
-            camera.position.x = radius * Math.sin(currentAngle);
-            camera.position.z = radius * Math.cos(currentAngle);
-            camera.lookAt(0, 0, 0);
-        },
-    });
+    // ✅ Animar correctamente la rotación del ángulo
+    gsap.to(
+        { angle: currentAngle }, // objeto temporal con la variable
+        {
+            duration: 2,
+            angle: targetAngle,
+            ease: "power2.inOut",
+            onUpdate: function () {
+                currentAngle = this.targets()[0].angle; // actualizar valor global
+                const radius = 6;
+                camera.position.x = radius * Math.sin(currentAngle);
+                camera.position.z = radius * Math.cos(currentAngle);
+                camera.lookAt(0, 0, 0);
+            }
+        }
+    );
 
-    // 🔹 Efecto secundario: leve "shake" o zoom al moverse
+    // 🔹 Pequeño efecto secundario vertical
     gsap.fromTo(
         camera.position,
         { y: 0.3 },
         { y: 0, duration: 1.2, ease: "sine.out" }
     );
 }
+
 
 // --- Animación loop ---
 function animate() {
