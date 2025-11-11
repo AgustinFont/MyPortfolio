@@ -183,7 +183,17 @@ window.addEventListener("resize", () => {
 window.rotateToSection = rotateToSection;
 window.backToMenu = backToMenu;
 
-// --- Efecto inicial ---
-gsap.from("#scene-container", { opacity: 0, duration: 1.2 });
-gsap.from(".hud", { opacity: 0, y: -30, duration: 1, delay: 0.3 });
-gsap.from(".sections", { opacity: 0, duration: 1.2, delay: 0.8 });
+// --- Efecto inicial seguro ---
+window.addEventListener("load", () => {
+    const hud = document.querySelector(".hud");
+    if (hud) {
+        hud.style.opacity = "1";
+        hud.style.display = "block";
+        gsap.fromTo(hud, { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 1 });
+    }
+
+    const sceneContainer = document.querySelector("#scene-container");
+    if (sceneContainer) {
+        gsap.fromTo(sceneContainer, { opacity: 0 }, { opacity: 1, duration: 1.2, delay: 0.2 });
+    }
+});

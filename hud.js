@@ -1,7 +1,9 @@
 // === hud.js ===
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", () => {
     const menuItems = document.querySelectorAll("#menu li");
     let selectedIndex = 0;
+
+    const hud = document.querySelector(".hud");
 
     function updateMenu() {
         menuItems.forEach((item, i) => item.classList.toggle("active", i === selectedIndex));
@@ -10,10 +12,12 @@ document.addEventListener("DOMContentLoaded", () => {
     function goToSection(sectionId) {
         if (typeof window.rotateToSection === "function") {
             window.rotateToSection(sectionId);
+        } else {
+            console.warn("rotateToSection no está disponible todavía.");
         }
     }
 
-    // Navegación con teclado
+    // --- Eventos de teclado ---
     document.addEventListener("keydown", (e) => {
         if (e.key === "ArrowDown") {
             selectedIndex = (selectedIndex + 1) % menuItems.length;
@@ -22,11 +26,12 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
             updateMenu();
         } else if (e.key === "Enter") {
-            goToSection(menuItems[selectedIndex].dataset.section);
+            const sectionId = menuItems[selectedIndex].dataset.section;
+            goToSection(sectionId);
         }
     });
 
-    // Navegación con mouse
+    // --- Click en menú ---
     menuItems.forEach((item, i) => {
         item.addEventListener("click", () => {
             selectedIndex = i;
@@ -35,5 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Inicializa HUD visible y primer opción
+    if (hud) {
+        hud.style.display = "block";
+        hud.style.opacity = "1";
+    }
     updateMenu();
 });
