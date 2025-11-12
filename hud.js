@@ -1,8 +1,8 @@
-// === hud.js (v3.1) ===
+// === hud.js v3.3 ===
 document.addEventListener('DOMContentLoaded', () => {
     const menuItems = document.querySelectorAll("#menu li");
     let selectedIndex = 0;
-    let inSection = false; // <- bloquea navegación si estás dentro de una sección
+    let inSection = false; // bloquea navegación dentro de secciones
 
     function updateMenu() {
         menuItems.forEach((item, i) => {
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Mostrar sección ---
     function goToSection(sectionId) {
-        if (inSection) return; // bloquea si ya estás adentro
+        if (inSection) return;
         inSection = true;
 
         const hud = document.querySelector(".hud");
@@ -59,22 +59,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Teclado ---
     document.addEventListener("keydown", (e) => {
+        // si estás dentro de una sección, sólo ESC funciona
         if (inSection) {
-            // Si estás dentro, solo ESC funciona
             if (e.key === "Escape") {
                 window.backToMenu();
             }
             return;
         }
 
-        if (e.key === "ArrowDown") {
-            selectedIndex = (selectedIndex + 1) % menuItems.length;
-            updateMenu();
-        } else if (e.key === "ArrowUp") {
-            selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
-            updateMenu();
-        } else if (e.key === "Enter") {
-            goToSection(menuItems[selectedIndex].dataset.section);
+        switch (e.key) {
+            case "ArrowDown":
+                selectedIndex = (selectedIndex + 1) % menuItems.length;
+                updateMenu();
+                break;
+            case "ArrowUp":
+                selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
+                updateMenu();
+                break;
+            case "Enter":
+                goToSection(menuItems[selectedIndex].dataset.section);
+                break;
         }
     });
 
