@@ -162,6 +162,16 @@ function backToMenu() {
     });
 }
 
+// === Parallax de cámara con movimiento del mouse ===
+let mouseX = 0, mouseY = 0;
+
+document.addEventListener("mousemove", (e) => {
+    const xNorm = (e.clientX / window.innerWidth - 0.5) * 2; // -1 a 1
+    const yNorm = (e.clientY / window.innerHeight - 0.5) * 2;
+    mouseX = xNorm;
+    mouseY = yNorm;
+});
+
 // --- Loop principal ---
 function animate() {
     requestAnimationFrame(animate);
@@ -176,6 +186,11 @@ function animate() {
     currentAngle += (targetAngle - currentAngle) * 0.02;
     camera.position.x = zoomLevel * Math.sin(currentAngle);
     camera.position.z = zoomLevel * Math.cos(currentAngle);
+    group.position.x = -1.5;
+
+    // Parallax leve en la cámara (profundidad)
+    camera.position.x += (mouseX * 0.3 - camera.position.x) * 0.02;
+    camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.02;
     camera.lookAt(0, 0, 0);
 
     renderer.render(scene, camera);

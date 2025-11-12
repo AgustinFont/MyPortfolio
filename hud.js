@@ -93,4 +93,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     updateMenu();
+
+    // === Tilt HUD con movimiento del mouse ===
+    const hud = document.querySelector(".hud");
+    document.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2; // rango -1 a 1
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+
+        gsap.to(hud, {
+            rotationY: -x * 10, // rotación horizontal
+            rotationX: y * 10,  // rotación vertical
+            transformPerspective: 600,
+            transformOrigin: "center",
+            duration: 0.6,
+            ease: "power2.out"
+        });
+    });
+
 });
