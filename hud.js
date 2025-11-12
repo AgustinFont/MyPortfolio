@@ -1,23 +1,25 @@
-// === hud.js v3.3 ===
+// === hud.js (v5.0 responsive + tilt + touch) ===
 document.addEventListener('DOMContentLoaded', () => {
     const menuItems = document.querySelectorAll("#menu li");
+    const hud = document.querySelector(".hud");
     let selectedIndex = 0;
-    let inSection = false; // bloquea navegación dentro de secciones
+    let inSection = false;
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
+    // === Actualiza el menú visualmente ===
     function updateMenu() {
         menuItems.forEach((item, i) => {
             item.classList.toggle("active", i === selectedIndex);
+            item.classList.toggle("inactive", i !== selectedIndex);
         });
     }
 
-    // --- Mostrar sección ---
+    // === Mostrar sección seleccionada ===
     function goToSection(sectionId) {
         if (inSection) return;
         inSection = true;
 
-        const hud = document.querySelector(".hud");
         const content = document.getElementById(sectionId + "-content");
-
         if (!hud || !content) return;
 
         gsap.to(hud, {
@@ -35,12 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Volver al menú principal ---
+    // === Volver al menú principal ===
     window.backToMenu = function () {
         if (!inSection) return;
         inSection = false;
 
-        const hud = document.querySelector(".hud");
         const contents = document.querySelectorAll(".section-content");
 
         contents.forEach(c => {
@@ -57,57 +58,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 600);
     };
 
-    // --- Teclado ---
+    // === Navegación por teclado ===
     document.addEventListener("keydown", (e) => {
-        // si estás dentro de una sección, sólo ESC funciona
         if (inSection) {
-            if (e.key === "Escape") {
-                window.backToMenu();
-            }
+            if (e.key === "Escape") window.backToMenu();
             return;
         }
 
-        switch (e.key) {
-            case "ArrowDown":
-                selectedIndex = (selectedIndex + 1) % menuItems.length;
-                updateMenu();
-                break;
-            case "ArrowUp":
-                selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
-                updateMenu();
-                break;
-            case "Enter":
-                goToSection(menuItems[selectedIndex].dataset.section);
-                break;
+        if (e.key === "ArrowDown") {
+            selectedIndex = (selectedIndex + 1) % menuItems.length;
+            updateMenu();
+        } else if (e.key === "ArrowUp") {
+            selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
+            updateMenu();
+        } else if (e.key === "Enter") {
+            goToSection(menuItems[selectedIndex].dataset.section);
         }
     });
 
-    // --- Clic ---
+    // === Clic / Tap ===
     menuItems.forEach((item, i) => {
-        item.addEventListener("click", () => {
+        const eventType = isTouchDevice ? "touchstart" : "click";
+        item.addEventListener(eventType, () => {
             if (inSection) return;
             selectedIndex = i;
             updateMenu();
             goToSection(item.dataset.section);
         });
+
+        if (!isTouchDevice) {
+            item.addEventListener("mouseenter", () => {
+                selectedIndex = i;
+                updateMenu();
+            });
+        }
     });
+
+    // === Tilt 3D (solo en desktop) ===
+    if (!isTouchDevice) {
+        document.addEventListener("mousemove", (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 2;
+            const y = (e.clientY / window.innerHeight - 0.5) * 2;
+            gsap.to(".hud", {
+                rotationY: x * 10,
+                rotationX: -y * 6,
+                transformPerspective: 600,
+                transformOrigin: "center right",
+                duration: 0.6,
+                ease: "power2.out"
+            });
+        });
+    }
 
     updateMenu();
-
-    // === Tilt HUD con movimiento del mouse ===
-    const hud = document.querySelector(".hud");
-    document.addEventListener("mousemove", (e) => {
-        const x = (e.clientX / window.innerWidth - 0.5) * 2; // rango -1 a 1
-        const y = (e.clientY / window.innerHeight - 0.5) * 2;
-
-        gsap.to(hud, {
-            rotationY: -x * 10, // rotación horizontal
-            rotationX: y * 10,  // rotación vertical
-            transformPerspective: 600,
-            transformOrigin: "center",
-            duration: 0.6,
-            ease: "power2.out"
-        });
-    });
-
 });

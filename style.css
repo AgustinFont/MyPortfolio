@@ -10,10 +10,11 @@ body {
     color: #00ffff;
 }
 
+/* === HUD === */
 .hud {
     position: absolute;
     top: 50%;
-    right: 5%;
+    right: 10%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
@@ -22,16 +23,9 @@ body {
     z-index: 10;
     opacity: 1;
     transition: opacity 0.5s ease;
+    transform-style: preserve-3d;
 }
 
-#menu {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    text-align: right;
-}
-
-/* === ITEMS DEL MENÚ === */
 #menu {
     list-style: none;
     margin: 0;
@@ -39,41 +33,53 @@ body {
     text-align: right;
     display: flex;
     flex-direction: column;
-    /* <— FORZAMOS orientación vertical */
-    align-items: flex-end;
-    gap: 12px;
-    /* separación limpia entre ítems */
 }
 
+/* === ITEMS DEL MENÚ === */
 #menu li {
-    display: block;
-    /* <— cada ítem ocupa su línea */
     font-family: "Press Start 2P", monospace;
     font-size: 14px;
     color: #00ffff;
     cursor: pointer;
+    margin: 12px 0;
     transition:
         color 0.3s ease,
         text-shadow 0.4s ease,
-        transform 0.3s ease;
+        transform 0.25s ease,
+        opacity 0.25s ease;
     transform-origin: right center;
 }
 
+/* Hover y selección visual */
+#menu li:hover,
+#menu li.active {
+    color: #ffffff;
+    text-shadow:
+        0 0 6px #00ffff,
+        0 0 12px #00ffff,
+        0 0 18px #00ffff;
+    transform: scale(1.2);
+}
 
-/* Efecto de brillo pulsante en activo */
+/* Efecto pulsante */
 #menu li.active {
     animation: glowPulse 1.8s infinite ease-in-out;
+}
+
+#menu li.inactive {
+    opacity: 0.7;
+    transform: scale(0.9);
 }
 
 @keyframes glowPulse {
 
     0%,
     100% {
-        text-shadow: 0 0 8px #00ffff, 0 0 16px #00ffff, 0 0 24px #00ffff;
+        text-shadow: 0 0 8px #00ffff, 0 0 16px #00ffff;
     }
 
     50% {
-        text-shadow: 0 0 4px #00cccc, 0 0 8px #00cccc, 0 0 12px #00cccc;
+        text-shadow: 0 0 4px #00cccc, 0 0 10px #00cccc;
     }
 }
 
@@ -87,7 +93,7 @@ body {
     justify-content: center;
     text-align: center;
     color: white;
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(0, 0, 0, 0.45);
     z-index: 15;
 }
 
@@ -151,5 +157,46 @@ body {
 
     50% {
         opacity: 0.96;
+    }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+    .hud {
+        right: 8%;
+    }
+
+    #menu li {
+        font-size: 13px;
+        margin: 10px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .hud {
+        right: 50%;
+        bottom: 8%;
+        top: auto;
+        transform: translateX(50%);
+        align-items: center;
+    }
+
+    #menu {
+        text-align: center;
+    }
+
+    #menu li {
+        font-size: 11px;
+        margin: 8px 0;
+        transform-origin: center;
+    }
+
+    .section-content {
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    .back-btn {
+        font-size: 10px;
+        padding: 6px 10px;
     }
 }
