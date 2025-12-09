@@ -52,25 +52,37 @@ const projectsData = {
             genre: "Interactive Tour",
             platform: "PC",
             year: "2023",
-            thumbnail: "images/projects/recorrido2-thumb.jpg",
+            thumbnail: "images/projects/recorrido2-thumb.png",
             media: {
-                type: "carousel", // Tipo carrusel para múltiples medios
+                type: "carousel",
                 items: [
                     {
                         type: "image",
-                        src: "images/projects/recorrido2-screenshot1.jpg"
+                        src: "images/projects/recorrido2-screenshot1.png"
                     },
                     {
                         type: "image",
-                        src: "images/projects/recorrido2-screenshot2.jpg"
+                        src: "images/projects/recorrido2-screenshot2.png"
+                    },
+                    {
+                        type: "image",
+                        src: "images/projects/recorrido2-screenshot3.png"
+                    },
+                    {
+                        type: "image",
+                        src: "images/projects/recorrido2-screenshot4.png"
+                    },
+                    {
+                        type: "image",
+                        src: "images/projects/recorrido2-screenshot5.png"
+                    },
+                    {
+                        type: "image",
+                        src: "images/projects/recorrido2-screenshot6.png"
                     },
                     {
                         type: "video",
                         src: "videos/recorrido2-demo.mp4"
-                    },
-                    {
-                        type: "image",
-                        src: "images/projects/recorrido2-screenshot3.jpg"
                     }
                 ]
             },
@@ -115,8 +127,8 @@ const projectsData = {
             year: "2023",
             thumbnail: "images/projects/beta-thumb.jpg",
             media: {
-                type: "image",
-                src: "images/projects/beta-screenshot.jpg"
+                type: "video",
+                src: "videos/beta-demo.mp4"
             },
             description: "Puzzle game con mecánicas únicas de física. Ganador del Game Jam Local 2023. Desafía a los jugadores con niveles progresivamente más complejos.",
             tech: ["Unity", "C#"],
