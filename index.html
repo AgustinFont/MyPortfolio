@@ -11,6 +11,20 @@
 
 <body>
 
+    <!-- === LANDING ANIMATION === -->
+    <div class="landing-screen" id="landing-screen">
+        <div class="landing-content">
+            <div class="terminal-text" id="terminal-text">
+                <div class="terminal-line">> SYSTEM INITIALIZING...</div>
+                <div class="terminal-line">> LOADING ASSETS...</div>
+                <div class="terminal-line">> CONNECTING TO SERVER...</div>
+                <div class="terminal-line">> READY</div>
+            </div>
+            <div class="scanline-overlay"></div>
+            <div class="glitch-overlay"></div>
+        </div>
+    </div>
+
     <!-- === HUD PRINCIPAL === -->
     <div class="hud">
         <ul id="menu">
@@ -39,6 +53,12 @@
         
         <div class="projects-container">
             <h2 class="section-title">MY PROJECTS</h2>
+            
+            <!-- Categorías -->
+            <div class="categories-tabs" id="categories-tabs" role="tablist">
+                <!-- Las categorías se generarán dinámicamente aquí -->
+            </div>
+            
             <div class="projects-grid" id="projects-grid">
                 <!-- Los proyectos se generarán dinámicamente aquí -->
             </div>

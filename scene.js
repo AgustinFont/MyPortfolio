@@ -232,17 +232,118 @@ window.addEventListener("orientationchange", () => {
 window.rotateToSection = rotateToSection;
 window.backToMenu = backToMenu;
 
-// --- Fade inicial ---
-window.addEventListener("load", () => {
+// === LANDING ANIMATION ===
+function initLandingAnimation() {
+    const landingScreen = document.getElementById('landing-screen');
+    const terminalText = document.getElementById('terminal-text');
+    const terminalLines = terminalText?.querySelectorAll('.terminal-line');
+    const sceneContainer = document.querySelector("#scene-container");
     const hud = document.querySelector(".hud");
-    if (hud) {
-        hud.style.opacity = "1";
-        hud.style.display = "block";
-        gsap.fromTo(hud, { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 1 });
+
+    if (!landingScreen || !terminalLines) return;
+
+    // Mostrar terminal text
+    gsap.to(terminalText, {
+        opacity: 1,
+        duration: 0.5,
+        delay: 0.3
+    });
+
+    // Animar cada línea del terminal
+    terminalLines.forEach((line, index) => {
+        gsap.fromTo(line, 
+            { 
+                opacity: 0, 
+                x: -20 
+            },
+            { 
+                opacity: 1, 
+                x: 0, 
+                duration: 0.6,
+                delay: 0.8 + (index * 0.4),
+                ease: "power2.out"
+            }
+        );
+    });
+
+    // Efecto de scanline
+    const scanline = landingScreen.querySelector('.scanline-overlay');
+    if (scanline) {
+        gsap.to(scanline, {
+            opacity: 0.3,
+            duration: 1,
+            delay: 1.5
+        });
     }
 
-    const sceneContainer = document.querySelector("#scene-container");
-    if (sceneContainer) {
-        gsap.fromTo(sceneContainer, { opacity: 0 }, { opacity: 1, duration: 1.2, delay: 0.2 });
+    // Efecto glitch antes de desaparecer
+    setTimeout(() => {
+        landingScreen.classList.add('glitching');
+        
+        setTimeout(() => {
+            landingScreen.classList.remove('glitching');
+            
+            // Fade out del landing screen
+            landingScreen.classList.add('fade-out');
+            
+            // Mostrar escena 3D con efecto
+            if (sceneContainer) {
+                sceneContainer.style.opacity = "0";
+                gsap.to(sceneContainer, {
+                    opacity: 1,
+                    duration: 1.5,
+                    ease: "power2.in"
+                });
+            }
+
+            // Mostrar HUD con efecto
+            if (hud) {
+                hud.style.opacity = "0";
+                hud.style.display = "block";
+                gsap.fromTo(hud, 
+                    { 
+                        opacity: 0, 
+                        y: -30,
+                        scale: 0.9
+                    }, 
+                    { 
+                        opacity: 1, 
+                        y: 0,
+                        scale: 1,
+                        duration: 1.2,
+                        delay: 0.3,
+                        ease: "back.out(1.7)"
+                    }
+                );
+            }
+
+            // Remover landing screen del DOM después de la animación
+            setTimeout(() => {
+                landingScreen.style.display = "none";
+            }, 1000);
+        }, 500);
+    }, 3000); // Duración total de la animación: ~3.5 segundos
+}
+
+// --- Fade inicial (solo si no hay landing screen) ---
+window.addEventListener("load", () => {
+    const landingScreen = document.getElementById('landing-screen');
+    
+    if (landingScreen) {
+        // Iniciar animación de landing
+        initLandingAnimation();
+    } else {
+        // Fallback: animación simple si no hay landing screen
+        const hud = document.querySelector(".hud");
+        if (hud) {
+            hud.style.opacity = "1";
+            hud.style.display = "block";
+            gsap.fromTo(hud, { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 1 });
+        }
+
+        const sceneContainer = document.querySelector("#scene-container");
+        if (sceneContainer) {
+            gsap.fromTo(sceneContainer, { opacity: 0 }, { opacity: 1, duration: 1.2, delay: 0.2 });
+        }
     }
 });
