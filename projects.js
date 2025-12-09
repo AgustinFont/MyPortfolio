@@ -402,14 +402,27 @@ document.addEventListener('DOMContentLoaded', () => {
 function initProjects() {
     // Esperar a que se carguen los datos de proyectos
     if (window.projectsData && window.categories) {
+        // Verificar que projectsData sea un objeto, no un array
+        if (Array.isArray(window.projectsData)) {
+            console.error('ERROR: projectsData es un array. Debe ser un objeto con categorías.');
+            console.log('Recarga la página con Ctrl+F5 para limpiar la caché');
+            return;
+        }
         renderCategories();
         renderProjectsGrid();
     } else {
+        console.warn('Esperando datos de proyectos...');
         // Intentar de nuevo después de un breve delay
         setTimeout(() => {
             if (window.projectsData && window.categories) {
+                if (Array.isArray(window.projectsData)) {
+                    console.error('ERROR: projectsData es un array. Debe ser un objeto con categorías.');
+                    return;
+                }
                 renderCategories();
                 renderProjectsGrid();
+            } else {
+                console.error('No se pudieron cargar los datos de proyectos');
             }
         }, 500);
     }

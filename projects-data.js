@@ -229,5 +229,10 @@ const categories = [
 ];
 
 // Exportar para uso global
-window.projectsData = projectsData;
-window.categories = categories;
+// Forzar actualización para evitar caché
+if (typeof window !== 'undefined') {
+    window.projectsData = projectsData;
+    window.categories = categories;
+    console.log('Projects data loaded:', Object.keys(projectsData));
+    console.log('Categories loaded:', categories.length);
+}

@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const hud = document.querySelector(".hud");
     let selectedIndex = 0;
     let inSection = false;
-    let isMouseOverMenu = false; // Para saber si el mouse está sobre el menú
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     // === Actualiza el menú visualmente ===
@@ -76,40 +75,29 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Solo navegar con teclado si el mouse no está sobre el menú
-        if (!isMouseOverMenu) {
-            if (e.key === "ArrowDown") {
-                e.preventDefault();
-                selectedIndex = (selectedIndex + 1) % menuItems.length;
-                updateMenu();
-            } else if (e.key === "ArrowUp") {
-                e.preventDefault();
-                selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
-                updateMenu();
-            } else if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                goToSection(menuItems[selectedIndex].dataset.section);
-            }
+        // Navegación con teclado
+        if (e.key === "ArrowDown") {
+            e.preventDefault();
+            selectedIndex = (selectedIndex + 1) % menuItems.length;
+            updateMenu();
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
+            updateMenu();
+        } else if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            goToSection(menuItems[selectedIndex].dataset.section);
         }
     });
 
-    // === NAVEGACIÓN POR MOUSE (HOVER) ===
+    // === NAVEGACIÓN POR MOUSE (HOVER) - SIMPLIFICADO ===
     if (!isTouchDevice) {
-        // Detectar cuando el mouse entra/sale del área del menú
-        hud.addEventListener("mouseenter", () => {
-            isMouseOverMenu = true;
-        });
-
-        hud.addEventListener("mouseleave", () => {
-            isMouseOverMenu = false;
-        });
-
         // Hover sobre cada item del menú
         menuItems.forEach((item, i) => {
             // Cuando el mouse entra sobre un item
-            item.addEventListener("mouseenter", (e) => {
+            item.addEventListener("mouseenter", () => {
                 if (inSection) return;
-                // Actualizar selectedIndex inmediatamente cuando el mouse entra
+                // Actualizar selectedIndex inmediatamente
                 selectedIndex = i;
                 updateMenu();
             });
@@ -138,7 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // === TILT 3D (solo en desktop, deshabilitado en móviles) ===
+    // === TILT 3D DESHABILITADO (comentado para evitar conflictos con el mouse) ===
+    /*
     if (!isTouchDevice && window.innerWidth > 768) {
         document.addEventListener("mousemove", (e) => {
             const x = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -153,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+    */
 
     // === Manejo de resize ===
     let resizeTimer;

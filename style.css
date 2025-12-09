@@ -335,6 +335,291 @@ body {
     color: #ffffff;
 }
 
+/* === ABOUT SECTION === */
+.about-section {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+}
+
+.about-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-photo-container {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 3px solid #00ffff;
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.5),
+        inset 0 0 20px rgba(0, 255, 255, 0.1);
+    overflow: hidden;
+    background: rgba(0, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.cover-letter-container {
+    width: 100%;
+    max-width: 700px;
+    background: rgba(0, 255, 255, 0.05);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.cover-letter-container h3 {
+    font-family: "Press Start 2P", monospace;
+    font-size: 1em;
+    color: #00ffff;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.cover-letter-text {
+    text-align: left;
+    line-height: 1.8;
+}
+
+.cover-letter-text p {
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.cover-letter-text p:last-child {
+    margin-bottom: 0;
+}
+
+/* === CONTACT SECTION === */
+.contact-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.contact-buttons {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.contact-btn {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.9em;
+    padding: 15px 30px;
+    background: transparent;
+    border: 2px solid #00ffff;
+    color: #00ffff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.contact-btn:hover::before {
+    left: 100%;
+}
+
+.contact-btn:hover {
+    background: #00ffff;
+    color: #000;
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.6),
+        0 0 40px rgba(0, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.contact-btn:active {
+    transform: translateY(0);
+}
+
+.linkedin-btn {
+    border-color: #0077b5;
+    color: #0077b5;
+}
+
+.linkedin-btn:hover {
+    background: #0077b5;
+    color: #fff;
+    box-shadow: 
+        0 0 20px rgba(0, 119, 181, 0.6),
+        0 0 40px rgba(0, 119, 181, 0.3);
+}
+
+.email-btn {
+    border-color: #00ffff;
+    color: #00ffff;
+}
+
+.contact-info {
+    font-size: 1.1em;
+    color: #88ffff;
+    margin-top: 10px;
+}
+
+/* === EASTER EGGS SECTION === */
+.easter-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.easter-counter-container {
+    width: 100%;
+    max-width: 600px;
+    background: rgba(0, 255, 255, 0.05);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.easter-counter-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.counter-label {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.8em;
+    color: #88ffff;
+    text-align: center;
+}
+
+.counter-value {
+    font-family: "Press Start 2P", monospace;
+    font-size: 3em;
+    color: #00ffff;
+    text-shadow: 
+        0 0 10px #00ffff,
+        0 0 20px #00ffff,
+        0 0 30px #00ffff;
+    animation: counterPulse 2s infinite ease-in-out;
+}
+
+@keyframes counterPulse {
+    0%, 100% {
+        transform: scale(1);
+        text-shadow: 
+            0 0 10px #00ffff,
+            0 0 20px #00ffff,
+            0 0 30px #00ffff;
+    }
+    50% {
+        transform: scale(1.1);
+        text-shadow: 
+            0 0 15px #00ffff,
+            0 0 30px #00ffff,
+            0 0 45px #00ffff;
+    }
+}
+
+.easter-hint {
+    font-size: 0.9em;
+    color: #88ffff;
+    text-align: center;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+.easter-eggs-list {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.easter-egg-item {
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 4px;
+    padding: 15px;
+    color: #ffffff;
+    font-size: 0.9em;
+    animation: eggFound 0.5s ease-out;
+}
+
+@keyframes eggFound {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive para About Me */
+@media (max-width: 768px) {
+    .profile-photo-container {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .cover-letter-container {
+        padding: 20px;
+    }
+    
+    .contact-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .contact-btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .counter-value {
+        font-size: 2em;
+    }
+}
+
 /* === PROJECT CARD === */
 .project-card {
     display: flex;

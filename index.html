@@ -42,9 +42,22 @@
     <!-- === CONTENIDOS DE SECCIONES === -->
     <div class="section-content" id="about-content" style="display:none;">
         <button class="back-btn" onclick="backToMenu()">← Back</button>
-        <div class="section-inner">
-            <h2>ABOUT ME</h2>
-            <p>Hola, soy Tanito, Game Designer. Placeholder de la sección.</p>
+        <div class="section-inner about-section">
+            <div class="about-header">
+                <div class="profile-photo-container">
+                    <img src="images/profile.jpg" alt="Profile Photo" class="profile-photo" 
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\'%3E%3Crect fill=\\'%23003333\\' width=\\'200\\' height=\\'200\\'/%3E%3Ctext fill=\\'%2300ffff\\' font-family=\\'monospace\\' font-size=\\'20\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dominant-baseline=\\'middle\\'%3EPHOTO%3C/text%3E%3C/svg%3E'">
+                </div>
+                <h2>ABOUT ME</h2>
+            </div>
+            <div class="cover-letter-container">
+                <h3>COVER LETTER</h3>
+                <div class="cover-letter-text">
+                    <p>Hola, soy Tanito, Game Designer. Placeholder de la sección.</p>
+                    <p>Aquí puedes escribir tu cover letter, experiencia, habilidades y lo que te apasiona del desarrollo de videojuegos.</p>
+                    <p>Personaliza este texto con tu información real.</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -97,17 +110,34 @@
 
     <div class="section-content" id="contact-content" style="display:none;">
         <button class="back-btn" onclick="backToMenu()">← Back</button>
-        <div class="section-inner">
+        <div class="section-inner contact-section">
             <h2>CONTACT</h2>
-            <p>Email: tuemail@ejemplo.com</p>
+            <div class="contact-buttons">
+                <a href="https://www.linkedin.com/in/agusgfont/" target="_blank" rel="noopener noreferrer" class="contact-btn linkedin-btn">
+                    <span>LINKEDIN</span>
+                </a>
+                <a href="mailto:agusgonzalezfont@gmail.com" class="contact-btn email-btn">
+                    <span>EMAIL</span>
+                </a>
+            </div>
+            <p class="contact-info">agusgonzalezfont@gmail.com</p>
         </div>
     </div>
 
     <div class="section-content" id="easter-content" style="display:none;">
         <button class="back-btn" onclick="backToMenu()">← Back</button>
-        <div class="section-inner">
-            <h2>EASTER EGG</h2>
-            <p>Contenido oculto o divertido ;</p>
+        <div class="section-inner easter-section">
+            <h2>EASTER EGGS</h2>
+            <div class="easter-counter-container">
+                <div class="easter-counter-display">
+                    <span class="counter-label">EASTER EGGS ENCONTRADOS:</span>
+                    <span class="counter-value" id="easter-counter">0</span>
+                </div>
+                <p class="easter-hint">Explora la página para encontrar easter eggs escondidos...</p>
+            </div>
+            <div class="easter-eggs-list" id="easter-eggs-list">
+                <!-- Los easter eggs encontrados se mostrarán aquí -->
+            </div>
         </div>
     </div>
 
@@ -123,6 +153,7 @@
     <script src="scene.js"></script>
     <script src="hud.js"></script>
     <script src="projects.js"></script>
+    <script src="easter-eggs.js"></script>
 
 </body>
 
