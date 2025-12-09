@@ -247,3 +247,4 @@ if (typeof originalGoToSection === 'undefined') {
     }, 1000);
 }
 
+

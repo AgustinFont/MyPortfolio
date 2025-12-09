@@ -86,3 +86,4 @@ const projectsData = [
 // Exportar para uso global
 window.projectsData = projectsData;
 
+
