@@ -5,6 +5,7 @@ let currentProjectIndex = 0; // Índice del proyecto seleccionado en la categor�
 let currentCategoryIndex = 0; // Índice de la categoría seleccionada
 let projectItems = []; // Array de elementos de proyectos visibles
 let isInProjectsSection = false;
+let pendingCategory = null; // Categoría que debe mostrarse al abrir projects
 
 // Función para obtener todos los proyectos de una categoría
 function getProjectsByCategory(categoryId) {
@@ -399,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Renderizar cuando se carga la página o cuando se muestra la sección de proyectos
-function initProjects() {
+function initProjects(targetCategoryId = null) {
     // Esperar a que se carguen los datos de proyectos
     if (window.projectsData && window.categories) {
         // Verificar que projectsData sea un objeto, no un array
@@ -408,7 +409,21 @@ function initProjects() {
             console.log('Recarga la página con Ctrl+F5 para limpiar la caché');
             return;
         }
+        
         renderCategories();
+        
+        // Si hay una categoría pendiente o target, usarla
+        const categoryToShow = pendingCategory || targetCategoryId;
+        if (categoryToShow && window.categories) {
+            const categoryIndex = window.categories.findIndex(cat => cat.id === categoryToShow);
+            if (categoryIndex !== -1) {
+                selectCategory(categoryToShow, categoryIndex);
+                pendingCategory = null; // Limpiar después de usar
+                return;
+            }
+        }
+        
+        // Si no hay categoría específica, usar la actual
         renderProjectsGrid();
     } else {
         console.warn('Esperando datos de proyectos...');
@@ -420,6 +435,18 @@ function initProjects() {
                     return;
                 }
                 renderCategories();
+                
+                // Verificar si hay categoría pendiente
+                const categoryToShow = pendingCategory || targetCategoryId;
+                if (categoryToShow && window.categories) {
+                    const categoryIndex = window.categories.findIndex(cat => cat.id === categoryToShow);
+                    if (categoryIndex !== -1) {
+                        selectCategory(categoryToShow, categoryIndex);
+                        pendingCategory = null;
+                        return;
+                    }
+                }
+                
                 renderProjectsGrid();
             } else {
                 console.error('No se pudieron cargar los datos de proyectos');
@@ -434,6 +461,7 @@ window.openProjectModal = openProjectModal;
 window.closeProjectModal = closeProjectModal;
 window.initProjects = initProjects;
 window.selectCategory = selectCategory;
+window.pendingCategory = null; // Variable global para categoría pendiente
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {

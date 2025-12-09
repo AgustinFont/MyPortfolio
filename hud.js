@@ -40,7 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Inicializar proyectos si se abre la sección de proyectos
                 if (sectionId === "projects" && typeof window.initProjects === "function") {
                     setTimeout(() => {
-                        window.initProjects();
+                        // Pasar la categoría pendiente si existe
+                        const targetCategory = window.pendingCategory || null;
+                        window.initProjects(targetCategory);
                     }, 100);
                 }
             }

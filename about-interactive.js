@@ -24,6 +24,16 @@ function navigateToCategory(categoryId) {
         return;
     }
     
+    // Establecer la categoría pendiente ANTES de abrir projects
+    if (typeof window !== 'undefined' && window.pendingCategory !== undefined) {
+        window.pendingCategory = realCategoryId;
+    } else {
+        // Si no existe la variable, crearla
+        if (typeof window !== 'undefined') {
+            window.pendingCategory = realCategoryId;
+        }
+    }
+    
     // Si no estamos en projects, ir primero al menú y luego a projects
     if (typeof window.backToMenu === 'function') {
         window.backToMenu();
@@ -33,25 +43,6 @@ function navigateToCategory(categoryId) {
     setTimeout(() => {
         if (typeof window.goToSection === 'function') {
             window.goToSection('projects');
-            
-            // Esperar a que se inicialicen los proyectos y luego seleccionar la categoría
-            setTimeout(() => {
-                // Asegurarse de que los proyectos estén inicializados
-                if (typeof window.initProjects === 'function') {
-                    window.initProjects();
-                }
-                
-                // Esperar un poco más para que se rendericen las categorías
-                setTimeout(() => {
-                    if (typeof window.selectCategory === 'function' && window.categories) {
-                        // Buscar el índice correcto de la categoría
-                        const categoryIndex = window.categories.findIndex(cat => cat.id === realCategoryId);
-                        if (categoryIndex !== -1) {
-                            window.selectCategory(realCategoryId, categoryIndex);
-                        }
-                    }
-                }, 300);
-            }, 500);
         }
     }, 800);
 }

@@ -466,10 +466,12 @@ body {
 
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
     justify-items: center;
     width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .skill-badge {
@@ -482,9 +484,11 @@ body {
     border: 2px solid rgba(0, 255, 255, 0.3);
     border-radius: 8px;
     width: 100%;
-    max-width: 140px;
+    max-width: 150px;
+    min-width: 120px;
     transition: all 0.3s ease;
     cursor: default;
+    box-sizing: border-box;
 }
 
 .skill-badge:hover {
@@ -506,10 +510,14 @@ body {
     border: 2px solid rgba(0, 255, 255, 0.3);
 }
 
-.skill-icon img {
+.skill-icon img,
+.skill-icon svg {
     width: 40px;
     height: 40px;
     object-fit: contain;
+}
+
+.skill-icon img {
     filter: brightness(0) saturate(100%) invert(67%) sepia(100%) saturate(1000%) hue-rotate(150deg);
 }
 
@@ -736,12 +744,13 @@ body {
     }
     
     .skills-grid {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
         gap: 15px;
     }
     
     .skill-badge {
-        max-width: 120px;
+        max-width: 130px;
+        min-width: 110px;
         padding: 12px;
     }
     
