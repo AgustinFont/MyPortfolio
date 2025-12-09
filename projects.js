@@ -368,16 +368,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // Detectar cuando se entra/sale de la sección de proyectos
     const projectsContent = document.getElementById('projects-content');
     if (projectsContent) {
+        // Verificar estado inicial
+        const initialDisplay = projectsContent.style.display;
+        isInProjectsSection = (initialDisplay === 'flex' || initialDisplay === 'block');
+        if (isInProjectsSection) {
+            document.addEventListener('keydown', handleProjectsKeyboard);
+        }
+
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
                     const display = projectsContent.style.display;
+                    const wasInSection = isInProjectsSection;
                     isInProjectsSection = (display === 'flex' || display === 'block');
                     
-                    if (isInProjectsSection) {
+                    if (isInProjectsSection && !wasInSection) {
                         // Agregar listener de teclado cuando se entra
                         document.addEventListener('keydown', handleProjectsKeyboard);
-                    } else {
+                        // Reinicializar proyectos
+                        initProjects();
+                    } else if (!isInProjectsSection && wasInSection) {
                         // Remover listener cuando se sale
                         document.removeEventListener('keydown', handleProjectsKeyboard);
                     }

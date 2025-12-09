@@ -95,9 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === NAVEGACIÓN POR MOUSE (HOVER) ===
     if (!isTouchDevice) {
-        let currentHoverIndex = -1; // Track del item sobre el que está el mouse
-        let hoverTimeout = null;
-
         // Detectar cuando el mouse entra/sale del área del menú
         hud.addEventListener("mouseenter", () => {
             isMouseOverMenu = true;
@@ -105,45 +102,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         hud.addEventListener("mouseleave", () => {
             isMouseOverMenu = false;
-            currentHoverIndex = -1;
-            // Limpiar timeout si existe
-            if (hoverTimeout) {
-                clearTimeout(hoverTimeout);
-                hoverTimeout = null;
-            }
         });
 
         // Hover sobre cada item del menú
         menuItems.forEach((item, i) => {
             // Cuando el mouse entra sobre un item
-            item.addEventListener("mouseenter", () => {
+            item.addEventListener("mouseenter", (e) => {
                 if (inSection) return;
-                
-                // Limpiar timeout anterior si existe
-                if (hoverTimeout) {
-                    clearTimeout(hoverTimeout);
-                }
-                
-                // Actualizar inmediatamente el índice actual del hover
-                currentHoverIndex = i;
-                
-                // Actualizar selectedIndex inmediatamente
+                // Actualizar selectedIndex inmediatamente cuando el mouse entra
                 selectedIndex = i;
                 updateMenu();
-            });
-
-            // Cuando el mouse sale de un item
-            item.addEventListener("mouseleave", () => {
-                // Solo resetear si el mouse realmente salió del menú
-                // (no si solo pasó a otro item)
-                hoverTimeout = setTimeout(() => {
-                    // Si el mouse no está sobre ningún item después de un breve delay
-                    // y no está sobre el menú, mantener el último selectedIndex
-                    // pero solo si realmente salió del área del menú
-                    if (!isMouseOverMenu && currentHoverIndex === i) {
-                        currentHoverIndex = -1;
-                    }
-                }, 50);
             });
 
             // Click en un item
