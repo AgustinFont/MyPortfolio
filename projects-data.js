@@ -54,8 +54,25 @@ const projectsData = {
             year: "2023",
             thumbnail: "images/projects/recorrido2-thumb.jpg",
             media: {
-                type: "image",
-                src: "images/projects/recorrido2-screenshot.jpg"
+                type: "carousel", // Tipo carrusel para múltiples medios
+                items: [
+                    {
+                        type: "image",
+                        src: "images/projects/recorrido2-screenshot1.jpg"
+                    },
+                    {
+                        type: "image",
+                        src: "images/projects/recorrido2-screenshot2.jpg"
+                    },
+                    {
+                        type: "video",
+                        src: "videos/recorrido2-demo.mp4"
+                    },
+                    {
+                        type: "image",
+                        src: "images/projects/recorrido2-screenshot3.jpg"
+                    }
+                ]
             },
             description: "Recorrido virtual de un complejo arquitectónico. Incluye múltiples edificios y espacios exteriores con iluminación realista.",
             tech: ["Unity", "C#"],

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes" />
-    <title>Tanito Portfolio — Game HUD</title>
+    <title>Agus's Portfolio</title>
     <link rel="stylesheet" href="style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
@@ -184,8 +184,16 @@
             <button class="close-modal" onclick="closeProjectModal()">×</button>
             <div class="project-detail">
                 <div class="project-media">
-                    <video id="project-video" muted loop></video>
-                    <img id="project-image" style="display:none;" alt="Project">
+                    <div class="carousel-container" id="carousel-container">
+                        <button class="carousel-btn carousel-prev" id="carousel-prev" aria-label="Previous">‹</button>
+                        <div class="carousel-slides" id="carousel-slides">
+                            <!-- Los slides se generarán dinámicamente -->
+                        </div>
+                        <button class="carousel-btn carousel-next" id="carousel-next" aria-label="Next">›</button>
+                        <div class="carousel-indicators" id="carousel-indicators">
+                            <!-- Los indicadores se generarán dinámicamente -->
+                        </div>
+                    </div>
                 </div>
                 <div class="project-info">
                     <h2 id="project-title"></h2>

@@ -232,31 +232,151 @@ function openProjectModal(project) {
         }
     }
 
-    // Media (video o imagen)
-    const videoEl = document.getElementById('project-video');
-    const imageEl = document.getElementById('project-image');
+    // Media - Carrusel o media simple
+    const carouselContainer = document.getElementById('carousel-container');
+    const carouselSlides = document.getElementById('carousel-slides');
+    const carouselIndicators = document.getElementById('carousel-indicators');
+    const carouselPrev = document.getElementById('carousel-prev');
+    const carouselNext = document.getElementById('carousel-next');
     
-    if (project.media.type === 'video') {
-        if (videoEl) {
-            videoEl.src = project.media.src;
-            videoEl.style.display = 'block';
-            videoEl.load();
-            videoEl.play().catch(e => console.log('Error al reproducir video:', e));
+    if (project.media.type === 'carousel' && project.media.items) {
+        // Modo carrusel - múltiples medios
+        carouselContainer.style.display = 'block';
+        carouselSlides.innerHTML = '';
+        carouselIndicators.innerHTML = '';
+        
+        let currentSlide = 0;
+        
+        project.media.items.forEach((item, index) => {
+            // Crear slide
+            const slide = document.createElement('div');
+            slide.className = 'carousel-slide';
+            slide.dataset.slideIndex = index;
+            
+            if (item.type === 'video') {
+                const video = document.createElement('video');
+                video.src = item.src;
+                video.muted = true;
+                video.loop = true;
+                video.controls = true;
+                video.className = 'carousel-media';
+                slide.appendChild(video);
+            } else {
+                const img = document.createElement('img');
+                img.src = item.src;
+                img.alt = `${project.title} - Image ${index + 1}`;
+                img.className = 'carousel-media';
+                slide.appendChild(img);
+            }
+            
+            carouselSlides.appendChild(slide);
+            
+            // Crear indicador
+            const indicator = document.createElement('button');
+            indicator.className = 'carousel-indicator';
+            indicator.dataset.slideIndex = index;
+            indicator.setAttribute('aria-label', `Go to slide ${index + 1}`);
+            if (index === 0) indicator.classList.add('active');
+            indicator.addEventListener('click', () => goToSlide(index));
+            carouselIndicators.appendChild(indicator);
+        });
+        
+        // Función para cambiar de slide
+        function goToSlide(index) {
+            if (index < 0 || index >= project.media.items.length) return;
+            
+            currentSlide = index;
+            
+            // Actualizar slides
+            carouselSlides.querySelectorAll('.carousel-slide').forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            
+            // Actualizar indicadores
+            carouselIndicators.querySelectorAll('.carousel-indicator').forEach((ind, i) => {
+                ind.classList.toggle('active', i === index);
+            });
+            
+            // Pausar todos los videos excepto el actual
+            carouselSlides.querySelectorAll('video').forEach((video, i) => {
+                if (i === index) {
+                    video.play().catch(e => console.log('Error al reproducir video:', e));
+                } else {
+                    video.pause();
+                }
+            });
         }
-        if (imageEl) {
-            imageEl.style.display = 'none';
+        
+        // Mostrar botones e indicadores para carrusel
+        if (carouselPrev) carouselPrev.style.display = 'flex';
+        if (carouselNext) carouselNext.style.display = 'flex';
+        
+        // Eventos de botones
+        if (carouselPrev) {
+            carouselPrev.onclick = () => {
+                const prevIndex = (currentSlide - 1 + project.media.items.length) % project.media.items.length;
+                goToSlide(prevIndex);
+            };
         }
+        
+        if (carouselNext) {
+            carouselNext.onclick = () => {
+                const nextIndex = (currentSlide + 1) % project.media.items.length;
+                goToSlide(nextIndex);
+            };
+        }
+        
+        // Navegación con teclado
+        const handleCarouselKeyboard = (e) => {
+            if (e.key === 'ArrowLeft') {
+                const prevIndex = (currentSlide - 1 + project.media.items.length) % project.media.items.length;
+                goToSlide(prevIndex);
+            } else if (e.key === 'ArrowRight') {
+                const nextIndex = (currentSlide + 1) % project.media.items.length;
+                goToSlide(nextIndex);
+            }
+        };
+        
+        document.addEventListener('keydown', handleCarouselKeyboard);
+        
+        // Guardar handler para limpiarlo después
+        window.currentCarouselHandler = handleCarouselKeyboard;
+        
+        // Inicializar primer slide
+        goToSlide(0);
+        
     } else {
-        if (imageEl) {
-            imageEl.src = project.media.src;
-            imageEl.style.display = 'block';
-            imageEl.alt = project.title;
+        // Modo simple - un solo medio (compatibilidad con proyectos antiguos)
+        carouselContainer.style.display = 'block';
+        carouselSlides.innerHTML = '';
+        carouselIndicators.innerHTML = '';
+        
+        // Ocultar botones e indicadores para media simple
+        if (carouselPrev) carouselPrev.style.display = 'none';
+        if (carouselNext) carouselNext.style.display = 'none';
+        
+        // Crear slide único
+        const slide = document.createElement('div');
+        slide.className = 'carousel-slide active';
+        
+        if (project.media.type === 'video') {
+            const video = document.createElement('video');
+            video.src = project.media.src;
+            video.muted = true;
+            video.loop = true;
+            video.controls = true;
+            video.className = 'carousel-media';
+            slide.appendChild(video);
+            video.play().catch(e => console.log('Error al reproducir video:', e));
+        } else {
+            const img = document.createElement('img');
+            img.src = project.media.src;
+            img.alt = project.title;
+            img.className = 'carousel-media';
+            slide.appendChild(img);
         }
-        if (videoEl) {
-            videoEl.style.display = 'none';
-            videoEl.pause();
-            videoEl.src = '';
-        }
+        
+        carouselSlides.appendChild(slide);
     }
 
     // Mostrar modal con animación
@@ -280,10 +400,19 @@ function closeProjectModal() {
     const modal = document.getElementById('project-modal');
     if (!modal) return;
 
-    const videoEl = document.getElementById('project-video');
-    if (videoEl) {
-        videoEl.pause();
-        videoEl.src = '';
+    // Pausar todos los videos en el carrusel
+    const carouselSlides = document.getElementById('carousel-slides');
+    if (carouselSlides) {
+        carouselSlides.querySelectorAll('video').forEach(video => {
+            video.pause();
+            video.src = '';
+        });
+    }
+    
+    // Limpiar handler de teclado del carrusel
+    if (window.currentCarouselHandler) {
+        document.removeEventListener('keydown', window.currentCarouselHandler);
+        window.currentCarouselHandler = null;
     }
 
     gsap.to(modal, {
