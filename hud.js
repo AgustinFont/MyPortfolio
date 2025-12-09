@@ -162,4 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicializar menú
     updateMenu();
+    
+    // Exportar funciones globalmente
+    window.goToSection = goToSection;
 });

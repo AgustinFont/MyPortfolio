@@ -351,8 +351,8 @@ body {
 }
 
 .profile-photo-container {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
     border: 3px solid #00ffff;
     box-shadow: 
@@ -363,6 +363,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.profile-name {
+    font-family: "Press Start 2P", monospace;
+    font-size: 1.2em;
+    color: #00ffff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    margin: 0;
+    margin-top: 10px;
 }
 
 .profile-photo {
@@ -402,6 +411,110 @@ body {
 
 .cover-letter-text p:last-child {
     margin-bottom: 0;
+}
+
+/* Links interactivos en el texto */
+.interactive-link {
+    color: #00ffff;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: rgba(0, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.interactive-link:hover,
+.interactive-link:focus {
+    color: #ffffff;
+    text-shadow: 
+        0 0 8px #00ffff,
+        0 0 16px #00ffff;
+    background: rgba(0, 255, 255, 0.2);
+    text-decoration-color: #00ffff;
+    outline: none;
+}
+
+.interactive-link:active {
+    transform: scale(0.98);
+}
+
+/* === SKILLS SECTION === */
+.skills-section {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+}
+
+.skills-section h3 {
+    font-family: "Press Start 2P", monospace;
+    font-size: 1em;
+    color: #00ffff;
+    margin-bottom: 25px;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    text-align: center;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+.skill-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: rgba(0, 255, 255, 0.05);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 140px;
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.skill-badge:hover {
+    border-color: #00ffff;
+    box-shadow: 
+        0 0 15px rgba(0, 255, 255, 0.4),
+        inset 0 0 15px rgba(0, 255, 255, 0.1);
+    transform: translateY(-3px);
+}
+
+.skill-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 255, 255, 0.1);
+    border-radius: 50%;
+    border: 2px solid rgba(0, 255, 255, 0.3);
+}
+
+.skill-icon img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(67%) sepia(100%) saturate(1000%) hue-rotate(150deg);
+}
+
+.skill-icon span {
+    font-family: "Press Start 2P", monospace;
+    font-size: 1.5em;
+    color: #00ffff;
+}
+
+.skill-name {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.7em;
+    color: #88ffff;
+    text-align: center;
 }
 
 /* === CONTACT SECTION === */
@@ -597,12 +710,36 @@ body {
 /* Responsive para About Me */
 @media (max-width: 768px) {
     .profile-photo-container {
-        width: 150px;
-        height: 150px;
+        width: 180px;
+        height: 180px;
+    }
+    
+    .profile-name {
+        font-size: 1em;
     }
     
     .cover-letter-container {
         padding: 20px;
+    }
+    
+    .skills-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 15px;
+    }
+    
+    .skill-badge {
+        max-width: 120px;
+        padding: 12px;
+    }
+    
+    .skill-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .skill-icon img {
+        width: 35px;
+        height: 35px;
     }
     
     .contact-buttons {

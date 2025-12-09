@@ -223,7 +223,7 @@ const projectsData = {
 // Categorías disponibles en orden
 const categories = [
     { id: "thesis", name: "THESIS", label: "Thesis" },
-    { id: "recorridos", name: "RECORRIDOS", label: "Recorridos Interactivos" },
+    { id: "recorridos", name: "NAGMA", label: "Nagma" },
     { id: "universidad", name: "UNIVERSIDAD", label: "Juegos de Universidad" },
     { id: "diseno", name: "DISEÑO", label: "Diseño Gráfico" }
 ];
