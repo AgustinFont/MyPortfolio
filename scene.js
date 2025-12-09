@@ -9,8 +9,12 @@ let targetAngle = 0;
 let zoomLevel = 7;
 let idleOffset = 0;
 
+// Ajustar FOV según el dispositivo
+const isMobile = window.innerWidth < 768;
+const fov = isMobile ? 70 : 60;
+
 const camera = new THREE.PerspectiveCamera(
-    60,
+    fov,
     window.innerWidth / window.innerHeight,
     0.1,
     1000
@@ -19,9 +23,13 @@ camera.position.set(0, 0, zoomLevel);
 camera.lookAt(0, 0, 0);
 
 // --- Renderizador ---
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+const renderer = new THREE.WebGLRenderer({ 
+    antialias: true, 
+    alpha: true,
+    powerPreference: "high-performance"
+});
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
 renderer.setClearColor(0x0a0a15, 1);
 document.getElementById("scene-container").appendChild(renderer.domElement);
 
@@ -73,15 +81,15 @@ const envMat = new THREE.MeshBasicMaterial({
 const envCube = new THREE.Mesh(envGeo, envMat);
 scene.add(envCube);
 
-// --- Partículas flotantes ---
+// --- Partículas flotantes (optimizado para móviles) ---
 const particlesGeo = new THREE.BufferGeometry();
-const count = 200;
-const positions = new Float32Array(count * 3);
-for (let i = 0; i < count * 3; i++) positions[i] = (Math.random() - 0.5) * 20;
+const particleCount = isMobile ? 100 : 200; // Menos partículas en móviles
+const positions = new Float32Array(particleCount * 3);
+for (let i = 0; i < particleCount * 3; i++) positions[i] = (Math.random() - 0.5) * 20;
 particlesGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 const particlesMat = new THREE.PointsMaterial({
     color: 0x88ccff,
-    size: 0.05,
+    size: isMobile ? 0.04 : 0.05,
     transparent: true,
     opacity: 0.5
 });
@@ -197,11 +205,27 @@ function animate() {
 }
 animate();
 
-// --- Resize handler ---
-window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+// --- Resize handler (optimizado para móviles) ---
+let resizeTimeout;
+function handleResize() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
+        
+        // Ajustar pixel ratio para mejor rendimiento en móviles
+        const pixelRatio = Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1.5 : 2);
+        renderer.setPixelRatio(pixelRatio);
+    }, 100);
+}
+
+window.addEventListener("resize", handleResize);
+window.addEventListener("orientationchange", () => {
+    setTimeout(handleResize, 200);
 });
 
 // --- Exponer globalmente ---

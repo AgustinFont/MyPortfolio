@@ -1,16 +1,18 @@
-// === hud.js (v5.0 responsive + tilt + touch) ===
+// === hud.js - Sistema de navegación completo (teclado + mouse) ===
 document.addEventListener('DOMContentLoaded', () => {
     const menuItems = document.querySelectorAll("#menu li");
     const hud = document.querySelector(".hud");
     let selectedIndex = 0;
     let inSection = false;
+    let isMouseOverMenu = false; // Para saber si el mouse está sobre el menú
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     // === Actualiza el menú visualmente ===
     function updateMenu() {
         menuItems.forEach((item, i) => {
-            item.classList.toggle("active", i === selectedIndex);
-            item.classList.toggle("inactive", i !== selectedIndex);
+            const isActive = i === selectedIndex;
+            item.classList.toggle("active", isActive);
+            item.classList.toggle("inactive", !isActive);
         });
     }
 
@@ -29,6 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 hud.style.display = "none";
                 content.style.display = "flex";
                 gsap.fromTo(content, { opacity: 0 }, { opacity: 1, duration: 0.8 });
+                
+                // Inicializar proyectos si se abre la sección de proyectos
+                if (sectionId === "projects" && typeof window.initProjects === "function") {
+                    setTimeout(() => {
+                        window.initProjects();
+                    }, 100);
+                }
             }
         });
 
@@ -58,44 +67,78 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 600);
     };
 
-    // === Navegación por teclado ===
+    // === NAVEGACIÓN POR TECLADO ===
     document.addEventListener("keydown", (e) => {
         if (inSection) {
-            if (e.key === "Escape") window.backToMenu();
+            if (e.key === "Escape") {
+                window.backToMenu();
+            }
             return;
         }
 
-        if (e.key === "ArrowDown") {
-            selectedIndex = (selectedIndex + 1) % menuItems.length;
-            updateMenu();
-        } else if (e.key === "ArrowUp") {
-            selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
-            updateMenu();
-        } else if (e.key === "Enter") {
-            goToSection(menuItems[selectedIndex].dataset.section);
+        // Solo navegar con teclado si el mouse no está sobre el menú
+        if (!isMouseOverMenu) {
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                selectedIndex = (selectedIndex + 1) % menuItems.length;
+                updateMenu();
+            } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
+                updateMenu();
+            } else if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                goToSection(menuItems[selectedIndex].dataset.section);
+            }
         }
     });
 
-    // === Clic / Tap ===
-    menuItems.forEach((item, i) => {
-        const eventType = isTouchDevice ? "touchstart" : "click";
-        item.addEventListener(eventType, () => {
-            if (inSection) return;
-            selectedIndex = i;
-            updateMenu();
-            goToSection(item.dataset.section);
+    // === NAVEGACIÓN POR MOUSE (HOVER) ===
+    if (!isTouchDevice) {
+        // Detectar cuando el mouse entra/sale del área del menú
+        hud.addEventListener("mouseenter", () => {
+            isMouseOverMenu = true;
         });
 
-        if (!isTouchDevice) {
+        hud.addEventListener("mouseleave", () => {
+            isMouseOverMenu = false;
+        });
+
+        // Hover sobre cada item del menú
+        menuItems.forEach((item, i) => {
+            // Cuando el mouse entra sobre un item
             item.addEventListener("mouseenter", () => {
+                if (inSection) return;
                 selectedIndex = i;
                 updateMenu();
             });
-        }
-    });
 
-    // === Tilt 3D (solo en desktop) ===
-    if (!isTouchDevice) {
+            // Click en un item
+            item.addEventListener("click", (e) => {
+                if (inSection) return;
+                e.preventDefault();
+                selectedIndex = i;
+                updateMenu();
+                goToSection(item.dataset.section);
+            });
+        });
+    }
+
+    // === NAVEGACIÓN TÁCTIL (MÓVILES) ===
+    if (isTouchDevice) {
+        menuItems.forEach((item, i) => {
+            item.addEventListener("touchstart", (e) => {
+                if (inSection) return;
+                e.preventDefault();
+                selectedIndex = i;
+                updateMenu();
+                goToSection(item.dataset.section);
+            });
+        });
+    }
+
+    // === TILT 3D (solo en desktop, deshabilitado en móviles) ===
+    if (!isTouchDevice && window.innerWidth > 768) {
         document.addEventListener("mousemove", (e) => {
             const x = (e.clientX / window.innerWidth - 0.5) * 2;
             const y = (e.clientY / window.innerHeight - 0.5) * 2;
@@ -110,5 +153,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // === Manejo de resize ===
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            const newIsTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            if (newIsTouchDevice !== isTouchDevice && window.innerWidth <= 768) {
+                gsap.set(".hud", {
+                    rotationY: 0,
+                    rotationX: 0,
+                    clearProps: "transform"
+                });
+            }
+        }, 250);
+    });
+
+    // Inicializar menú
     updateMenu();
 });

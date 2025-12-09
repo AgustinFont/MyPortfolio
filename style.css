@@ -8,6 +8,23 @@ body {
     overflow: hidden;
     background-color: #0a0a15;
     color: #00ffff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevenir selección de texto accidental en móviles */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Mejorar renderizado en móviles */
+#scene-container {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
 }
 
 /* === HUD === */
@@ -24,6 +41,8 @@ body {
     opacity: 1;
     transition: opacity 0.5s ease;
     transform-style: preserve-3d;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 #menu {
@@ -42,44 +61,98 @@ body {
     color: #00ffff;
     cursor: pointer;
     margin: 12px 0;
+    padding: 4px 8px;
     transition:
         color 0.3s ease,
         text-shadow 0.4s ease,
-        transform 0.25s ease,
-        opacity 0.25s ease;
+        transform 0.3s ease,
+        opacity 0.3s ease;
     transform-origin: right center;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
 }
 
-/* Hover y selección visual */
-#menu li:hover,
+/* Estado inactivo (por defecto) */
+#menu li.inactive {
+    opacity: 0.6;
+    transform: scale(1);
+    color: #00ffff;
+}
+
+/* Estado activo (seleccionado con teclado o mouse) */
 #menu li.active {
     color: #ffffff;
-    text-shadow:
-        0 0 6px #00ffff,
-        0 0 12px #00ffff,
-        0 0 18px #00ffff;
+    opacity: 1;
     transform: scale(1.2);
+    animation: glowPulse 1.5s infinite ease-in-out;
 }
 
-/* Efecto pulsante */
-#menu li.active {
-    animation: glowPulse 1.8s infinite ease-in-out;
+/* Hover del mouse - glow titilante y agrandamiento */
+#menu li:hover {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    transform: scale(1.25) !important;
+    animation: hoverGlow 1.2s infinite ease-in-out !important;
 }
 
-#menu li.inactive {
-    opacity: 0.7;
-    transform: scale(0.9);
+/* Cuando está activo Y con hover, combinar efectos */
+#menu li.active:hover {
+    transform: scale(1.3) !important;
+    animation: activeHoverGlow 1s infinite ease-in-out !important;
 }
 
+/* Animación de glow pulsante para activo (teclado) */
 @keyframes glowPulse {
-
-    0%,
-    100% {
-        text-shadow: 0 0 8px #00ffff, 0 0 16px #00ffff;
+    0%, 100% {
+        text-shadow: 
+            0 0 8px #00ffff,
+            0 0 16px #00ffff,
+            0 0 24px #00ffff;
     }
-
     50% {
-        text-shadow: 0 0 4px #00cccc, 0 0 10px #00cccc;
+        text-shadow: 
+            0 0 4px #00cccc,
+            0 0 12px #00cccc,
+            0 0 20px #00cccc;
+    }
+}
+
+/* Animación de glow titilante para hover del mouse */
+@keyframes hoverGlow {
+    0%, 100% {
+        text-shadow: 
+            0 0 10px #00ffff,
+            0 0 20px #00ffff,
+            0 0 30px #00ffff,
+            0 0 40px rgba(0, 255, 255, 0.5);
+    }
+    50% {
+        text-shadow: 
+            0 0 15px #00ffff,
+            0 0 30px #00ffff,
+            0 0 45px #00ffff,
+            0 0 60px rgba(0, 255, 255, 0.8);
+    }
+}
+
+/* Animación combinada para activo + hover */
+@keyframes activeHoverGlow {
+    0%, 100% {
+        text-shadow: 
+            0 0 12px #00ffff,
+            0 0 24px #00ffff,
+            0 0 36px #00ffff,
+            0 0 48px rgba(0, 255, 255, 0.6);
+    }
+    50% {
+        text-shadow: 
+            0 0 18px #00ffff,
+            0 0 36px #00ffff,
+            0 0 54px #00ffff,
+            0 0 72px rgba(0, 255, 255, 1);
     }
 }
 
@@ -95,12 +168,379 @@ body {
     color: white;
     background: rgba(0, 0, 0, 0.45);
     z-index: 15;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 60px 20px 20px;
+    box-sizing: border-box;
 }
 
 .section-inner,
 .project-card {
     max-width: 800px;
     padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.section-inner h2,
+.project-card h3 {
+    font-family: "Press Start 2P", monospace;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #00ffff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.section-inner p,
+.project-card p {
+    font-size: 1em;
+    line-height: 1.8;
+    color: #ffffff;
+}
+
+/* === PROJECT CARD === */
+.project-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.project-card video {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border: 2px solid #00ffff;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.project-card .info {
+    width: 100%;
+    text-align: center;
+}
+
+/* === PROJECTS GRID === */
+.projects-container {
+    width: 100%;
+    max-width: 1400px;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-family: "Press Start 2P", monospace;
+    font-size: 1.5em;
+    color: #00ffff;
+    text-align: center;
+    margin-bottom: 40px;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    width: 100%;
+    padding: 20px 0;
+}
+
+/* === PROJECT CARD (Grid Item) === */
+.project-item {
+    position: relative;
+    cursor: pointer;
+    background: rgba(0, 255, 255, 0.05);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    transform: scale(1);
+    opacity: 0.9;
+}
+
+.project-item:hover {
+    transform: scale(1.05);
+    border-color: #00ffff;
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.4),
+        0 0 40px rgba(0, 255, 255, 0.2);
+    opacity: 1;
+}
+
+.project-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(0, 0, 0, 0.3) 50%,
+        rgba(0, 0, 0, 0.8) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+}
+
+.project-thumbnail {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.project-item:hover .project-thumbnail {
+    transform: scale(1.1);
+}
+
+.project-item-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    z-index: 2;
+    color: white;
+}
+
+.project-item-title {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+    color: #00ffff;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+}
+
+.project-item-meta {
+    font-size: 0.7em;
+    color: #88ffff;
+    opacity: 0.8;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.project-item-meta span {
+    padding: 2px 6px;
+    background: rgba(0, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+/* === PROJECT MODAL (Vista Detalle) === */
+.project-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: "Press Start 2P", monospace;
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    color: #00ffff;
+    border: 2px solid #00ffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 101;
+    line-height: 1;
+}
+
+.close-modal:hover {
+    background: #00ffff;
+    color: #000;
+    box-shadow: 0 0 20px #00ffff;
+    transform: rotate(90deg);
+}
+
+.project-detail {
+    max-width: 1000px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.project-media {
+    position: relative;
+    width: 100%;
+}
+
+.project-media video,
+.project-media img {
+    width: 100%;
+    height: auto;
+    border: 3px solid #00ffff;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+    border-radius: 8px;
+}
+
+.project-info {
+    color: white;
+}
+
+.project-info h2 {
+    font-family: "Press Start 2P", monospace;
+    font-size: 1.5em;
+    color: #00ffff;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.project-meta {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.project-meta span {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.7em;
+    padding: 6px 12px;
+    background: rgba(0, 255, 255, 0.2);
+    border: 1px solid #00ffff;
+    color: #00ffff;
+    border-radius: 4px;
+}
+
+.project-info p {
+    font-size: 1em;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    color: #ffffff;
+}
+
+.project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.project-tech span {
+    font-size: 0.85em;
+    padding: 5px 10px;
+    background: rgba(0, 255, 255, 0.15);
+    border: 1px solid rgba(0, 255, 255, 0.4);
+    color: #88ffff;
+    border-radius: 4px;
+}
+
+.project-links {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.project-link {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.8em;
+    padding: 10px 20px;
+    background: transparent;
+    border: 2px solid #00ffff;
+    color: #00ffff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.project-link:hover {
+    background: #00ffff;
+    color: #000;
+    box-shadow: 0 0 15px #00ffff;
+    transform: translateY(-2px);
+}
+
+.project-link:active {
+    transform: translateY(0);
+}
+
+/* === RESPONSIVE GRID === */
+@media (max-width: 1024px) {
+    .projects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 25px;
+    }
+    
+    .project-detail {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .projects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    .section-title {
+        font-size: 1.2em;
+        margin-bottom: 30px;
+    }
+    
+    .project-item-title {
+        font-size: 0.8em;
+    }
+    
+    .project-thumbnail {
+        height: 150px;
+    }
+    
+    .projects-container {
+        padding: 30px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .projects-container {
+        padding: 20px 15px;
+    }
+    
+    .project-modal {
+        padding: 20px 15px;
+    }
+    
+    .close-modal {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        top: 10px;
+        right: 10px;
+    }
+    
+    .project-detail {
+        gap: 20px;
+    }
+    
+    .project-info h2 {
+        font-size: 1.2em;
+    }
 }
 
 /* === BOTÓN BACK === */
@@ -122,6 +562,24 @@ body {
     background: #00ffff;
     color: #000;
     box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+}
+
+.back-btn:active {
+    transform: scale(0.95);
+}
+
+@media (hover: none) {
+    .back-btn:hover {
+        background: transparent;
+        color: #00ffff;
+        box-shadow: none;
+    }
+    
+    .back-btn:active {
+        background: #00ffff;
+        color: #000;
+        box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    }
 }
 
 /* === CRT EFECTO === */
@@ -161,21 +619,35 @@ body {
 }
 
 /* === RESPONSIVE === */
+
+/* Tablets grandes */
 @media (max-width: 1024px) {
     .hud {
-        right: 8%;
+        right: 5%;
     }
 
     #menu li {
-        font-size: 13px;
+        font-size: 12px;
         margin: 10px 0;
+    }
+
+    .section-inner,
+    .project-card {
+        max-width: 700px;
+        padding: 30px 20px;
+    }
+
+    .section-inner h2,
+    .project-card h3 {
+        font-size: 1.5em;
     }
 }
 
+/* Tablets */
 @media (max-width: 768px) {
     .hud {
         right: 50%;
-        bottom: 8%;
+        bottom: 5%;
         top: auto;
         transform: translateX(50%);
         align-items: center;
@@ -186,17 +658,184 @@ body {
     }
 
     #menu li {
-        font-size: 11px;
+        font-size: 10px;
         margin: 8px 0;
         transform-origin: center;
     }
 
+    #menu li:hover,
+    #menu li.active {
+        transform: scale(1.15);
+    }
+
     .section-content {
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.75);
+        padding: 20px;
+    }
+
+    .section-inner,
+    .project-card {
+        max-width: 90%;
+        padding: 20px 15px;
+    }
+
+    .section-inner h2,
+    .project-card h3 {
+        font-size: 1.3em;
+        margin-bottom: 15px;
+    }
+
+    .section-inner p,
+    .project-card p {
+        font-size: 0.9em;
+        line-height: 1.6;
     }
 
     .back-btn {
-        font-size: 10px;
+        font-size: 9px;
         padding: 6px 10px;
+        top: 15px;
+        left: 15px;
+    }
+
+    .project-card video {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* Móviles grandes */
+@media (max-width: 480px) {
+    .hud {
+        bottom: 3%;
+        right: 50%;
+        transform: translateX(50%);
+    }
+
+    #menu li {
+        font-size: 8px;
+        margin: 6px 0;
+        padding: 4px 0;
+    }
+
+    #menu li:hover,
+    #menu li.active {
+        transform: scale(1.1);
+    }
+
+    .section-content {
+        padding: 15px 10px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .section-inner,
+    .project-card {
+        max-width: 100%;
+        padding: 15px 10px;
+    }
+
+    .section-inner h2,
+    .project-card h3 {
+        font-size: 1.1em;
+        margin-bottom: 12px;
+    }
+
+    .section-inner p,
+    .project-card p {
+        font-size: 0.85em;
+        line-height: 1.5;
+    }
+
+    .back-btn {
+        font-size: 8px;
+        padding: 5px 8px;
+        top: 10px;
+        left: 10px;
+    }
+
+    .project-card {
+        flex-direction: column;
+    }
+
+    .project-card video {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .project-card .info {
+        width: 100%;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 360px) {
+    #menu li {
+        font-size: 7px;
+        margin: 5px 0;
+        padding: 3px 6px;
+    }
+
+    .section-inner h2,
+    .project-card h3 {
+        font-size: 0.95em;
+    }
+
+    .section-inner p,
+    .project-card p {
+        font-size: 0.75em;
+    }
+
+    .back-btn {
+        font-size: 7px;
+        padding: 4px 6px;
+    }
+
+    .section-content {
+        padding: 10px 8px;
+    }
+}
+
+/* Orientación horizontal en móviles */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hud {
+        right: 3%;
+        bottom: auto;
+        top: 50%;
+        transform: translateY(-50%);
+        align-items: flex-end;
+    }
+
+    #menu {
+        text-align: right;
+    }
+
+    #menu li {
+        font-size: 9px;
+        margin: 6px 0;
+        transform-origin: right center;
+    }
+
+    .section-content {
+        padding: 15px;
+    }
+
+    .section-inner,
+    .project-card {
+        max-width: 85%;
+    }
+}
+
+/* Pantallas muy grandes */
+@media (min-width: 1920px) {
+    #menu li {
+        font-size: 16px;
+        margin: 15px 0;
+    }
+
+    .section-inner,
+    .project-card {
+        max-width: 1000px;
     }
 }

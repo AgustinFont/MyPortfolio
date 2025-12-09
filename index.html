@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes" />
     <title>Tanito Portfolio — Game HUD</title>
     <link rel="stylesheet" href="style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -36,11 +36,33 @@
 
     <div class="section-content" id="projects-content" style="display:none;">
         <button class="back-btn" onclick="backToMenu()">← Back</button>
-        <div class="project-card">
-            <video src="videos/demo.mp4" muted autoplay loop></video>
-            <div class="info">
-                <h3>Project Title</h3>
-                <p>Short description of what you did...</p>
+        
+        <div class="projects-container">
+            <h2 class="section-title">MY PROJECTS</h2>
+            <div class="projects-grid" id="projects-grid">
+                <!-- Los proyectos se generarán dinámicamente aquí -->
+            </div>
+        </div>
+        
+        <!-- Modal/Vista detalle del proyecto -->
+        <div class="project-modal" id="project-modal" style="display:none;">
+            <button class="close-modal" onclick="closeProjectModal()">×</button>
+            <div class="project-detail">
+                <div class="project-media">
+                    <video id="project-video" muted loop></video>
+                    <img id="project-image" style="display:none;" alt="Project">
+                </div>
+                <div class="project-info">
+                    <h2 id="project-title"></h2>
+                    <div class="project-meta">
+                        <span id="project-genre"></span>
+                        <span id="project-platform"></span>
+                        <span id="project-year"></span>
+                    </div>
+                    <p id="project-description"></p>
+                    <div class="project-tech" id="project-tech"></div>
+                    <div class="project-links" id="project-links"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -77,8 +99,10 @@
     <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
 
     <!-- TUS SCRIPTS -->
+    <script src="projects-data.js"></script>
     <script src="scene.js"></script>
     <script src="hud.js"></script>
+    <script src="projects.js"></script>
 
 </body>
 
