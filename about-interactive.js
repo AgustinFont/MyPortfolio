@@ -1,26 +1,27 @@
 // === about-interactive.js - Manejo de links interactivos en About Me ===
 
 function navigateToCategory(categoryId) {
+    // Mapeo correcto: categoryId del link -> ID real de la categoría
+    const categoryIdMap = {
+        'universidad': 'universidad',  // ID real
+        'nagma': 'recorridos'         // El ID real es 'recorridos' aunque se muestre como NAGMA
+    };
+    
+    const realCategoryId = categoryIdMap[categoryId];
+    if (!realCategoryId) return;
+    
     // Si ya estamos en la sección de projects, solo cambiar la categoría
     const projectsContent = document.getElementById('projects-content');
     if (projectsContent && (projectsContent.style.display === 'flex' || projectsContent.style.display === 'block')) {
         // Ya estamos en projects, solo cambiar categoría
         if (typeof window.selectCategory === 'function' && window.categories) {
-            const categoryMap = {
-                'universidad': 2,
-                'nagma': 1,
-                'recorridos': 1
-            };
-            
-            const categoryIndex = categoryMap[categoryId];
-            if (categoryIndex !== undefined) {
-                const category = window.categories[categoryIndex];
-                if (category) {
-                    window.selectCategory(category.id, categoryIndex);
-                    return;
-                }
+            // Buscar el índice correcto de la categoría
+            const categoryIndex = window.categories.findIndex(cat => cat.id === realCategoryId);
+            if (categoryIndex !== -1) {
+                window.selectCategory(realCategoryId, categoryIndex);
             }
         }
+        return;
     }
     
     // Si no estamos en projects, ir primero al menú y luego a projects
@@ -33,24 +34,24 @@ function navigateToCategory(categoryId) {
         if (typeof window.goToSection === 'function') {
             window.goToSection('projects');
             
-            // Esperar a que se cargue y luego seleccionar la categoría
+            // Esperar a que se inicialicen los proyectos y luego seleccionar la categoría
             setTimeout(() => {
-                if (typeof window.selectCategory === 'function' && window.categories) {
-                    const categoryMap = {
-                        'universidad': 2,
-                        'nagma': 1,
-                        'recorridos': 1
-                    };
-                    
-                    const categoryIndex = categoryMap[categoryId];
-                    if (categoryIndex !== undefined) {
-                        const category = window.categories[categoryIndex];
-                        if (category) {
-                            window.selectCategory(category.id, categoryIndex);
+                // Asegurarse de que los proyectos estén inicializados
+                if (typeof window.initProjects === 'function') {
+                    window.initProjects();
+                }
+                
+                // Esperar un poco más para que se rendericen las categorías
+                setTimeout(() => {
+                    if (typeof window.selectCategory === 'function' && window.categories) {
+                        // Buscar el índice correcto de la categoría
+                        const categoryIndex = window.categories.findIndex(cat => cat.id === realCategoryId);
+                        if (categoryIndex !== -1) {
+                            window.selectCategory(realCategoryId, categoryIndex);
                         }
                     }
-                }
-            }, 600);
+                }, 300);
+            }, 500);
         }
     }, 800);
 }
@@ -80,4 +81,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Exportar función globalmente
 window.navigateToCategory = navigateToCategory;
-

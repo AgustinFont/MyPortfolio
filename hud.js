@@ -25,11 +25,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         gsap.to(hud, {
             opacity: 0,
-            duration: 0.8,
+            duration: 0.6,
+            ease: "power2.in",
             onComplete: () => {
                 hud.style.display = "none";
                 content.style.display = "flex";
-                gsap.fromTo(content, { opacity: 0 }, { opacity: 1, duration: 0.8 });
+                // Scroll al inicio de la sección
+                content.scrollTop = 0;
+                gsap.fromTo(content, 
+                    { opacity: 0, y: 20 }, 
+                    { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
+                );
                 
                 // Inicializar proyectos si se abre la sección de proyectos
                 if (sectionId === "projects" && typeof window.initProjects === "function") {
@@ -62,8 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(() => {
             hud.style.display = "flex";
-            gsap.fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.8 });
-        }, 600);
+            gsap.fromTo(hud, 
+                { opacity: 0, y: -10 }, 
+                { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
+            );
+        }, 400);
     };
 
     // === NAVEGACIÓN POR TECLADO ===
