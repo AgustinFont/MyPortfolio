@@ -1,3 +1,13 @@
+/* === COLOR PALETTE === */
+:root {
+    --color-primary: #00ffff;      /* Cyan */
+    --color-secondary: #ff6f00;    /* Naranja */
+    --color-accent: #ff00ff;       /* Magenta */
+    --color-bg: #0a0a15;
+    --color-text: #ffffff;
+    --color-text-dim: #88ffff;
+}
+
 /* === RESET === */
 html,
 body {
@@ -6,8 +16,8 @@ body {
     height: 100%;
     width: 100%;
     overflow: hidden;
-    background-color: #0a0a15;
-    color: #00ffff;
+    background-color: var(--color-bg);
+    color: var(--color-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -326,8 +336,10 @@ body {
     font-family: "Press Start 2P", monospace;
     font-size: 1.8em;
     margin-bottom: 20px;
-    color: #00ffff;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    color: var(--color-secondary);
+    text-shadow: 
+        0 0 10px rgba(255, 111, 0, 0.6),
+        0 0 20px rgba(255, 111, 0, 0.4);
 }
 
 .section-inner p,
@@ -374,8 +386,10 @@ body {
 .profile-name {
     font-family: "Press Start 2P", monospace;
     font-size: 1.2em;
-    color: #00ffff;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    color: var(--color-secondary);
+    text-shadow: 
+        0 0 10px rgba(255, 111, 0, 0.6),
+        0 0 20px rgba(255, 111, 0, 0.4);
     margin: 0;
     margin-top: 10px;
 }
@@ -401,9 +415,11 @@ body {
 .cover-letter-container h3 {
     font-family: "Press Start 2P", monospace;
     font-size: 1em;
-    color: #00ffff;
+    color: var(--color-accent);
     margin-bottom: 20px;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    text-shadow: 
+        0 0 10px rgba(255, 0, 255, 0.6),
+        0 0 20px rgba(255, 0, 255, 0.4);
 }
 
 .cover-letter-text {
@@ -458,9 +474,11 @@ body {
 .skills-section h3 {
     font-family: "Press Start 2P", monospace;
     font-size: 1em;
-    color: #00ffff;
+    color: var(--color-secondary);
     margin-bottom: 25px;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    text-shadow: 
+        0 0 10px rgba(255, 111, 0, 0.6),
+        0 0 20px rgba(255, 111, 0, 0.4);
     text-align: center;
 }
 
@@ -487,16 +505,50 @@ body {
     max-width: 150px;
     min-width: 120px;
     transition: all 0.3s ease;
-    cursor: default;
+    cursor: pointer;
     box-sizing: border-box;
+    position: relative;
 }
 
 .skill-badge:hover {
-    border-color: #00ffff;
+    border-color: var(--color-secondary);
     box-shadow: 
-        0 0 15px rgba(0, 255, 255, 0.4),
-        inset 0 0 15px rgba(0, 255, 255, 0.1);
-    transform: translateY(-3px);
+        0 0 20px rgba(255, 111, 0, 0.5),
+        inset 0 0 15px rgba(255, 111, 0, 0.1);
+    transform: translateY(-5px) scale(1.05);
+    background: rgba(255, 111, 0, 0.1);
+}
+
+.skill-badge:active {
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* Tooltip para skills */
+.skill-badge::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    background: rgba(10, 10, 21, 0.95);
+    color: var(--color-secondary);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.5em;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    border: 2px solid var(--color-secondary);
+    box-shadow: 0 0 15px rgba(255, 111, 0, 0.5);
+    z-index: 1000;
+    margin-bottom: 5px;
+}
+
+.skill-badge:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
 .skill-icon {
@@ -532,7 +584,94 @@ body {
 .skill-name {
     font-family: "Press Start 2P", monospace;
     font-size: 0.65em;
-    color: #88ffff;
+    color: var(--color-text-dim);
+    text-align: center;
+    line-height: 1.3;
+    word-break: break-word;
+}
+
+/* === SKILLS AND ABILITIES CONTAINER === */
+.skills-abilities-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto 0;
+    align-items: start;
+}
+
+/* === ABILITIES SECTION === */
+.abilities-section {
+    width: 100%;
+    max-width: 500px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.abilities-section h3 {
+    font-family: "Press Start 2P", monospace;
+    font-size: 1em;
+    color: var(--color-accent);
+    margin-bottom: 25px;
+    text-shadow: 
+        0 0 10px rgba(255, 0, 255, 0.6),
+        0 0 20px rgba(255, 0, 255, 0.4);
+    text-align: center;
+}
+
+.abilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    justify-items: center;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.ability-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(255, 0, 255, 0.05);
+    border: 2px solid rgba(255, 0, 255, 0.3);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 160px;
+    min-width: 140px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.ability-badge:hover {
+    border-color: var(--color-accent);
+    box-shadow: 
+        0 0 20px rgba(255, 0, 255, 0.5),
+        inset 0 0 15px rgba(255, 0, 255, 0.1);
+    transform: translateY(-5px) scale(1.05);
+    background: rgba(255, 0, 255, 0.1);
+}
+
+.ability-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 0, 255, 0.1);
+    border-radius: 50%;
+    border: 2px solid rgba(255, 0, 255, 0.3);
+    font-size: 1.5em;
+}
+
+.ability-name {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.6em;
+    color: var(--color-text-dim);
     text-align: center;
     line-height: 1.3;
     word-break: break-word;
@@ -558,8 +697,8 @@ body {
     font-size: 0.9em;
     padding: 15px 30px;
     background: transparent;
-    border: 2px solid #00ffff;
-    color: #00ffff;
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
     text-decoration: none;
     transition: all 0.3s ease;
     display: inline-block;
@@ -583,8 +722,9 @@ body {
 }
 
 .contact-btn:hover {
-    background: #00ffff;
+    background: var(--color-primary);
     color: #000;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
     box-shadow: 
         0 0 20px rgba(0, 255, 255, 0.6),
         0 0 40px rgba(0, 255, 255, 0.3);
@@ -813,10 +953,12 @@ body {
 .section-title {
     font-family: "Press Start 2P", monospace;
     font-size: 1.5em;
-    color: #00ffff;
+    color: var(--color-secondary);
     text-align: center;
     margin-bottom: 30px;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    text-shadow: 
+        0 0 10px rgba(255, 111, 0, 0.6),
+        0 0 20px rgba(255, 111, 0, 0.4);
 }
 
 /* === CATEGORIES TABS === */
@@ -835,7 +977,7 @@ body {
     padding: 10px 20px;
     background: transparent;
     border: 2px solid rgba(0, 255, 255, 0.3);
-    color: #00ffff;
+    color: var(--color-primary);
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
@@ -888,10 +1030,12 @@ body {
 
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 40px;
     width: 100%;
     padding: 20px 0;
+    max-width: 1600px;
+    margin: 0 auto;
 }
 
 /* === PROJECT CARD (Grid Item) === */
@@ -962,7 +1106,7 @@ body {
 
 .project-thumbnail {
     width: 100%;
-    height: 200px;
+    height: 280px;
     object-fit: cover;
     display: block;
     transition: transform 0.4s ease;
@@ -1047,11 +1191,11 @@ body {
 }
 
 .project-detail {
-    max-width: 1000px;
+    max-width: 1400px;
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    grid-template-columns: 2fr 1fr;
+    gap: 50px;
     align-items: start;
 }
 
@@ -1075,8 +1219,9 @@ body {
     position: relative;
     width: 100%;
     height: 0;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    padding-bottom: 60%; /* Aspect ratio más grande para mejor visualización */
     overflow: hidden;
+    min-height: 500px;
 }
 
 .carousel-slide {
@@ -1108,6 +1253,19 @@ body {
     width: 100%;
     height: 100%;
     object-fit: contain;
+}
+
+/* Mensaje de error para videos */
+.video-error {
+    color: #ff0000;
+    padding: 20px;
+    text-align: center;
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.8em;
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #ff0000;
+    border-radius: 4px;
+    margin: 20px;
 }
 
 .carousel-btn {
@@ -1284,6 +1442,11 @@ body {
     .project-detail {
         grid-template-columns: 1fr;
         gap: 30px;
+        max-width: 1200px;
+    }
+    
+    .carousel-slides {
+        min-height: 400px;
     }
     
     .carousel-btn {
@@ -1533,6 +1696,21 @@ body {
     .project-card h3 {
         font-size: 1.3em;
         margin-bottom: 15px;
+    }
+    
+    .skills-abilities-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .abilities-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+    }
+    
+    .ability-badge {
+        min-width: 120px;
+        max-width: 140px;
     }
 
     .section-inner p,

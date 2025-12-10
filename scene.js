@@ -45,6 +45,74 @@ scene.add(new THREE.AmbientLight(0x404040, 0.7));
 const group = new THREE.Group();
 scene.add(group);
 
+// --- Variables para modelos 3D ---
+let characterModel = null;
+let environmentModel = null;
+let characterMixer = null; // Para animaciones
+let characterAnimationAction = null;
+
+// --- Cargador GLTF ---
+// Verificar si GLTFLoader está disponible
+if (typeof THREE.GLTFLoader === 'undefined') {
+    console.error('GLTFLoader no está disponible. Verifica que el script se haya cargado correctamente.');
+}
+const loader = new THREE.GLTFLoader();
+
+// --- Cargar modelos ---
+function loadModels() {
+    // Cargar environment
+    loader.load(
+        'models/enviroment.glb',
+        (gltf) => {
+            environmentModel = gltf.scene;
+            environmentModel.scale.set(1, 1, 1); // Ajustar escala si es necesario
+            environmentModel.position.set(0, 0, 0);
+            environmentModel.visible = false; // Oculto por defecto
+            group.add(environmentModel);
+            console.log('Environment cargado');
+        },
+        (progress) => {
+            console.log('Cargando environment:', (progress.loaded / progress.total * 100) + '%');
+        },
+        (error) => {
+            console.error('Error cargando environment:', error);
+        }
+    );
+
+    // Cargar character
+    loader.load(
+        'models/character.glb',
+        (gltf) => {
+            characterModel = gltf.scene;
+            characterModel.scale.set(1, 1, 1); // Ajustar escala si es necesario
+            
+            // Buscar animaciones
+            if (gltf.animations && gltf.animations.length > 0) {
+                characterMixer = new THREE.AnimationMixer(characterModel);
+                characterAnimationAction = characterMixer.clipAction(gltf.animations[0]); // Primera animación (idle)
+                characterAnimationAction.play();
+                console.log('Animación idle encontrada y reproduciendo');
+            }
+            
+            // Posicionar character arriba de una caja del environment
+            // Ajustar estos valores según tu modelo (Y = altura de la caja + offset)
+            characterModel.position.set(0, 1.5, 0);
+            characterModel.visible = false; // Oculto por defecto
+            group.add(characterModel);
+            console.log('Character cargado');
+        },
+        (progress) => {
+            console.log('Cargando character:', (progress.loaded / progress.total * 100) + '%');
+        },
+        (error) => {
+            console.error('Error cargando character:', error);
+        }
+    );
+}
+
+// Llamar a loadModels al inicio
+loadModels();
+
 // --- Objetos placeholder ---
 const materialBase = new THREE.MeshStandardMaterial({ color: 0x00aaff, roughness: 0.4 });
 
@@ -109,14 +177,40 @@ gsap.to(camera.position, {
 function rotateToSection(sectionId) {
     // Ocultar todos los objetos
     meshCube.visible = meshCyl.visible = meshCone.visible = meshTorus.visible = false;
+    
+    // Ocultar modelos si existen
+    if (environmentModel) environmentModel.visible = false;
+    if (characterModel) characterModel.visible = false;
 
     // Determinar objeto visible y ángulo objetivo
     switch (sectionId) {
-        case "about": meshCube.visible = true; targetAngle = 0; break;
-        case "projects": meshCyl.visible = true; targetAngle = Math.PI / 2; break;
-        case "looking": meshCone.visible = true; targetAngle = Math.PI; break;
-        case "contact": meshTorus.visible = true; targetAngle = Math.PI * 1.5; break;
-        case "easter": meshCyl.visible = true; targetAngle = Math.PI * 2; break;
+        case "about": 
+            meshCube.visible = true; 
+            targetAngle = 0; 
+            break;
+        case "projects": 
+            // Mostrar modelos en lugar del cilindro
+            if (environmentModel && characterModel) {
+                environmentModel.visible = true;
+                characterModel.visible = true;
+            } else {
+                // Fallback al cilindro si los modelos no están cargados
+                meshCyl.visible = true;
+            }
+            targetAngle = Math.PI / 2; 
+            break;
+        case "looking": 
+            meshCone.visible = true; 
+            targetAngle = Math.PI; 
+            break;
+        case "contact": 
+            meshTorus.visible = true; 
+            targetAngle = Math.PI * 1.5; 
+            break;
+        case "easter": 
+            meshCyl.visible = true; 
+            targetAngle = Math.PI * 2; 
+            break;
     }
 
     // --- Rotación y zoom de cámara ---
@@ -184,10 +278,21 @@ document.addEventListener("mousemove", (e) => {
 function animate() {
     requestAnimationFrame(animate);
 
-    // Rotación continua
+    // Actualizar animación del character
+    if (characterMixer) {
+        const delta = 0.016; // ~60fps
+        characterMixer.update(delta);
+    }
+
+    // Rotación continua (solo para objetos placeholder)
     [meshCube, meshCyl, meshCone, meshTorus].forEach((m) => {
         if (m.visible) m.rotation.y += 0.01;
     });
+    
+    // Rotar el environment si está visible (opcional, rotación más lenta)
+    if (environmentModel && environmentModel.visible) {
+        environmentModel.rotation.y += 0.005;
+    }
 
     particles.rotation.y += 0.0005;
 

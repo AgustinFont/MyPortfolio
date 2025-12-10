@@ -260,6 +260,23 @@ function openProjectModal(project) {
                 video.loop = true;
                 video.controls = true;
                 video.className = 'carousel-media';
+                
+                // Agregar manejo de errores
+                video.addEventListener('error', (e) => {
+                    console.error('Error cargando video:', item.src, e);
+                    console.error('Video error details:', video.error);
+                    // Mostrar mensaje de error al usuario
+                    const errorMsg = document.createElement('div');
+                    errorMsg.className = 'video-error';
+                    errorMsg.style.cssText = 'color: #ff0000; padding: 20px; text-align: center;';
+                    errorMsg.textContent = `Error al cargar el video: ${item.src}`;
+                    slide.appendChild(errorMsg);
+                });
+                
+                video.addEventListener('loadeddata', () => {
+                    console.log('Video cargado exitosamente:', item.src);
+                });
+                
                 slide.appendChild(video);
             } else {
                 const img = document.createElement('img');
@@ -366,6 +383,23 @@ function openProjectModal(project) {
             video.loop = true;
             video.controls = true;
             video.className = 'carousel-media';
+            
+            // Agregar manejo de errores
+            video.addEventListener('error', (e) => {
+                console.error('Error cargando video:', project.media.src, e);
+                console.error('Video error details:', video.error);
+                // Mostrar mensaje de error al usuario
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'video-error';
+                errorMsg.style.cssText = 'color: #ff0000; padding: 20px; text-align: center;';
+                errorMsg.textContent = `Error al cargar el video: ${project.media.src}`;
+                slide.appendChild(errorMsg);
+            });
+            
+            video.addEventListener('loadeddata', () => {
+                console.log('Video cargado exitosamente:', project.media.src);
+            });
+            
             slide.appendChild(video);
             video.play().catch(e => console.log('Error al reproducir video:', e));
         } else {
