@@ -45,7 +45,7 @@ scene.add(new THREE.AmbientLight(0x404040, 0.7));
 
 // --- Grupo principal ---
 const group = new THREE.Group();
-group.position.set(-1.2, 0, -6); // alejamos más de la cámara para apreciarlo mejor
+group.position.set(-1.2, 0, -7.5); // alejamos más de la cámara para apreciarlo mejor
 scene.add(group);
 
 // Grupo para modelos (environment + character) rotará como un solo conjunto
@@ -105,8 +105,8 @@ function loadModels() {
             }
             
             // Posicionar sobre las cajas (tweak visual)
-            characterModel.position.set(0.45, 0.25, 0.15); // más bajo y cercano al frente
-            characterModel.rotation.y = Math.PI * 0.15;
+            characterModel.position.set(0.35, 0.25, -0.15); // un poco hacia su izquierda y forward
+            characterModel.rotation.y = Math.PI * 0.08; // reducir giro propio
             characterModel.visible = false;
 
             // Glow suave en ojos (amarillo tenue)
@@ -332,7 +332,7 @@ function animate() {
 
     // Rotación suave conjunta de los modelos (sin órbita, pivot centrado en modelsGroup)
     if (modelsGroup.visible) {
-        modelsGroup.rotation.y += 0.0032; // ~0.2 rad/s
+        modelsGroup.rotation.y += 0.002; // más lento
     }
 
     particles.rotation.y += 0.0005;

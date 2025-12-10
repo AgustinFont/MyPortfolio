@@ -88,7 +88,7 @@ function updateEasterEggsList() {
     if (!listEl) return;
     
     if (foundEasterEggs.length === 0) {
-        listEl.innerHTML = '<p style="text-align: center; color: #88ffff; opacity: 0.7;">Aún no has encontrado ningún easter egg...</p>';
+        listEl.innerHTML = '';
         return;
     }
     
