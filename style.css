@@ -1161,6 +1161,34 @@ body {
     padding: 40px 20px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    transition: all 0.3s ease;
+}
+
+.project-modal.fullscreen {
+    padding: 0;
+    background: rgba(0, 0, 0, 1);
+}
+
+.project-modal.fullscreen .project-detail {
+    max-width: 100%;
+    width: 100%;
+    height: 100vh;
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 60px 20px 20px;
+    box-sizing: border-box;
+}
+
+.project-modal.fullscreen .carousel-slides {
+    min-height: calc(100vh - 200px);
+    padding-bottom: 0;
+    height: calc(100vh - 200px);
+}
+
+.project-modal.fullscreen .project-info {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .close-modal {
@@ -1190,8 +1218,45 @@ body {
     transform: rotate(90deg);
 }
 
+.fullscreen-btn {
+    position: absolute;
+    top: 20px;
+    right: 80px;
+    font-family: "Press Start 2P", monospace;
+    font-size: 20px;
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    color: var(--color-secondary);
+    border: 2px solid var(--color-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 101;
+    line-height: 1;
+}
+
+.fullscreen-btn:hover {
+    background: var(--color-secondary);
+    color: #000;
+    box-shadow: 0 0 20px rgba(255, 111, 0, 0.6);
+    transform: scale(1.1);
+}
+
+.project-modal.fullscreen .fullscreen-btn {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.project-modal.fullscreen .fullscreen-btn:hover {
+    background: var(--color-accent);
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.6);
+}
+
 .project-detail {
-    max-width: 1400px;
+    max-width: 1600px;
     width: 100%;
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -1219,9 +1284,9 @@ body {
     position: relative;
     width: 100%;
     height: 0;
-    padding-bottom: 60%; /* Aspect ratio más grande para mejor visualización */
+    padding-bottom: 65%; /* Aspect ratio más grande para mejor visualización */
     overflow: hidden;
-    min-height: 500px;
+    min-height: 600px;
 }
 
 .carousel-slide {
@@ -1447,6 +1512,12 @@ body {
     
     .carousel-slides {
         min-height: 400px;
+        padding-bottom: 56.25%;
+    }
+    
+    .project-modal.fullscreen .carousel-slides {
+        min-height: calc(100vh - 150px);
+        height: calc(100vh - 150px);
     }
     
     .carousel-btn {
@@ -1521,6 +1592,14 @@ body {
     
     .project-modal {
         padding: 20px 15px;
+    }
+    
+    .fullscreen-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        top: 15px;
+        right: 60px;
     }
     
     .close-modal {

@@ -429,10 +429,39 @@ function openProjectModal(project) {
     }
 }
 
+// Función para alternar pantalla completa
+function toggleFullscreen() {
+    const modal = document.getElementById('project-modal');
+    if (!modal) return;
+    
+    const isFullscreen = modal.classList.contains('fullscreen');
+    
+    if (isFullscreen) {
+        modal.classList.remove('fullscreen');
+    } else {
+        modal.classList.add('fullscreen');
+    }
+    
+    // Actualizar el ícono del botón
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    if (fullscreenBtn) {
+        if (modal.classList.contains('fullscreen')) {
+            fullscreenBtn.textContent = '⛶';
+            fullscreenBtn.title = 'Salir de pantalla completa (F o Escape)';
+        } else {
+            fullscreenBtn.textContent = '⛶';
+            fullscreenBtn.title = 'Pantalla completa (F)';
+        }
+    }
+}
+
 // Función para cerrar el modal
 function closeProjectModal() {
     const modal = document.getElementById('project-modal');
     if (!modal) return;
+    
+    // Salir de pantalla completa si está activa
+    modal.classList.remove('fullscreen');
 
     // Pausar todos los videos en el carrusel
     const carouselSlides = document.getElementById('carousel-slides');
@@ -464,9 +493,19 @@ function handleProjectsKeyboard(e) {
 
     const modal = document.getElementById('project-modal');
     if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
-        // Si el modal está abierto, solo cerrar con Escape
+        // Si el modal está abierto
         if (e.key === 'Escape') {
-            closeProjectModal();
+            // Si está en pantalla completa, salir primero
+            if (modal.classList.contains('fullscreen')) {
+                e.preventDefault();
+                toggleFullscreen();
+            } else {
+                closeProjectModal();
+            }
+        } else if (e.key === 'f' || e.key === 'F') {
+            // Alternar pantalla completa con F
+            e.preventDefault();
+            toggleFullscreen();
         }
         return;
     }
@@ -622,6 +661,7 @@ function initProjects(targetCategoryId = null) {
 window.renderProjectsGrid = renderProjectsGrid;
 window.openProjectModal = openProjectModal;
 window.closeProjectModal = closeProjectModal;
+window.toggleFullscreen = toggleFullscreen;
 window.initProjects = initProjects;
 window.selectCategory = selectCategory;
 window.pendingCategory = null; // Variable global para categoría pendiente

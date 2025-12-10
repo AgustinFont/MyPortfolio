@@ -206,6 +206,7 @@
         <!-- Modal/Vista detalle del proyecto -->
         <div class="project-modal" id="project-modal" style="display:none;">
             <button class="close-modal" onclick="closeProjectModal()">×</button>
+            <button class="fullscreen-btn" id="fullscreen-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)">⛶</button>
             <div class="project-detail">
                 <div class="project-media">
                     <div class="carousel-container" id="carousel-container">
@@ -280,8 +281,12 @@
 
     <!-- LIBRERÍAS -->
     <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://threejs.org/examples/js/loaders/GLTFLoader.js"></script>
+    <script type="module">
+        // Cargar GLTFLoader como módulo ES6
+        import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/loaders/GLTFLoader.js';
+        window.GLTFLoader = GLTFLoader;
+        console.log('GLTFLoader cargado correctamente');
+    </script>
 
     <!-- TUS SCRIPTS -->
     <script src="projects-data.js"></script>

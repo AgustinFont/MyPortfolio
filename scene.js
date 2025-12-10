@@ -52,27 +52,47 @@ let characterMixer = null; // Para animaciones
 let characterAnimationAction = null;
 
 // --- Cargador GLTF ---
-// Verificar si GLTFLoader está disponible
-if (typeof THREE.GLTFLoader === 'undefined') {
-    console.error('GLTFLoader no está disponible. Verifica que el script se haya cargado correctamente.');
+let loader = null;
+
+// Función para inicializar el loader cuando esté disponible
+function initGLTFLoader() {
+    // Intentar usar window.GLTFLoader (cargado como módulo ES6)
+    if (typeof window.GLTFLoader !== 'undefined') {
+        loader = new window.GLTFLoader();
+        loadModels();
+        return true;
+    }
+    // Fallback: intentar THREE.GLTFLoader (si está disponible de otra forma)
+    else if (typeof THREE !== 'undefined' && typeof THREE.GLTFLoader !== 'undefined') {
+        loader = new THREE.GLTFLoader();
+        loadModels();
+        return true;
+    }
+    return false;
 }
-const loader = new THREE.GLTFLoader();
 
 // --- Cargar modelos ---
 function loadModels() {
+    if (!loader) {
+        console.warn('GLTFLoader no disponible, saltando carga de modelos');
+        return;
+    }
+    
     // Cargar environment
     loader.load(
         'models/enviroment.glb',
         (gltf) => {
             environmentModel = gltf.scene;
-            environmentModel.scale.set(1, 1, 1); // Ajustar escala si es necesario
+            environmentModel.scale.set(1, 1, 1);
             environmentModel.position.set(0, 0, 0);
-            environmentModel.visible = false; // Oculto por defecto
+            environmentModel.visible = false;
             group.add(environmentModel);
             console.log('Environment cargado');
         },
         (progress) => {
-            console.log('Cargando environment:', (progress.loaded / progress.total * 100) + '%');
+            if (progress.total > 0) {
+                console.log('Cargando environment:', (progress.loaded / progress.total * 100).toFixed(0) + '%');
+            }
         },
         (error) => {
             console.error('Error cargando environment:', error);
@@ -84,25 +104,24 @@ function loadModels() {
         'models/character.glb',
         (gltf) => {
             characterModel = gltf.scene;
-            characterModel.scale.set(1, 1, 1); // Ajustar escala si es necesario
+            characterModel.scale.set(1, 1, 1);
             
-            // Buscar animaciones
             if (gltf.animations && gltf.animations.length > 0) {
                 characterMixer = new THREE.AnimationMixer(characterModel);
-                characterAnimationAction = characterMixer.clipAction(gltf.animations[0]); // Primera animación (idle)
+                characterAnimationAction = characterMixer.clipAction(gltf.animations[0]);
                 characterAnimationAction.play();
                 console.log('Animación idle encontrada y reproduciendo');
             }
             
-            // Posicionar character arriba de una caja del environment
-            // Ajustar estos valores según tu modelo (Y = altura de la caja + offset)
             characterModel.position.set(0, 1.5, 0);
-            characterModel.visible = false; // Oculto por defecto
+            characterModel.visible = false;
             group.add(characterModel);
             console.log('Character cargado');
         },
         (progress) => {
-            console.log('Cargando character:', (progress.loaded / progress.total * 100) + '%');
+            if (progress.total > 0) {
+                console.log('Cargando character:', (progress.loaded / progress.total * 100).toFixed(0) + '%');
+            }
         },
         (error) => {
             console.error('Error cargando character:', error);
@@ -110,8 +129,42 @@ function loadModels() {
     );
 }
 
-// Llamar a loadModels al inicio
-loadModels();
+// Intentar inicializar el loader cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        // Dar tiempo para que el módulo ES6 se cargue
+        setTimeout(() => {
+            if (!initGLTFLoader()) {
+                // Reintentar cada 100ms hasta que esté disponible (máximo 5 segundos)
+                let attempts = 0;
+                const maxAttempts = 50;
+                const interval = setInterval(() => {
+                    attempts++;
+                    if (initGLTFLoader() || attempts >= maxAttempts) {
+                        clearInterval(interval);
+                        if (attempts >= maxAttempts) {
+                            console.warn('GLTFLoader no se pudo cargar después de varios intentos');
+                        }
+                    }
+                }, 100);
+            }
+        }, 100);
+    });
+} else {
+    // Si el DOM ya está listo, intentar inmediatamente
+    setTimeout(() => {
+        if (!initGLTFLoader()) {
+            let attempts = 0;
+            const maxAttempts = 50;
+            const interval = setInterval(() => {
+                attempts++;
+                if (initGLTFLoader() || attempts >= maxAttempts) {
+                    clearInterval(interval);
+                }
+            }, 100);
+        }
+    }, 100);
+}
 
 // --- Objetos placeholder ---
 const materialBase = new THREE.MeshStandardMaterial({ color: 0x00aaff, roughness: 0.4 });
