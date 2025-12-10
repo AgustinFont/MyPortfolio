@@ -1,4 +1,6 @@
-// === scene.js ===
+// === scene.js (ESM) ===
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // --- Escena y cámara ---
 const scene = new THREE.Scene();
@@ -52,24 +54,7 @@ let characterMixer = null; // Para animaciones
 let characterAnimationAction = null;
 
 // --- Cargador GLTF ---
-let loader = null;
-
-// Función para inicializar el loader cuando esté disponible
-function initGLTFLoader() {
-    // Intentar usar window.GLTFLoader (cargado como módulo ES6)
-    if (typeof window.GLTFLoader !== 'undefined') {
-        loader = new window.GLTFLoader();
-        loadModels();
-        return true;
-    }
-    // Fallback: intentar THREE.GLTFLoader (si está disponible de otra forma)
-    else if (typeof THREE !== 'undefined' && typeof THREE.GLTFLoader !== 'undefined') {
-        loader = new THREE.GLTFLoader();
-        loadModels();
-        return true;
-    }
-    return false;
-}
+const loader = new GLTFLoader();
 
 // --- Cargar modelos ---
 function loadModels() {
@@ -129,42 +114,8 @@ function loadModels() {
     );
 }
 
-// Intentar inicializar el loader cuando el DOM esté listo
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        // Dar tiempo para que el módulo ES6 se cargue
-        setTimeout(() => {
-            if (!initGLTFLoader()) {
-                // Reintentar cada 100ms hasta que esté disponible (máximo 5 segundos)
-                let attempts = 0;
-                const maxAttempts = 50;
-                const interval = setInterval(() => {
-                    attempts++;
-                    if (initGLTFLoader() || attempts >= maxAttempts) {
-                        clearInterval(interval);
-                        if (attempts >= maxAttempts) {
-                            console.warn('GLTFLoader no se pudo cargar después de varios intentos');
-                        }
-                    }
-                }, 100);
-            }
-        }, 100);
-    });
-} else {
-    // Si el DOM ya está listo, intentar inmediatamente
-    setTimeout(() => {
-        if (!initGLTFLoader()) {
-            let attempts = 0;
-            const maxAttempts = 50;
-            const interval = setInterval(() => {
-                attempts++;
-                if (initGLTFLoader() || attempts >= maxAttempts) {
-                    clearInterval(interval);
-                }
-            }, 100);
-        }
-    }, 100);
-}
+// Cargar modelos apenas esté disponible el loader
+loadModels();
 
 // --- Objetos placeholder ---
 const materialBase = new THREE.MeshStandardMaterial({ color: 0x00aaff, roughness: 0.4 });

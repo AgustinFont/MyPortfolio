@@ -23,10 +23,10 @@ const projectsData = {
             role: "Solo Developer"
         }
     ],
-    recorridos: [
+    nagma: [
         {
             id: 2,
-            category: "recorridos",
+            category: "nagma",
             title: "Recorrido Interactivo - Edificio A",
             genre: "Interactive Tour",
             platform: "PC",
@@ -47,7 +47,7 @@ const projectsData = {
         },
         {
             id: 3,
-            category: "recorridos",
+            category: "nagma",
             title: "Recorrido Interactivo - Complejo B",
             genre: "Interactive Tour",
             platform: "PC",
@@ -252,7 +252,7 @@ const projectsData = {
 // Categorías disponibles en orden
 const categories = [
     { id: "thesis", name: "THESIS", label: "Thesis" },
-    { id: "recorridos", name: "NAGMA", label: "Nagma" },
+    { id: "nagma", name: "NAGMA", label: "Nagma" },
     { id: "universidad", name: "UNIVERSIDAD", label: "Juegos de Universidad" },
     { id: "diseno", name: "DISEÑO", label: "Diseño Gráfico" }
 ];
