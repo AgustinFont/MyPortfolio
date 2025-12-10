@@ -45,7 +45,12 @@ scene.add(new THREE.AmbientLight(0x404040, 0.7));
 
 // --- Grupo principal ---
 const group = new THREE.Group();
+group.position.set(-1.5, 0, -1); // alejar ligeramente de la cámara
 scene.add(group);
+
+// Grupo para modelos (environment + character)
+const modelsGroup = new THREE.Group();
+group.add(modelsGroup);
 
 // --- Variables para modelos 3D ---
 let characterModel = null;
@@ -71,7 +76,7 @@ function loadModels() {
             environmentModel.scale.set(1, 1, 1);
             environmentModel.position.set(0, 0, 0);
             environmentModel.visible = false;
-            group.add(environmentModel);
+            modelsGroup.add(environmentModel);
             console.log('Environment cargado');
         },
         (progress) => {
@@ -98,9 +103,11 @@ function loadModels() {
                 console.log('Animación idle encontrada y reproduciendo');
             }
             
-            characterModel.position.set(0, 1.5, 0);
+            // Posicionar sobre las cajas (tweak visual)
+            characterModel.position.set(0.55, 1.05, 0.25);
+            characterModel.rotation.y = Math.PI * 0.15;
             characterModel.visible = false;
-            group.add(characterModel);
+            modelsGroup.add(characterModel);
             console.log('Character cargado');
         },
         (progress) => {
@@ -185,6 +192,7 @@ function rotateToSection(sectionId) {
     // Ocultar modelos si existen
     if (environmentModel) environmentModel.visible = false;
     if (characterModel) characterModel.visible = false;
+    modelsGroup.visible = false;
 
     // Determinar objeto visible y ángulo objetivo
     switch (sectionId) {
@@ -197,6 +205,7 @@ function rotateToSection(sectionId) {
             if (environmentModel && characterModel) {
                 environmentModel.visible = true;
                 characterModel.visible = true;
+                modelsGroup.visible = true;
             } else {
                 // Fallback al cilindro si los modelos no están cargados
                 meshCyl.visible = true;
@@ -292,10 +301,10 @@ function animate() {
     [meshCube, meshCyl, meshCone, meshTorus].forEach((m) => {
         if (m.visible) m.rotation.y += 0.01;
     });
-    
-    // Rotar el environment si está visible (opcional, rotación más lenta)
-    if (environmentModel && environmentModel.visible) {
-        environmentModel.rotation.y += 0.005;
+
+    // Rotación suave conjunta de los modelos (sin órbita)
+    if (modelsGroup.visible) {
+        modelsGroup.rotation.y += 0.0032; // ~0.2 rad/s
     }
 
     particles.rotation.y += 0.0005;
