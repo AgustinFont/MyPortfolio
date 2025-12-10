@@ -45,11 +45,12 @@ scene.add(new THREE.AmbientLight(0x404040, 0.7));
 
 // --- Grupo principal ---
 const group = new THREE.Group();
-group.position.set(-1.5, 0, -3.5); // alejar más de la cámara para mejor vista
+group.position.set(-1.2, 0, -6); // alejamos más de la cámara para apreciarlo mejor
 scene.add(group);
 
-// Grupo para modelos (environment + character)
+// Grupo para modelos (environment + character) rotará como un solo conjunto
 const modelsGroup = new THREE.Group();
+modelsGroup.position.set(0, 0, 0);
 group.add(modelsGroup);
 
 // --- Variables para modelos 3D ---
@@ -104,7 +105,7 @@ function loadModels() {
             }
             
             // Posicionar sobre las cajas (tweak visual)
-            characterModel.position.set(0.55, 0.65, 0.25); // bajar al nivel de las cajas
+            characterModel.position.set(0.45, 0.25, 0.15); // más bajo y cercano al frente
             characterModel.rotation.y = Math.PI * 0.15;
             characterModel.visible = false;
 
@@ -269,19 +270,25 @@ function rotateToSection(sectionId) {
 
     // --- Apagar el HUD y mostrar la sección ---
     const hud = document.querySelector(".hud");
+    const content = document.getElementById(sectionId + "-content");
+
     if (!hud) {
         console.warn("HUD no encontrado; se omite animación de transición.");
+        if (content) content.style.display = "block";
         return;
     }
-    const content = document.getElementById(sectionId + "-content");
+
+    if (!content) {
+        console.warn(`Sección ${sectionId} no encontrada; se omite animación de contenido.`);
+        gsap.to(hud, { opacity: 0, duration: 0.8, onComplete: () => { hud.style.display = "none"; } });
+        return;
+    }
 
     gsap.to(hud, {
         opacity: 0, duration: 0.8, onComplete: () => {
             hud.style.display = "none";
-            if (content) {
-                content.style.display = "block";
-                gsap.fromTo(content, { opacity: 0 }, { opacity: 1, duration: 1 });
-            }
+            content.style.display = "block";
+            gsap.fromTo(content, { opacity: 0 }, { opacity: 1, duration: 1 });
         }
     });
 }
@@ -323,7 +330,7 @@ function animate() {
         if (m.visible) m.rotation.y += 0.01;
     });
 
-    // Rotación suave conjunta de los modelos (sin órbita)
+    // Rotación suave conjunta de los modelos (sin órbita, pivot centrado en modelsGroup)
     if (modelsGroup.visible) {
         modelsGroup.rotation.y += 0.0032; // ~0.2 rad/s
     }

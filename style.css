@@ -594,10 +594,10 @@ body {
 .skills-abilities-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: 24px;
     width: 100%;
     max-width: 1200px;
-    margin: 20px auto 0;
+    margin: 8px auto 0;
     align-items: start;
 }
 
