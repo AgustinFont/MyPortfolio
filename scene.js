@@ -45,7 +45,7 @@ scene.add(new THREE.AmbientLight(0x404040, 0.7));
 
 // --- Grupo principal ---
 const group = new THREE.Group();
-group.position.set(-1.5, 0, -1); // alejar ligeramente de la cámara
+group.position.set(-1.5, 0, -3.5); // alejar más de la cámara para mejor vista
 scene.add(group);
 
 // Grupo para modelos (environment + character)
@@ -104,7 +104,7 @@ function loadModels() {
             }
             
             // Posicionar sobre las cajas (tweak visual)
-            characterModel.position.set(0.55, 1.05, 0.25);
+            characterModel.position.set(0.55, 0.65, 0.25); // bajar al nivel de las cajas
             characterModel.rotation.y = Math.PI * 0.15;
             characterModel.visible = false;
 
