@@ -107,6 +107,23 @@ function loadModels() {
             characterModel.position.set(0.55, 1.05, 0.25);
             characterModel.rotation.y = Math.PI * 0.15;
             characterModel.visible = false;
+
+            // Glow suave en ojos (amarillo tenue)
+            const eyeGlowColor = new THREE.Color(0xffd966);
+            characterModel.traverse((child) => {
+                if (!child.isMesh) return;
+                const mats = Array.isArray(child.material) ? child.material : [child.material];
+                mats.forEach((mat) => {
+                    if (!mat) return;
+                    const name = (mat.name || child.name || "").toLowerCase();
+                    if (name.includes('eye')) {
+                        if (!mat.emissive) mat.emissive = new THREE.Color();
+                        mat.emissive.copy(eyeGlowColor);
+                        mat.emissiveIntensity = 0.6;
+                    }
+                });
+            });
+
             modelsGroup.add(characterModel);
             console.log('Character cargado');
         },
@@ -252,6 +269,10 @@ function rotateToSection(sectionId) {
 
     // --- Apagar el HUD y mostrar la sección ---
     const hud = document.querySelector(".hud");
+    if (!hud) {
+        console.warn("HUD no encontrado; se omite animación de transición.");
+        return;
+    }
     const content = document.getElementById(sectionId + "-content");
 
     gsap.to(hud, {
