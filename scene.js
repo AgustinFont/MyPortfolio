@@ -69,12 +69,12 @@ function loadModels() {
         return;
     }
     
-    // Cargar environment
+    // Cargar environment (nuevo enviromentSand)
     loader.load(
-        'models/enviroment.glb',
+        'models/enviromentSand.glb',
         (gltf) => {
             environmentModel = gltf.scene;
-            environmentModel.scale.set(1, 1, 1);
+            environmentModel.scale.set(0.7, 0.7, 0.7); // reducir tamaño
             environmentModel.position.set(0, 0, 0);
             environmentModel.visible = false;
             modelsGroup.add(environmentModel);
@@ -90,12 +90,12 @@ function loadModels() {
         }
     );
 
-    // Cargar character
+    // Cargar character (nuevo characterSand)
     loader.load(
-        'models/character.glb',
+        'models/characterSand.glb',
         (gltf) => {
             characterModel = gltf.scene;
-            characterModel.scale.set(1, 1, 1);
+            characterModel.scale.set(0.7, 0.7, 0.7); // reducir tamaño
             
             if (gltf.animations && gltf.animations.length > 0) {
                 characterMixer = new THREE.AnimationMixer(characterModel);
