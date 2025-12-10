@@ -330,11 +330,6 @@ function animate() {
         if (m.visible) m.rotation.y += 0.01;
     });
 
-    // Rotación suave conjunta de los modelos (sin órbita, pivot centrado en modelsGroup)
-    if (modelsGroup.visible) {
-        modelsGroup.rotation.y += 0.002; // más lento
-    }
-
     particles.rotation.y += 0.0005;
 
     currentAngle += (targetAngle - currentAngle) * 0.02;
