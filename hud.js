@@ -2,6 +2,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const menuItems = document.querySelectorAll("#menu li");
     const hud = document.querySelector(".hud");
+    const playToggle = document.getElementById("play-toggle");
+    let playMode = false;
     let selectedIndex = 0;
     let inSection = false;
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -17,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === Mostrar sección seleccionada ===
     function goToSection(sectionId) {
+        if (playMode) return; // en modo juego no navega secciones
         if (inSection) return;
         inSection = true;
 
@@ -55,6 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === Volver al menú principal ===
     window.backToMenu = function () {
+        if (playMode) {
+            // salir de modo juego
+            playMode = false;
+            hud.classList.remove("play-mode");
+            hud.style.display = "flex";
+            gsap.fromTo(hud, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" });
+            return;
+        }
+
         if (!inSection) return;
         inSection = false;
 
@@ -86,6 +98,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (playMode) {
+            if (e.key === "Escape" || e.key === "Backspace") {
+                window.backToMenu();
+            }
+            return;
+        }
+
         // Navegación con teclado
         if (e.key === "ArrowDown") {
             e.preventDefault();
@@ -107,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         menuItems.forEach((item, i) => {
             // Cuando el mouse entra sobre un item
             item.addEventListener("mouseenter", () => {
-                if (inSection) return;
+                if (inSection || playMode) return;
                 // Actualizar selectedIndex inmediatamente
                 selectedIndex = i;
                 updateMenu();
@@ -115,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Click en un item
             item.addEventListener("click", (e) => {
-                if (inSection) return;
+                if (inSection || playMode) return;
                 e.preventDefault();
                 selectedIndex = i;
                 updateMenu();
@@ -128,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isTouchDevice) {
         menuItems.forEach((item, i) => {
             item.addEventListener("touchstart", (e) => {
-                if (inSection) return;
+                if (inSection || playMode) return;
                 e.preventDefault();
                 selectedIndex = i;
                 updateMenu();
@@ -173,7 +192,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicializar menú
     updateMenu();
-    
+
+    // === PLAY MODE TOGGLE ===
+    function enterPlayMode() {
+        playMode = true;
+        hud.classList.add("play-mode");
+        // Ocultar menú (clase play-mode ya lo oculta) y mantener el botón Play/Back
+        hud.style.display = "flex";
+
+        // Notificación y egg (solo primera vez)
+        if (!window.__playModeUnlocked) {
+            window.__playModeUnlocked = true;
+            if (typeof window.addEasterEgg === "function") {
+                window.addEasterEgg("Ready to play", "Unlock play mode");
+            }
+            // Si hay un sistema de notificaciones, podríamos disparar aquí (placeholder)
+        }
+    }
+
+    if (playToggle) {
+        playToggle.addEventListener("click", () => {
+            if (playMode) {
+                window.backToMenu();
+            } else {
+                enterPlayMode();
+            }
+        });
+    }
+
     // Exportar funciones globalmente
     window.goToSection = goToSection;
 });

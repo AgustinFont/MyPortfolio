@@ -109,7 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initEasterEggCounter();
 });
 
-// Exportar funciones globalmente
+// API pública para otros módulos
+window.addEasterEgg = function(title, description) {
+    foundEasterEgg(`egg-${title}`, title, description || '');
+};
+
+// Exportar funciones globalmente (compat)
 window.foundEasterEgg = foundEasterEgg;
 window.initEasterEggCounter = initEasterEggCounter;
 window.easterEggsFound = () => easterEggsFound;
