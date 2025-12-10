@@ -279,14 +279,24 @@
     <!-- Overlay CRT -->
     <div class="crt"></div>
 
-    <!-- LIBRERÍAS -->
-    <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
-    <script type="module">
-        // Cargar GLTFLoader como módulo ES6
-        import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/loaders/GLTFLoader.js';
-        window.GLTFLoader = GLTFLoader;
-        console.log('GLTFLoader cargado correctamente');
+    <!-- LIBRERÍAS (ES Modules) -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.152.2/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.152.2/examples/jsm/"
+        }
+    }
     </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        // Exponer global para el código existente
+        window.THREE = THREE;
+        window.GLTFLoader = GLTFLoader;
+        console.log('Three y GLTFLoader cargados correctamente');
+    </script>
+    <script src="gsap.min.js"></script>
 
     <!-- TUS SCRIPTS -->
     <script src="projects-data.js"></script>
