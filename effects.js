@@ -127,7 +127,7 @@
                                 rotationY: xN * maxTilt,
                                 rotationX: -yN * maxTilt * 0.6,
                                 transformPerspective: 700,
-                                transformOrigin: 'center',
+                                transformOrigin: 'center center',
                                 duration: 0.28,
                                 ease: 'power2.out',
                             });
@@ -178,12 +178,17 @@
                 '.contact-btn',
             ];
 
-            interactiveSelectors.forEach((selector) => {
-                document.querySelectorAll(selector).forEach((el) => {
-                    el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
-                    el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
+            const addHoverHandlers = () => {
+                interactiveSelectors.forEach((selector) => {
+                    document.querySelectorAll(selector).forEach((el) => {
+                        el.style.cursor = 'none';
+                        el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
+                        el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
+                    });
                 });
-            });
+            };
+
+            addHoverHandlers();
 
             window.addEventListener('mousedown', () => cursor.classList.add('cursor-down'));
             window.addEventListener('mouseup', () => cursor.classList.remove('cursor-down'));
