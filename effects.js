@@ -11,12 +11,15 @@
         if (!prefersReduce && window.ScrollTrigger) {
             gsapRef.registerPlugin(window.ScrollTrigger);
 
+            const getScroller = (el) => el.closest('.section-content') || window;
+
             const reveal = (selector, opts = {}) => {
                 const elements = gsapRef.utils.toArray(selector);
                 elements.forEach((el) => {
                     window.ScrollTrigger.create({
                         trigger: el,
                         start: 'top 85%',
+                        scroller: getScroller(el),
                         once: true,
                         onEnter: () => {
                             gsapRef.fromTo(
@@ -57,10 +60,10 @@
                     const item = e.target.closest('.project-item');
                     if (!item) return;
                     gsapRef.to(item, {
-                        scale: 1.04,
-                        y: -8,
-                        boxShadow: '0 0 25px rgba(0,255,255,0.35), 0 0 40px rgba(255,111,0,0.25)',
-                        duration: 0.25,
+                        scale: 1.03,
+                        y: -6,
+                        boxShadow: '0 0 18px rgba(0,255,255,0.3), 0 0 28px rgba(255,111,0,0.2)',
+                        duration: 0.22,
                         ease: 'power2.out',
                     });
                 },
@@ -76,7 +79,7 @@
                         scale: 1,
                         y: 0,
                         boxShadow: '0 0 0 rgba(0,0,0,0)',
-                        duration: 0.25,
+                        duration: 0.22,
                         ease: 'power2.out',
                     });
                 },
@@ -112,7 +115,7 @@
                 let rafId = null;
                 let xN = 0;
                 let yN = 0;
-                const maxTilt = 8;
+                const maxTilt = 4;
 
                 const handleMove = (e) => {
                     xN = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -125,7 +128,7 @@
                                 rotationX: -yN * maxTilt * 0.6,
                                 transformPerspective: 700,
                                 transformOrigin: 'center',
-                                duration: 0.35,
+                                duration: 0.28,
                                 ease: 'power2.out',
                             });
                         });
