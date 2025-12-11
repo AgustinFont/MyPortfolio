@@ -380,6 +380,7 @@ function initLandingAnimation() {
     const terminalLines = terminalText?.querySelectorAll('.terminal-line');
     const sceneContainer = document.querySelector("#scene-container");
     const hud = document.querySelector(".hud");
+    // const introBeep = document.getElementById('intro-beep'); // sonido opcional (comentado)
 
     if (!landingScreen || !terminalLines) return;
 
@@ -424,65 +425,51 @@ function initLandingAnimation() {
         setTimeout(() => {
             landingScreen.classList.remove('glitching');
             
-            const linesArray = gsap.utils.toArray(terminalLines);
-            const tl = gsap.timeline();
+            // Fade out del landing screen (simple)
+            landingScreen.classList.add('fade-out');
+            
+            // Mostrar escena 3D con efecto
+            if (sceneContainer) {
+                sceneContainer.style.opacity = "0";
+                gsap.to(sceneContainer, {
+                    opacity: 1,
+                    duration: 1.5,
+                    ease: "power2.in"
+                });
+            }
 
-            // Desintegrar/caer líneas del terminal
-            tl.to(linesArray, {
-                y: () => gsap.utils.random(30, 80),
-                rotationX: () => gsap.utils.random(-60, -20),
-                rotationZ: () => gsap.utils.random(-25, 25),
-                opacity: 0,
-                duration: 0.9,
-                stagger: 0.08,
-                ease: "power3.in"
-            });
-
-            // Fade del overlay mientras las letras se van
-            tl.to(landingScreen, {
-                opacity: 0,
-                duration: 0.8,
-                ease: "power2.inOut"
-            }, "-=0.35");
-
-            // Mostrar escena 3D
-            tl.add(() => {
-                if (sceneContainer) {
-                    sceneContainer.style.opacity = "0";
-                    gsap.to(sceneContainer, {
-                        opacity: 1,
+            // Mostrar HUD con efecto
+            if (hud) {
+                hud.style.opacity = "0";
+                hud.style.display = "block";
+                gsap.fromTo(hud, 
+                    { 
+                        opacity: 0, 
+                        y: -30,
+                        scale: 0.9
+                    }, 
+                    { 
+                        opacity: 1, 
+                        y: 0,
+                        scale: 1,
                         duration: 1.2,
-                        ease: "power2.in"
-                    });
-                }
-            }, "-=0.4");
+                        delay: 0.3,
+                        ease: "back.out(1.7)"
+                    }
+                );
+            }
 
-            // Mostrar HUD
-            tl.add(() => {
-                if (hud) {
-                    hud.style.opacity = "0";
-                    hud.style.display = "block";
-                    gsap.fromTo(hud, 
-                        { 
-                            opacity: 0, 
-                            y: -24,
-                            scale: 0.92
-                        }, 
-                        { 
-                            opacity: 1, 
-                            y: 0,
-                            scale: 1,
-                            duration: 1,
-                            ease: "back.out(1.6)"
-                        }
-                    );
-                }
-            }, "-=0.2");
+            // Beep sutil al finalizar intro (comentado mientras no se use archivo)
+            // if (introBeep) {
+            //     introBeep.currentTime = 0;
+            //     introBeep.volume = 0.35;
+            //     introBeep.play().catch(() => {});
+            // }
 
-            // Ocultar landing al final
-            tl.add(() => {
+            // Remover landing screen del DOM después de la animación
+            setTimeout(() => {
                 landingScreen.style.display = "none";
-            });
+            }, 1000);
         }, 500);
     }, 3000); // Duración total de la animación: ~3.5 segundos
 }

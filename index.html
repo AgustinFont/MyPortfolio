@@ -253,7 +253,13 @@
         <button class="back-btn" onclick="backToMenu()">← Back</button>
         <div class="section-inner">
             <h2>WHAT I'M LOOKING FOR</h2>
-            <p>What type of work or collaborations you are looking for.</p>
+            <div class="looking-block">
+                <p>I’m looking for a job that allows me to keep improving as a developer and as a human being. I enjoy projects that challenge my technical thinking and give me space to take ownership of the work I deliver.</p>
+                <p>I’m confident in what I can bring — focus, adaptability, and a genuine drive to solve problems — and that’s why I look for environments where people take their work seriously but stay open, curious, and willing to help each other.</p>
+                <p>I work best with a healthy level of flexibility — remote or hybrid — as long as expectations are clear and communication flows well.</p>
+                <p class="looking-cta">If this aligns with what you’re offering, my contact is just one click away.</p>
+                <button class="contact-btn" onclick="(function(){ if(window.backToMenu) window.backToMenu(); setTimeout(()=>{ if(window.goToSection) window.goToSection('contact'); }, 400); })();">GO TO CONTACT</button>
+            </div>
         </div>
     </div>
 
@@ -310,6 +316,7 @@
     </script>
     <script src="gsap.min.js"></script>
     <script src="https://unpkg.com/gsap@3.12.5/ScrollTrigger.min.js"></script>
+    <!-- <audio id="intro-beep" src="assets/intro-beep.mp3" preload="auto"></audio> -->
     <script src="effects.js"></script>
 
     <!-- TUS SCRIPTS -->

@@ -26,6 +26,10 @@ body.custom-cursor-enabled {
     cursor: none;
 }
 
+a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li, .back-btn, .contact-btn {
+    cursor: none !important;
+}
+
 #custom-cursor {
     position: fixed;
     top: 0;
@@ -878,6 +882,32 @@ body.custom-cursor-enabled {
 
 .contact-btn:active {
     transform: translateY(0);
+}
+
+.looking-block {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: left;
+}
+
+.looking-block p {
+    color: #ffffff;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.looking-block .looking-cta {
+    color: var(--color-secondary);
+    font-weight: bold;
+    text-shadow: 0 0 8px rgba(255, 111, 0, 0.5);
+}
+
+.looking-block .contact-btn {
+    align-self: flex-start;
+    margin-top: 10px;
 }
 
 .linkedin-btn {
