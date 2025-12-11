@@ -22,6 +22,58 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+body.custom-cursor-enabled {
+    cursor: none;
+}
+
+#custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--color-secondary);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    mix-blend-mode: screen;
+    z-index: 120;
+    opacity: 0;
+    transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+#custom-cursor .cursor-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: rgba(0, 255, 255, 0.6);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+}
+
+#custom-cursor.cursor-hover {
+    transform: translate(-50%, -50%) scale(1.35);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 18px rgba(0, 255, 255, 0.6), 0 0 24px rgba(255, 111, 0, 0.35);
+}
+
+#custom-cursor.cursor-down {
+    transform: translate(-50%, -50%) scale(0.95);
+    border-color: var(--color-accent);
+}
+
+@media (hover: none) {
+    body.custom-cursor-enabled {
+        cursor: auto;
+    }
+    #custom-cursor {
+        display: none;
+    }
+}
+
 /* Prevenir selección de texto accidental en móviles */
 * {
     -webkit-tap-highlight-color: transparent;

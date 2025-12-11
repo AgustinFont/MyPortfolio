@@ -46,6 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     { opacity: 0, y: 20 }, 
                     { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
                 );
+                setTimeout(() => {
+                    if (typeof window.refreshScrollTriggers === "function") {
+                        window.refreshScrollTriggers();
+                    }
+                }, 150);
                 
                 // Inicializar proyectos si se abre la sección de proyectos
                 if (sectionId === "projects" && typeof window.initProjects === "function") {
@@ -108,6 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
             );
             if (playgroundTitle) {
                 playgroundTitle.style.display = "flex";
+            }
+            if (typeof window.refreshScrollTriggers === "function") {
+                window.refreshScrollTriggers();
             }
         }, 400);
     };
