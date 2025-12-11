@@ -108,37 +108,13 @@
             });
         }
 
-        // --- Tilt sutil en ítems de menú ---
-        if (!prefersReduce && !isTouch) {
-            const menuItems = gsapRef.utils.toArray('#menu li');
-            if (menuItems.length) {
-                let rafId = null;
-                let xN = 0;
-                let yN = 0;
-                const maxTilt = 4;
-
-                const handleMove = (e) => {
-                    xN = (e.clientX / window.innerWidth - 0.5) * 2;
-                    yN = (e.clientY / window.innerHeight - 0.5) * 2;
-                    if (rafId) return;
-                    rafId = requestAnimationFrame(() => {
-                        menuItems.forEach((item, idx) => {
-                            gsapRef.to(item, {
-                                rotationY: xN * maxTilt,
-                                rotationX: -yN * maxTilt * 0.6,
-                                transformPerspective: 700,
-                                transformOrigin: 'center center',
-                                duration: 0.28,
-                                ease: 'power2.out',
-                            });
-                        });
-                        rafId = null;
-                    });
-                };
-
-                window.addEventListener('mousemove', handleMove);
-            }
-        }
+        // Tilt desactivado (causaba desalineo). Forzar reset.
+        gsapRef.set('#menu li', {
+            rotationX: 0,
+            rotationY: 0,
+            transformPerspective: 700,
+            transformOrigin: 'center center',
+        });
 
         // --- Cursor retro personalizado ---
         if (!prefersReduce && !isTouch) {
