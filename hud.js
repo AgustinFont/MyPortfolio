@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuItems = document.querySelectorAll("#menu li");
     const hud = document.querySelector(".hud");
     const playToggle = document.getElementById("play-toggle");
+    const playModeOverlay = document.getElementById("play-mode-overlay");
+    const playModeBack = document.getElementById("play-mode-back");
+    const playgroundTitle = document.getElementById("playground-title");
     let playMode = false;
     let selectedIndex = 0;
     let inSection = false;
@@ -25,6 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const content = document.getElementById(sectionId + "-content");
         if (!hud || !content) return;
+
+        if (playgroundTitle) {
+            playgroundTitle.style.display = "none";
+        }
 
         gsap.to(hud, {
             opacity: 0,
@@ -62,8 +69,21 @@ document.addEventListener('DOMContentLoaded', () => {
             // salir de modo juego
             playMode = false;
             hud.classList.remove("play-mode");
+            if (playModeOverlay) {
+                gsap.to(playModeOverlay, {
+                    opacity: 0,
+                    duration: 0.4,
+                    onComplete: () => {
+                        playModeOverlay.style.display = "none";
+                        playModeOverlay.style.opacity = 1;
+                    }
+                });
+            }
             hud.style.display = "flex";
             gsap.fromTo(hud, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" });
+            if (playgroundTitle) {
+                playgroundTitle.style.display = "flex";
+            }
             return;
         }
 
@@ -86,6 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 { opacity: 0, y: -10 }, 
                 { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
             );
+            if (playgroundTitle) {
+                playgroundTitle.style.display = "flex";
+            }
         }, 400);
     };
 
@@ -199,6 +222,13 @@ document.addEventListener('DOMContentLoaded', () => {
         hud.classList.add("play-mode");
         // Ocultar menú (clase play-mode ya lo oculta) y mantener el botón Play/Back
         hud.style.display = "flex";
+        if (playgroundTitle) {
+            playgroundTitle.style.display = "none";
+        }
+        if (playModeOverlay) {
+            playModeOverlay.style.display = "flex";
+            gsap.fromTo(playModeOverlay, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" });
+        }
 
         // Notificación y egg (solo primera vez)
         if (!window.__playModeUnlocked) {
@@ -217,6 +247,12 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 enterPlayMode();
             }
+        });
+    }
+
+    if (playModeBack) {
+        playModeBack.addEventListener("click", () => {
+            window.backToMenu();
         });
     }
 

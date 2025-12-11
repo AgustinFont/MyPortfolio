@@ -25,12 +25,22 @@
         </div>
     </div>
 
+    <!-- === TÍTULO PLAYGROUND (fuera del HUD para evitar solapes) === -->
+    <div class="playground-title" id="playground-title" aria-label="Playground title">
+        <span class="title-prefix">WELCOME TO MY</span>
+        <button class="play-btn" id="play-toggle" aria-label="Play mode">PLAY</button><span class="title-suffix">GROUND</span>
+    </div>
+
+    <!-- HUD base de modo juego -->
+    <div class="play-mode-overlay" id="play-mode-overlay" style="display:none;">
+        <div class="play-mode-card">
+            <p>INTERACTIVE GAME COMING SOON ON THE PAGE</p>
+            <button class="back-btn play-mode-back" id="play-mode-back">← Back</button>
+        </div>
+    </div>
+
     <!-- === HUD PRINCIPAL === -->
     <div class="hud">
-        <div class="playground-title">
-            <span>Welcome to my </span>
-            <button class="play-btn" id="play-toggle" aria-label="Play mode">Play</button>
-        </div>
         <ul id="menu">
             <li class="active" data-section="about">ABOUT ME</li>
             <li data-section="projects">PROJECTS</li>
