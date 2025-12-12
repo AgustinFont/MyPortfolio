@@ -84,7 +84,7 @@ function loadModels() {
             
             // Posicionar y orientar para la sección Projects
             characterModel.position.set(-0.8, -0.2, 0.2); // mover ligeramente a la izquierda y adelante
-            characterModel.rotation.y = -Math.PI * 1.5; // rotar 3/4 de vuelta hacia la izquierda
+            characterModel.rotation.y = -Math.PI * 0.5; // rotar 3/4 de vuelta hacia la izquierda
             characterModel.visible = false;
 
             // Glow suave en ojos (amarillo tenue)

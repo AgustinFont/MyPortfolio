@@ -171,7 +171,7 @@ const projectsData = {
             role: "Game Designer, Artist"
         }
     ],
-    Design: [
+    design: [
         {
             id: 8,
             category: "Design",
@@ -242,8 +242,8 @@ const projectsData = {
 const categories = [
     { id: "thesis", name: "THESIS", label: "Thesis" },
     { id: "nagma", name: "NAGMA", label: "Nagma" },
-    { id: "universidad", name: "University", label: "Juegos de Universidad" },
-    { id: "diseno", name: "DISEÑO", label: "Diseño Gráfico" }
+    { id: "university", name: "University", label: "Juegos de Universidad" },
+    { id: "design", name: "DISEÑO", label: "Diseño Gráfico" }
 ];
 
 // Exportar para uso global
