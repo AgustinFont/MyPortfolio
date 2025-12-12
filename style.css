@@ -26,7 +26,7 @@ body.custom-cursor-enabled {
     cursor: none;
 }
 
-a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li, .back-btn, .contact-btn {
+a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #menu li, .back-btn, .contact-btn {
     cursor: none !important;
 }
 
@@ -264,39 +264,56 @@ a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li,
 }
 
 .title-prefix,
-.title-suffix {
+.title-full {
     letter-spacing: 1px;
 }
 
-.play-btn {
+.title-full {
+    position: relative;
+    display: inline-block;
+}
+
+.play-btn-overlay {
+    position: absolute;
     font-family: "Press Start 2P", monospace;
     font-size: 14px;
-    color: var(--color-secondary);
+    color: transparent;
     background: transparent;
     border: none;
-    padding: 0 2px;
+    padding: 0;
     cursor: pointer;
     text-transform: uppercase;
     transition: all 0.25s ease;
     box-shadow: none;
+    /* Posicionar solo sobre "PLAY" - el botón está dentro de .title-full */
+    left: 0;
+    top: 0;
+    width: 48px; /* ancho aproximado de "PLAY" en esta fuente */
+    height: 18px; /* altura de línea */
+    z-index: 26;
 }
 
-.play-btn:hover,
-.play-btn:focus-visible {
-    color: #fff7f0;
-    text-shadow: 0 0 10px rgba(255, 111, 0, 0.9);
+.play-btn-overlay:hover,
+.play-btn-overlay:focus-visible {
     outline: none;
 }
 
-.play-btn:active {
+.play-btn-overlay:active {
     transform: translateY(1px);
+}
+
+/* Efecto hover en el texto "PLAY" cuando el botón está encima */
+.play-btn-overlay:hover + *,
+.playground-title:hover .play-text {
+    color: #fff7f0;
+    text-shadow: 0 0 10px rgba(255, 111, 0, 0.9);
 }
 
 .hud.play-mode #menu {
     display: none;
 }
 
-.hud.play-mode .play-btn {
+.hud.play-mode .play-btn-overlay {
     color: var(--color-secondary);
     background: transparent;
     box-shadow: none;
@@ -1051,9 +1068,9 @@ a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li,
         gap: 10px; /* mantener separación visible en tablet */
     }
 
-    .play-btn {
+    .play-btn-overlay {
         font-size: 12px;
-        padding: 0 3px;
+        width: 42px; /* ajustar ancho para tamaño de fuente más pequeño */
     }
     
     .profile-photo-container {
@@ -2007,9 +2024,9 @@ a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li,
         gap: 8px; /* un poco menos en móvil, pero con separación visible */
     }
 
-    .play-btn {
+    .play-btn-overlay {
         font-size: 10px;
-        padding: 0 2px;
+        width: 36px; /* ajustar ancho para tamaño de fuente más pequeño */
     }
     
     .hud {

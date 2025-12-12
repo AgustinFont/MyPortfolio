@@ -130,6 +130,13 @@ function loadModels() {
 // Cargar modelos apenas esté disponible el loader
 loadModels();
 
+// Helper para ocultar todos los objetos
+function hideAllObjects() {
+    meshCube.visible = meshCyl.visible = meshCone.visible = meshTorus.visible = false;
+    if (characterModel) characterModel.visible = false;
+    modelsGroup.visible = false;
+}
+
 // --- Objetos placeholder ---
 const materialBase = new THREE.MeshStandardMaterial({ color: 0x00aaff, roughness: 0.4 });
 
@@ -192,12 +199,7 @@ gsap.to(camera.position, {
 
 // --- Transición de secciones ---
 function rotateToSection(sectionId) {
-    // Ocultar todos los objetos
-    meshCube.visible = meshCyl.visible = meshCone.visible = meshTorus.visible = false;
-    
-    // Ocultar modelos si existen
-    if (characterModel) characterModel.visible = false;
-    modelsGroup.visible = false;
+    hideAllObjects();
 
     // Determinar objeto visible y ángulo objetivo
     switch (sectionId) {
@@ -281,6 +283,7 @@ function rotateToSection(sectionId) {
 
 // --- Botón "Back" ---
 function backToMenu() {
+    hideAllObjects();
     document.querySelectorAll(".section-content").forEach(sec => {
         gsap.to(sec, { opacity: 0, duration: 0.6, onComplete: () => sec.style.display = "none" });
     });

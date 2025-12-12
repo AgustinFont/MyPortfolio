@@ -501,9 +501,14 @@ function closeProjectModal() {
     // Pausar todos los videos en el carrusel
     const carouselSlides = document.getElementById('carousel-slides');
     if (carouselSlides) {
+        // Videos locales: pausar y resetear tiempo
         carouselSlides.querySelectorAll('video').forEach(video => {
             video.pause();
-            video.src = '';
+            video.currentTime = 0;
+        });
+        // Iframes de YouTube: limpiar src para detener reproducción
+        carouselSlides.querySelectorAll('iframe').forEach(iframe => {
+            iframe.src = '';
         });
     }
     

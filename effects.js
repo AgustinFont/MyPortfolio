@@ -147,7 +147,7 @@
                 'button',
                 '.project-item',
                 '.category-tab',
-                '.play-btn',
+                '.play-btn-overlay',
                 '.interactive-link',
                 '#menu li',
                 '.back-btn',
