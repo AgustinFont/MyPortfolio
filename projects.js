@@ -286,8 +286,7 @@ function openProjectModal(project) {
                         ? item.src.split('v=')[1]
                         : item.src;
                 const embedUrl = `https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1&autoplay=0`;
-                iframe.dataset.src = embedUrl; // activar sólo cuando el slide esté activo
-                iframe.src = ''; // evitar que se reproduzca hasta seleccionarlo
+                iframe.src = embedUrl; // cargar siempre el player
                 iframe.title = `${project.title} - YouTube`;
                 iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
                 iframe.allowFullscreen = true;
@@ -337,13 +336,7 @@ function openProjectModal(project) {
 
                 const iframe = slide.querySelector('iframe');
                 if (iframe) {
-                    if (isActive) {
-                        if (!iframe.src) {
-                            iframe.src = iframe.dataset.src || '';
-                        }
-                    } else if (iframe.src) {
-                        iframe.src = '';
-                    }
+                    // dejamos el src siempre cargado para evitar que desaparezca el player
                 }
             });
             

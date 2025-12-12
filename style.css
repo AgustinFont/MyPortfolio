@@ -253,7 +253,7 @@ a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li,
     left: 18px;
     display: inline-flex;
     align-items: center;
-    gap: 2px;
+    gap: 12px; /* antes 2px; equivalente aprox. a dos espacios extra */
     font-family: "Press Start 2P", monospace;
     font-size: 14px;
     color: var(--color-secondary);
@@ -1048,7 +1048,7 @@ a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li,
         top: 12px;
         left: 12px;
         font-size: 12px;
-        gap: 4px;
+        gap: 10px; /* mantener separación visible en tablet */
     }
 
     .play-btn {
@@ -2004,7 +2004,7 @@ a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li,
         top: 10px;
         left: 10px;
         font-size: 10px;
-        gap: 3px;
+        gap: 8px; /* un poco menos en móvil, pero con separación visible */
     }
 
     .play-btn {
