@@ -16,7 +16,7 @@ const projectsData = {
             description: "Proyecto de tesis de universidad. Un juego completo desarrollado como trabajo final de carrera.",
             tech: ["Unity", "C#", "Blender"],
             links: {
-                play: "https://itch.io/...",
+                play: "https://drive.google.com/file/d/1_CU74Z3_D2io2E2v_Of8A1kM66maDLgG/view?usp=drive_link",
                 source: "https://github.com/...",
                 steam: null
             },
@@ -131,36 +131,46 @@ const projectsData = {
         {
             id: 6,
             category: "university",
-            title: "Project Gamma",
-            genre: "RPG",
+            title: "Soul Slave",
+            genre: "Platformer",
             platform: "PC",
-            year: "2022",
-            thumbnail: "images/projects/gamma-thumb.jpg",
+            year: "2019",
+            thumbnail: "images/projects/gamma-thumb.png",
             media: {
-                type: "video",
-                src: "videos/gamma-demo.mp4"
+                type: "carousel",
+                items: [
+                    {type: "image", src: "images/projects/gamma-1.png "},
+                    {type: "image", src: "images/projects/gamma-2.png "},
+                    {type: "image", src: "images/projects/gamma-3.png "},
+                    {type: "image", src: "images/projects/gamma-4.png "}   
+                ]
             },
-            description: "RPG con sistema de combate por turnos y narrativa profunda. Proyecto universitario desarrollado en equipo. Explora un mundo fantástico lleno de misterios.",
-            tech: ["Unreal Engine", "Blueprints", "Maya"],
+            description: "A 2D platformer where the player can detach their soul to possess enemies, unlock new abilities, and solve puzzle-based challenges. This demo showcases the core mechanics, traversal, and creative possession-based gameplay",
+            tech: ["Unity", "C#", "Plataformer"],
             links: {
                 play: null,
                 source: "https://github.com/...",
                 steam: null
             },
-            role: "Level Designer, Narrative Designer"
+            role: "Level Designer, Narrative Designer, Developer"
         },
         {
             id: 7,
             category: "university",
-            title: "Project Delta",
+            title: "Fluki",
             genre: "Platformer",
             platform: "PC",
-            year: "2023",
-            thumbnail: "images/projects/delta-thumb.jpg",
+            year: "2019",
+            thumbnail: "images/projects/delta-thumb.png",
             media: {
-                type: "image",
-                src: "images/projects/delta-screenshot.jpg"
-            },
+            type: "carousel",
+            items: [
+                {type: "image", src: "images/projects/delta-1.png "},
+                {type: "image", src: "images/projects/delta-2.png "},
+                {type: "image", src: "images/projects/delta-3.png "},
+                {type: "image", src: "images/projects/delta-4.png "}   
+            ]
+        },
             description: "Platformer 2D con mecánicas de movimiento fluidas. Inspirado en juegos clásicos pero con un toque moderno. Niveles diseñados para maximizar la diversión.",
             tech: ["Unity", "C#", "Aseprite"],
             links: {
