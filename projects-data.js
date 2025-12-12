@@ -8,19 +8,28 @@ const projectsData = {
             genre: "Thesis",
             platform: "PC",
             year: "2024",
-            thumbnail: "images/projects/thesis-thumb.jpg",
+            thumbnail: "images/projects/thesis-thumb.png",
             media: {
-                type: "video",
-                src: "videos/thesis-demo.mp4"
+                type: "carousel",
+                items: [
+                    { type: "image", src: "images/projects/thesis-screenshot1.png" },
+                    { type: "image", src: "images/projects/thesis-screenshot2.png" },
+                    { type: "image", src: "images/projects/thesis-screenshot3.png" },
+                    { type: "image", src: "images/projects/thesis-screenshot4.png" },
+                    { type: "image", src: "images/projects/thesis-screenshot5.png" },
+                    { type: "image", src: "images/projects/thesis-screenshot6.png" },
+                    { type: "image", src: "images/projects/thesis-screenshot7.png" },
+                    { type: "youtube", src: "" }
+                ]
             },
-            description: "Proyecto de tesis de universidad. Un juego completo desarrollado como trabajo final de carrera.",
-            tech: ["Unity", "C#", "Blender"],
+            description: "This thesis presents the design and development of a 3D fantasy adventure game focused on exploration and combat. The project explores world-building, player progression, and interactive systems, combining environmental exploration with real-time combat mechanics. The game was developed as a full interactive experience, emphasizing level design, atmosphere, and player immersion.",
+            tech: ["Unity", "C#", "3dsMax"],
             links: {
                 play: "https://drive.google.com/file/d/1_CU74Z3_D2io2E2v_Of8A1kM66maDLgG/view?usp=drive_link",
                 source: "https://github.com/...",
                 steam: null
             },
-            role: "Solo Developer"
+            role: "Level Designer, Developer, 3D Artist"
         }
     ],
     nagma: [
@@ -90,22 +99,27 @@ const projectsData = {
             id: 4,
             category: "university",
             title: "Project Alpha",
-            genre: "Action",
+            genre: "Platformer",
             platform: "PC",
-            year: "2024",
-            thumbnail: "images/projects/alpha-thumb.jpg",
+            year: "2019",
+            thumbnail: "images/projects/gamma-thumb.png",
             media: {
-                type: "video",
-                src: "videos/demo.mp4"
+                type: "carousel",
+                items: [
+                    {type: "image", src: "images/projects/gamma-1.png "},
+                    {type: "image", src: "images/projects/gamma-2.png "},
+                    {type: "image", src: "images/projects/gamma-3.png "},
+                    {type: "image", src: "images/projects/gamma-4.png "}   
+                ]
             },
-            description: "Un juego de acción frenético con mecánicas innovadoras. Desarrollado como proyecto personal para explorar sistemas de combate fluidos y dinámicos.",
-            tech: ["Unity", "C#", "Blender", "Photoshop"],
+            description: "A 2D platformer where the player can detach their soul to possess enemies, unlock new abilities, and solve puzzle-based challenges. This demo showcases the core mechanics, traversal, and creative possession-based gameplay",
+            tech: ["Unity", "C#", "Plataformer"],
             links: {
-                play: "https://itch.io/...",
+                play: null,
                 source: "https://github.com/...",
                 steam: null
             },
-            role: "Game Designer, Programmer"
+            role: "Level Designer, Narrative Designer, Developer"
         },
         {
             id: 5,
