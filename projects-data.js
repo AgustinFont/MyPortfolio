@@ -33,8 +33,17 @@ const projectsData = {
             year: "2024",
             thumbnail: "images/projects/recorrido1-thumb.jpg",
             media: {
-                type: "video",
-                src: "videos/recorrido1-demo.mp4"
+                type: "carousel",
+                items: [
+                    { type: "image", src: "images/projects/recorrido1-screenshot1.png" },
+                    { type: "image", src: "images/projects/recorrido1-screenshot2.png" },
+                    { type: "image", src: "images/projects/recorrido1-screenshot3.png" },
+                    { type: "image", src: "images/projects/recorrido1-screenshot4.png" },
+                    { type: "image", src: "images/projects/recorrido1-screenshot5.png" },
+                    { type: "image", src: "images/projects/recorrido1-screenshot6.png" },
+                    { type: "image", src: "images/projects/recorrido1-screenshot7.png" },
+                    { type: "image", src: "images/projects/recorrido1-screenshot8.png" }
+                ]
             },
             description: "Recorrido interactivo en Unity de un edificio completo. Permite explorar todas las áreas con navegación fluida y detalles arquitectónicos.",
             tech: ["Unity", "C#", "Blender"],
@@ -56,34 +65,13 @@ const projectsData = {
             media: {
                 type: "carousel",
                 items: [
-                    {
-                        type: "image",
-                        src: "images/projects/recorrido2-screenshot1.png"
-                    },
-                    {
-                        type: "image",
-                        src: "images/projects/recorrido2-screenshot2.png"
-                    },
-                    {
-                        type: "image",
-                        src: "images/projects/recorrido2-screenshot3.png"
-                    },
-                    {
-                        type: "image",
-                        src: "images/projects/recorrido2-screenshot4.png"
-                    },
-                    {
-                        type: "image",
-                        src: "images/projects/recorrido2-screenshot5.png"
-                    },
-                    {
-                        type: "image",
-                        src: "images/projects/recorrido2-screenshot6.png"
-                    },
-                    {
-                        type: "video",
-                        src: "videos/recorrido2-demo.mp4"
-                    }
+                    { type: "image", src: "images/projects/recorrido2-screenshot1.png" },
+                    { type: "image", src: "images/projects/recorrido2-screenshot2.png" },
+                    { type: "image", src: "images/projects/recorrido2-screenshot3.png" },
+                    { type: "image", src: "images/projects/recorrido2-screenshot4.png" },
+                    { type: "image", src: "images/projects/recorrido2-screenshot5.png" },
+                    { type: "image", src: "images/projects/recorrido2-screenshot6.png" },
+                    { type: "youtube", src: "https://youtu.be/aBcNwBF_do8" }
                 ]
             },
             description: "Recorrido virtual de un complejo arquitectónico. Incluye múltiples edificios y espacios exteriores con iluminación realista.",

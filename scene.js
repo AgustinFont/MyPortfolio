@@ -48,14 +48,13 @@ const group = new THREE.Group();
 group.position.set(-1.2, 0, -7.5); // alejamos más de la cámara para apreciarlo mejor
 scene.add(group);
 
-// Grupo para modelos (environment + character) rotará como un solo conjunto
+// Grupo para modelos (solo character) rotará como un conjunto
 const modelsGroup = new THREE.Group();
 modelsGroup.position.set(0, 0, 0);
 group.add(modelsGroup);
 
 // --- Variables para modelos 3D ---
 let characterModel = null;
-let environmentModel = null;
 let characterMixer = null; // Para animaciones
 let characterAnimationAction = null;
 
@@ -69,33 +68,12 @@ function loadModels() {
         return;
     }
     
-    // Cargar environment (nuevo enviromentSand)
-    loader.load(
-        'models/enviromentSand.glb',
-        (gltf) => {
-            environmentModel = gltf.scene;
-            environmentModel.scale.set(0.7, 0.7, 0.7); // reducir tamaño
-            environmentModel.position.set(0, 0, 0);
-            environmentModel.visible = false;
-            modelsGroup.add(environmentModel);
-            console.log('Environment cargado');
-        },
-        (progress) => {
-            if (progress.total > 0) {
-                console.log('Cargando environment:', (progress.loaded / progress.total * 100).toFixed(0) + '%');
-            }
-        },
-        (error) => {
-            console.error('Error cargando environment:', error);
-        }
-    );
-
-    // Cargar character (nuevo characterSand)
+    // Cargar character (único modelo characterSand)
     loader.load(
         'models/characterSand.glb',
         (gltf) => {
             characterModel = gltf.scene;
-            characterModel.scale.set(0.7, 0.7, 0.7); // reducir tamaño
+            characterModel.scale.set(0.6, 0.6, 0.6); // un poco más compacto
             
             if (gltf.animations && gltf.animations.length > 0) {
                 characterMixer = new THREE.AnimationMixer(characterModel);
@@ -105,8 +83,8 @@ function loadModels() {
             }
             
             // Posicionar sobre las cajas (tweak visual)
-            characterModel.position.set(0.35, 0.25, -0.15); // un poco hacia su izquierda y forward
-            characterModel.rotation.y = Math.PI * 0.08; // reducir giro propio
+            characterModel.position.set(0, -0.2, 0); // bajar ligeramente
+            characterModel.rotation.y = Math.PI * 0.05; // giro sutil
             characterModel.visible = false;
 
             // Glow suave en ojos (amarillo tenue)
@@ -208,7 +186,6 @@ function rotateToSection(sectionId) {
     meshCube.visible = meshCyl.visible = meshCone.visible = meshTorus.visible = false;
     
     // Ocultar modelos si existen
-    if (environmentModel) environmentModel.visible = false;
     if (characterModel) characterModel.visible = false;
     modelsGroup.visible = false;
 
@@ -219,13 +196,12 @@ function rotateToSection(sectionId) {
             targetAngle = 0; 
             break;
         case "projects": 
-            // Mostrar modelos en lugar del cilindro
-            if (environmentModel && characterModel) {
-                environmentModel.visible = true;
+            // Mostrar modelo único
+            if (characterModel) {
                 characterModel.visible = true;
                 modelsGroup.visible = true;
             } else {
-                // Fallback al cilindro si los modelos no están cargados
+                // Fallback al cilindro si el modelo no está cargado
                 meshCyl.visible = true;
             }
             targetAngle = Math.PI / 2; 

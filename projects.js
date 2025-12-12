@@ -278,6 +278,19 @@ function openProjectModal(project) {
                 });
                 
                 slide.appendChild(video);
+            } else if (item.type === 'youtube') {
+                const iframe = document.createElement('iframe');
+                const youtubeId = item.src.includes('youtu.be/')
+                    ? item.src.split('youtu.be/')[1]
+                    : item.src.includes('v=')
+                        ? item.src.split('v=')[1]
+                        : item.src;
+                iframe.src = `https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1&autoplay=1`;
+                iframe.title = `${project.title} - YouTube`;
+                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                iframe.allowFullscreen = true;
+                iframe.className = 'carousel-media';
+                slide.appendChild(iframe);
             } else {
                 const img = document.createElement('img');
                 img.src = item.src;
@@ -402,6 +415,19 @@ function openProjectModal(project) {
             
             slide.appendChild(video);
             video.play().catch(e => console.log('Error al reproducir video:', e));
+        } else if (project.media.type === 'youtube') {
+            const iframe = document.createElement('iframe');
+            const youtubeId = project.media.src.includes('youtu.be/')
+                ? project.media.src.split('youtu.be/')[1]
+                : project.media.src.includes('v=')
+                    ? project.media.src.split('v=')[1]
+                    : project.media.src;
+            iframe.src = `https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1&autoplay=1`;
+            iframe.title = `${project.title} - YouTube`;
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            iframe.className = 'carousel-media';
+            slide.appendChild(iframe);
         } else {
             const img = document.createElement('img');
             img.src = project.media.src;
