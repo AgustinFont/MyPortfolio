@@ -72,7 +72,7 @@ const projectsData = {
                     { type: "image", src: "images/projects/recorrido2-screenshot4.png" },
                     { type: "image", src: "images/projects/recorrido2-screenshot5.png" },
                     { type: "image", src: "images/projects/recorrido2-screenshot6.png" },
-                    { type: "youtube", src: "https://youtu.be/aBcNwBF_do8" }
+                    { type: "youtube", src: "https://www.youtube.com/watch?v=aBcNwBF_do8" }
                 ]
             },
             description: "A real-time VR walkthrough of an outdoor leisure complex featuring an artificial wave pool. This demo showcases the environment, amenities, and overall atmosphere of the facility through an immersive virtual experience.",
@@ -88,7 +88,7 @@ const projectsData = {
     University: [
         {
             id: 4,
-            category: "universidad",
+            category: "University",
             title: "Project Alpha",
             genre: "Action",
             platform: "PC",
@@ -109,7 +109,7 @@ const projectsData = {
         },
         {
             id: 5,
-            category: "universidad",
+            category: "University",
             title: "Project Beta",
             genre: "Puzzle",
             platform: "Mobile",
@@ -130,7 +130,7 @@ const projectsData = {
         },
         {
             id: 6,
-            category: "universidad",
+            category: "University",
             title: "Project Gamma",
             genre: "RPG",
             platform: "PC",
@@ -151,7 +151,7 @@ const projectsData = {
         },
         {
             id: 7,
-            category: "universidad",
+            category: "University",
             title: "Project Delta",
             genre: "Platformer",
             platform: "PC",
@@ -171,10 +171,10 @@ const projectsData = {
             role: "Game Designer, Artist"
         }
     ],
-    diseno: [
+    Design: [
         {
             id: 8,
-            category: "diseno",
+            category: "Design",
             title: "Diseño Gráfico - Proyecto A",
             genre: "Graphic Design",
             platform: "Digital",
@@ -195,7 +195,7 @@ const projectsData = {
         },
         {
             id: 9,
-            category: "diseno",
+            category: "Design",
             title: "Diseño Gráfico - Proyecto B",
             genre: "Graphic Design",
             platform: "Digital",
@@ -216,7 +216,7 @@ const projectsData = {
         },
         {
             id: 10,
-            category: "diseno",
+            category: "Design",
             title: "Diseño Gráfico - Proyecto C",
             genre: "Graphic Design",
             platform: "Print",
@@ -242,7 +242,7 @@ const projectsData = {
 const categories = [
     { id: "thesis", name: "THESIS", label: "Thesis" },
     { id: "nagma", name: "NAGMA", label: "Nagma" },
-    { id: "universidad", name: "UNIVERSIDAD", label: "Juegos de Universidad" },
+    { id: "universidad", name: "University", label: "Juegos de Universidad" },
     { id: "diseno", name: "DISEÑO", label: "Diseño Gráfico" }
 ];
 
