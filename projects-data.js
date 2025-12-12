@@ -85,10 +85,10 @@ const projectsData = {
             role: "Developer, 3D Artist"
         }
     ],
-    University: [
+    university: [
         {
             id: 4,
-            category: "University",
+            category: "university",
             title: "Project Alpha",
             genre: "Action",
             platform: "PC",
@@ -109,7 +109,7 @@ const projectsData = {
         },
         {
             id: 5,
-            category: "University",
+            category: "university",
             title: "Project Beta",
             genre: "Puzzle",
             platform: "Mobile",
@@ -130,7 +130,7 @@ const projectsData = {
         },
         {
             id: 6,
-            category: "University",
+            category: "university",
             title: "Project Gamma",
             genre: "RPG",
             platform: "PC",
@@ -151,7 +151,7 @@ const projectsData = {
         },
         {
             id: 7,
-            category: "University",
+            category: "university",
             title: "Project Delta",
             genre: "Platformer",
             platform: "PC",
@@ -174,7 +174,7 @@ const projectsData = {
     design: [
         {
             id: 8,
-            category: "Design",
+            category: "design",
             title: "Diseño Gráfico - Proyecto A",
             genre: "Graphic Design",
             platform: "Digital",
@@ -195,7 +195,7 @@ const projectsData = {
         },
         {
             id: 9,
-            category: "Design",
+            category: "design",
             title: "Diseño Gráfico - Proyecto B",
             genre: "Graphic Design",
             platform: "Digital",
@@ -216,7 +216,7 @@ const projectsData = {
         },
         {
             id: 10,
-            category: "Design",
+            category: "design",
             title: "Diseño Gráfico - Proyecto C",
             genre: "Graphic Design",
             platform: "Print",
@@ -242,8 +242,8 @@ const projectsData = {
 const categories = [
     { id: "thesis", name: "THESIS", label: "Thesis" },
     { id: "nagma", name: "NAGMA", label: "Nagma" },
-    { id: "university", name: "University", label: "Juegos de Universidad" },
-    { id: "design", name: "DISEÑO", label: "Diseño Gráfico" }
+    { id: "university", name: "UNIVERSITY", label: "University" },
+    { id: "design", name: "DESIGN", label: "Design" }
 ];
 
 // Exportar para uso global

@@ -285,7 +285,7 @@ function openProjectModal(project) {
                     : item.src.includes('v=')
                         ? item.src.split('v=')[1]
                         : item.src;
-                const embedUrl = `https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1&autoplay=1`;
+                const embedUrl = `https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1&autoplay=0`;
                 iframe.dataset.src = embedUrl; // activar sólo cuando el slide esté activo
                 iframe.src = ''; // evitar que se reproduzca hasta seleccionarlo
                 iframe.title = `${project.title} - YouTube`;

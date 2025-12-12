@@ -10,6 +10,11 @@ let currentAngle = 0;
 let targetAngle = 0;
 let zoomLevel = 7;
 let idleOffset = 0;
+let isDraggingModel = false;
+let dragStartX = 0;
+let dragStartRotationY = 0;
+let dragTargetRotationY = 0;
+let baseModelRotationY = 0; // rotación base para volver suave
 
 // Ajustar FOV según el dispositivo
 const isMobile = window.innerWidth < 768;
@@ -85,6 +90,7 @@ function loadModels() {
             // Posicionar y orientar para la sección Projects
             characterModel.position.set(-2, -0.2, 0.2); // mover a la izquierda y un poco adelante
             //characterModel.rotation.y = -Math.PI * ; // rotar 3/4 de vuelta hacia la izquierda
+            baseModelRotationY = characterModel.rotation.y;
             characterModel.visible = false;
 
             // Glow suave en ojos (amarillo tenue)
@@ -293,6 +299,43 @@ document.addEventListener("mousemove", (e) => {
     const yNorm = (e.clientY / window.innerHeight - 0.5) * 2;
     mouseX = xNorm;
     mouseY = yNorm;
+    
+    // Si estamos arrastrando el modelo, actualizar el objetivo de rotación
+    if (isDraggingModel && characterModel && characterModel.visible) {
+        const dragDelta = e.clientX - dragStartX;
+        dragTargetRotationY = dragStartRotationY + dragDelta * 0.01;
+    }
+});
+
+// --- Rotación del modelo al arrastrar ---
+const canvas = renderer.domElement;
+
+canvas.addEventListener('mousedown', (e) => {
+    if (!characterModel || !characterModel.visible) return;
+    isDraggingModel = true;
+    dragStartX = e.clientX;
+    dragStartRotationY = characterModel.rotation.y;
+    dragTargetRotationY = dragStartRotationY;
+});
+
+canvas.addEventListener('mouseup', () => {
+    if (!isDraggingModel || !characterModel) return;
+    isDraggingModel = false;
+    gsap.to(characterModel.rotation, {
+        y: baseModelRotationY,
+        duration: 0.8,
+        ease: "power2.out"
+    });
+});
+
+canvas.addEventListener('mouseleave', () => {
+    if (!isDraggingModel || !characterModel) return;
+    isDraggingModel = false;
+    gsap.to(characterModel.rotation, {
+        y: baseModelRotationY,
+        duration: 0.8,
+        ease: "power2.out"
+    });
 });
 
 // --- Loop principal ---
@@ -321,6 +364,12 @@ function animate() {
     camera.position.x += (mouseX * 0.3 - camera.position.x) * 0.02;
     camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.02;
     camera.lookAt(0, 0, 0);
+
+    // Aplicar rotación temporal mientras se arrastra el modelo
+    if (isDraggingModel && characterModel && characterModel.visible) {
+        const targetY = dragTargetRotationY;
+        characterModel.rotation.y += (targetY - characterModel.rotation.y) * 0.25;
+    }
 
     renderer.render(scene, camera);
 }
