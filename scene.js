@@ -88,8 +88,8 @@ function loadModels() {
             }
             
             // Posicionar y orientar para la sección Projects
-            characterModel.position.set(-2, -0.2, 0.2); // mover a la izquierda y un poco adelante
-            //characterModel.rotation.y = -Math.PI * ; // rotar 3/4 de vuelta hacia la izquierda
+            characterModel.position.set(-8, -0.2, 10);; // mover a la izquierda y un poco adelante
+            characterModel.rotation.y = -Math.PI * 0.3; // rotar 3/4 de vuelta hacia la izquierda
             baseModelRotationY = characterModel.rotation.y;
             characterModel.visible = false;
 
@@ -293,6 +293,11 @@ function backToMenu() {
 
 // === Parallax de cámara con movimiento del mouse ===
 let mouseX = 0, mouseY = 0;
+const canvas = renderer.domElement;
+const isProjectsVisible = () => {
+    const section = document.getElementById('projects-content');
+    return section && section.offsetParent !== null;
+};
 
 document.addEventListener("mousemove", (e) => {
     const xNorm = (e.clientX / window.innerWidth - 0.5) * 2; // -1 a 1
@@ -307,18 +312,17 @@ document.addEventListener("mousemove", (e) => {
     }
 });
 
-// --- Rotación del modelo al arrastrar ---
-const canvas = renderer.domElement;
-
-canvas.addEventListener('mousedown', (e) => {
+// --- Rotación del modelo al arrastrar (global, aunque el HUD esté encima) ---
+window.addEventListener('mousedown', (e) => {
     if (!characterModel || !characterModel.visible) return;
+    if (!isProjectsVisible()) return;
     isDraggingModel = true;
     dragStartX = e.clientX;
     dragStartRotationY = characterModel.rotation.y;
     dragTargetRotationY = dragStartRotationY;
 });
 
-canvas.addEventListener('mouseup', () => {
+const endModelDrag = () => {
     if (!isDraggingModel || !characterModel) return;
     isDraggingModel = false;
     gsap.to(characterModel.rotation, {
@@ -326,17 +330,11 @@ canvas.addEventListener('mouseup', () => {
         duration: 0.8,
         ease: "power2.out"
     });
-});
+};
 
-canvas.addEventListener('mouseleave', () => {
-    if (!isDraggingModel || !characterModel) return;
-    isDraggingModel = false;
-    gsap.to(characterModel.rotation, {
-        y: baseModelRotationY,
-        duration: 0.8,
-        ease: "power2.out"
-    });
-});
+window.addEventListener('mouseup', endModelDrag);
+window.addEventListener('mouseleave', endModelDrag);
+window.addEventListener('blur', endModelDrag);
 
 // --- Loop principal ---
 function animate() {
