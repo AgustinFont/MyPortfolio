@@ -13,9 +13,9 @@ html,
 body {
     margin: 0;
     padding: 0;
-    min-height: 100%;
+    height: 100%;
     width: 100%;
-    overflow-x: hidden;
+    overflow: hidden;
     background-color: var(--color-bg);
     color: var(--color-primary);
     -webkit-font-smoothing: antialiased;
@@ -254,7 +254,7 @@ a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li,
     left: 18px;
     display: inline-flex;
     align-items: center;
-    gap: 0;
+    gap: 6px;
     font-family: "Press Start 2P", monospace;
     font-size: 14px;
     color: var(--color-secondary);
@@ -474,8 +474,8 @@ a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li,
 
 .section-inner,
 .project-card {
-    max-width: 960px;
-    padding: 24px;
+    max-width: 800px;
+    padding: 20px;
     width: 100%;
     box-sizing: border-box;
 }
@@ -556,7 +556,7 @@ a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li,
     background: rgba(0, 255, 255, 0.05);
     border: 2px solid rgba(0, 255, 255, 0.3);
     border-radius: 8px;
-    padding: 24px 20px;
+    padding: 30px;
     box-sizing: border-box;
     margin: 0 auto;
 }
@@ -742,10 +742,10 @@ a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li,
 /* === SKILLS AND ABILITIES CONTAINER === */
 .skills-abilities-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
     width: 100%;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 8px auto 0;
     align-items: start;
 }
@@ -753,8 +753,8 @@ a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li,
 /* === ABILITIES SECTION === */
 .abilities-section {
     width: 100%;
-    max-width: 520px;
-    margin-top: 12px;
+    max-width: 500px;
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
@@ -831,15 +831,14 @@ a, button, .category-tab, .project-item, .play-btn, .interactive-link, #menu li,
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: 30px;
 }
 
 .contact-buttons {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 14px;
-    width: 100%;
-    max-width: 420px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .contact-btn {
