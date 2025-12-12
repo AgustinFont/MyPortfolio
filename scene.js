@@ -82,9 +82,9 @@ function loadModels() {
                 console.log('Animación idle encontrada y reproduciendo');
             }
             
-            // Posicionar sobre las cajas (tweak visual)
-            characterModel.position.set(0, -0.2, 0); // bajar ligeramente
-            characterModel.rotation.y = Math.PI * 0.05; // giro sutil
+            // Posicionar y orientar para la sección Projects
+            characterModel.position.set(-0.8, -0.2, 0.2); // mover ligeramente a la izquierda y adelante
+            characterModel.rotation.y = -Math.PI * 1.5; // rotar 3/4 de vuelta hacia la izquierda
             characterModel.visible = false;
 
             // Glow suave en ojos (amarillo tenue)

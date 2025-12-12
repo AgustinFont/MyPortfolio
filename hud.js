@@ -122,6 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === NAVEGACIÓN POR TECLADO ===
     document.addEventListener("keydown", (e) => {
+        const projectModal = document.getElementById('project-modal');
+        const modalOpen = projectModal && projectModal.style.display !== 'none' && projectModal.style.display !== '';
+        if (modalOpen) return;
+
         if (inSection) {
             if (e.key === "Escape") {
                 window.backToMenu();

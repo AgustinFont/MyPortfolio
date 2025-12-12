@@ -27,11 +27,11 @@ const projectsData = {
         {
             id: 2,
             category: "nagma",
-            title: "Recorrido Interactivo - Edificio A",
+            title: "Virtual Apartment Tour App – Floor & Layout Selector",
             genre: "Interactive Tour",
-            platform: "PC",
-            year: "2024",
-            thumbnail: "images/projects/recorrido1-thumb.jpg",
+            platform: "PC, VR",
+            year: "2018",
+            thumbnail: "images/projects/recorrido1-thumb.png",
             media: {
                 type: "carousel",
                 items: [
@@ -42,11 +42,12 @@ const projectsData = {
                     { type: "image", src: "images/projects/recorrido1-screenshot5.png" },
                     { type: "image", src: "images/projects/recorrido1-screenshot6.png" },
                     { type: "image", src: "images/projects/recorrido1-screenshot7.png" },
-                    { type: "image", src: "images/projects/recorrido1-screenshot8.png" }
+                    { type: "image", src: "images/projects/recorrido1-screenshot8.png" },
+                    { type: "youtube", src: "https://www.youtube.com/watch?v=op-REI0--7I" }
                 ]
             },
-            description: "Recorrido interactivo en Unity de un edificio completo. Permite explorar todas las áreas con navegación fluida y detalles arquitectónicos.",
-            tech: ["Unity", "C#", "Blender"],
+            description: "A virtual tour application allowing users to explore floors, switch apartment layouts, and choose optional room configurations.",
+            tech: ["Unity", "C#", "3dsMax"],
             links: {
                 play: null,
                 source: null,
@@ -57,10 +58,10 @@ const projectsData = {
         {
             id: 3,
             category: "nagma",
-            title: "Recorrido Interactivo - Complejo B",
+            title: "VR Walkthrough – Artificial Wave Pool Complex",
             genre: "Interactive Tour",
-            platform: "PC",
-            year: "2023",
+            platform: "PC, VR",
+            year: "2020",
             thumbnail: "images/projects/recorrido2-thumb.png",
             media: {
                 type: "carousel",
@@ -74,17 +75,17 @@ const projectsData = {
                     { type: "youtube", src: "https://youtu.be/aBcNwBF_do8" }
                 ]
             },
-            description: "Recorrido virtual de un complejo arquitectónico. Incluye múltiples edificios y espacios exteriores con iluminación realista.",
-            tech: ["Unity", "C#"],
+            description: "A real-time VR walkthrough of an outdoor leisure complex featuring an artificial wave pool. This demo showcases the environment, amenities, and overall atmosphere of the facility through an immersive virtual experience.",
+            tech: ["Unity", "C#","VR"],
             links: {
                 play: null,
                 source: null,
                 steam: null
             },
-            role: "Developer"
+            role: "Developer, 3D Artist"
         }
     ],
-    universidad: [
+    University: [
         {
             id: 4,
             category: "universidad",

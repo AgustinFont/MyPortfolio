@@ -285,7 +285,9 @@ function openProjectModal(project) {
                     : item.src.includes('v=')
                         ? item.src.split('v=')[1]
                         : item.src;
-                iframe.src = `https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1&autoplay=1`;
+                const embedUrl = `https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1&autoplay=1`;
+                iframe.dataset.src = embedUrl; // activar sólo cuando el slide esté activo
+                iframe.src = ''; // evitar que se reproduzca hasta seleccionarlo
                 iframe.title = `${project.title} - YouTube`;
                 iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
                 iframe.allowFullscreen = true;
@@ -317,23 +319,37 @@ function openProjectModal(project) {
             
             currentSlide = index;
             
-            // Actualizar slides
+            // Actualizar slides y medios
             carouselSlides.querySelectorAll('.carousel-slide').forEach((slide, i) => {
-                slide.classList.toggle('active', i === index);
+                const isActive = i === index;
+                slide.classList.toggle('active', isActive);
+
+                const video = slide.querySelector('video');
+                if (video) {
+                    if (isActive) {
+                        video.currentTime = 0;
+                        video.play().catch(e => console.log('Error al reproducir video:', e));
+                    } else {
+                        video.pause();
+                        video.currentTime = 0;
+                    }
+                }
+
+                const iframe = slide.querySelector('iframe');
+                if (iframe) {
+                    if (isActive) {
+                        if (!iframe.src) {
+                            iframe.src = iframe.dataset.src || '';
+                        }
+                    } else if (iframe.src) {
+                        iframe.src = '';
+                    }
+                }
             });
             
             // Actualizar indicadores
             carouselIndicators.querySelectorAll('.carousel-indicator').forEach((ind, i) => {
                 ind.classList.toggle('active', i === index);
-            });
-            
-            // Pausar todos los videos excepto el actual
-            carouselSlides.querySelectorAll('video').forEach((video, i) => {
-                if (i === index) {
-                    video.play().catch(e => console.log('Error al reproducir video:', e));
-                } else {
-                    video.pause();
-                }
             });
         }
         
@@ -422,7 +438,7 @@ function openProjectModal(project) {
                 : project.media.src.includes('v=')
                     ? project.media.src.split('v=')[1]
                     : project.media.src;
-            iframe.src = `https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1&autoplay=1`;
+            iframe.src = `https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1&autoplay=0`;
             iframe.title = `${project.title} - YouTube`;
             iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
             iframe.allowFullscreen = true;
