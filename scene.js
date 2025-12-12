@@ -104,6 +104,10 @@ function loadModels() {
             });
 
             modelsGroup.add(characterModel);
+
+            // Exponer para ajustes desde consola (debug)
+            window.characterModel = characterModel;
+            window.modelsGroup = modelsGroup;
             console.log('Character cargado');
         },
         (progress) => {
