@@ -149,32 +149,6 @@ const projectsData = {
             id: 6,
             category: "university",
             title: "Soul Slave",
-            genre: "Platformer",
-            platform: "PC",
-            year: "2019",
-            thumbnail: "images/projects/gamma-thumb.png",
-            media: {
-                type: "carousel",
-                items: [
-                    {type: "image", src: "images/projects/gamma-1.png "},
-                    {type: "image", src: "images/projects/gamma-2.png "},
-                    {type: "image", src: "images/projects/gamma-3.png "},
-                    {type: "image", src: "images/projects/gamma-4.png "}   
-                ]
-            },
-            description: "A 2D platformer where the player can detach their soul to possess enemies, unlock new abilities, and solve puzzle-based challenges. This demo showcases the core mechanics, traversal, and creative possession-based gameplay",
-            tech: ["Unity", "C#", "Plataformer"],
-            links: {
-                play: null,
-                source: "https://github.com/...",
-                steam: null
-            },
-            role: "Level Designer, Narrative Designer, Developer"
-        },
-        {
-            id: 7,
-            category: "university",
-            title: "Fluki",
             genre: "3D Modeling",
             platform: "PC",
             year: "2019",
@@ -197,6 +171,32 @@ const projectsData = {
                 steam: null
             },
             role: "3D Artist"
+        },
+        {
+            id: 7,
+            category: "university",
+            title: "Fluki",
+            genre: "Platformer",
+            platform: "PC",
+            year: "2019",
+            thumbnail: "images/projects/delta-thumb.png",
+            media: {
+                type: "carousel",
+                items: [
+                    {type: "image", src: "images/projects/delta-1.png "},
+                    {type: "image", src: "images/projects/delta-2.png "},
+                    {type: "image", src: "images/projects/delta-3.png "},
+                    {type: "image", src: "images/projects/delta-4.png "}   
+                ]
+            },
+            description: "Platformer 2D con mecánicas de movimiento fluidas. Inspirado en juegos clásicos pero con un toque moderno. Niveles diseñados para maximizar la diversión.",
+            tech: ["Unity", "C#", "Aseprite"],
+            links: {
+                play: "https://itch.io/...",
+                source: "https://github.com/...",
+                steam: null
+            },
+            role: "Game Designer, Artist"
         }
     ],
     design: [
