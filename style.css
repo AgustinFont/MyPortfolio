@@ -862,9 +862,311 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 35px;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
 }
 
+/* Status HUD */
+.status-hud {
+    width: 100%;
+    max-width: 600px;
+    background: rgba(0, 255, 255, 0.05);
+    border: 2px solid var(--color-primary);
+    border-radius: 8px;
+    padding: 20px 25px;
+    box-shadow: 
+        0 0 15px rgba(0, 255, 255, 0.2),
+        inset 0 0 10px rgba(0, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.status-hud::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+    animation: scanline 3s linear infinite;
+}
+
+@keyframes scanline {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100px); }
+}
+
+.status-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.65em;
+    color: var(--color-primary);
+    line-height: 1.8;
+}
+
+.status-line:last-child {
+    margin-bottom: 0;
+}
+
+.status-prefix {
+    color: var(--color-secondary);
+    text-shadow: 0 0 8px rgba(255, 111, 0, 0.6);
+}
+
+.status-text {
+    flex: 1;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    background: var(--color-secondary);
+    border-radius: 50%;
+    box-shadow: 
+        0 0 10px rgba(255, 111, 0, 0.8),
+        0 0 20px rgba(255, 111, 0, 0.4);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.9); }
+}
+
+/* Quest Log */
+.quest-log {
+    width: 100%;
+    max-width: 600px;
+    background: rgba(255, 111, 0, 0.05);
+    border: 2px solid var(--color-secondary);
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 
+        0 0 15px rgba(255, 111, 0, 0.2),
+        inset 0 0 10px rgba(255, 111, 0, 0.05);
+    position: relative;
+}
+
+.quest-log-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 111, 0, 0.3);
+}
+
+.quest-icon {
+    font-size: 1.5em;
+    filter: drop-shadow(0 0 5px rgba(255, 111, 0, 0.6));
+}
+
+.quest-title {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.75em;
+    color: var(--color-secondary);
+    text-shadow: 0 0 10px rgba(255, 111, 0, 0.6);
+}
+
+.quest-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.quest-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.65em;
+    color: var(--color-text-dim);
+    line-height: 1.8;
+    transition: all 0.3s ease;
+}
+
+.quest-item:hover {
+    color: var(--color-primary);
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+    transform: translateX(5px);
+}
+
+.quest-bullet {
+    color: var(--color-secondary);
+    text-shadow: 0 0 5px rgba(255, 111, 0, 0.6);
+}
+
+.quest-text {
+    flex: 1;
+}
+
+.quest-rewards {
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 0, 255, 0.3);
+}
+
+.rewards-title {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.7em;
+    color: var(--color-accent);
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
+    margin-bottom: 12px;
+}
+
+.reward-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.6em;
+    color: var(--color-text-dim);
+    line-height: 1.8;
+}
+
+.reward-item:last-child {
+    margin-bottom: 0;
+}
+
+.reward-check {
+    color: var(--color-accent);
+    text-shadow: 0 0 8px rgba(255, 0, 255, 0.6);
+    font-size: 1.1em;
+}
+
+.reward-text {
+    flex: 1;
+}
+
+/* Contact Message */
+.contact-message {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.contact-message p {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.75em;
+    color: var(--color-text);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* Contact Cards */
+.contact-cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+.contact-card {
+    flex: 1;
+    min-width: 250px;
+    max-width: 280px;
+    background: rgba(0, 255, 255, 0.05);
+    border: 2px solid var(--color-primary);
+    border-radius: 8px;
+    padding: 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+}
+
+.contact-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.contact-card:hover::before {
+    left: 100%;
+}
+
+.contact-card:hover {
+    background: rgba(0, 255, 255, 0.1);
+    border-color: var(--color-primary);
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.4),
+        inset 0 0 15px rgba(0, 255, 255, 0.1);
+    transform: translateY(-3px);
+}
+
+.contact-card:active {
+    transform: translateY(-1px);
+}
+
+.card-icon {
+    font-size: 2em;
+    filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.5));
+    flex-shrink: 0;
+}
+
+.card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.card-title {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.85em;
+    color: var(--color-primary);
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+    line-height: 1.5;
+}
+
+.card-subtitle {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.5em;
+    color: var(--color-text-dim);
+    line-height: 1.4;
+    opacity: 0.8;
+}
+
+.linkedin-card {
+    border-color: #0077b5;
+}
+
+.linkedin-card .card-title {
+    color: #0077b5;
+    text-shadow: 0 0 8px rgba(0, 119, 181, 0.5);
+}
+
+.linkedin-card:hover {
+    background: rgba(0, 119, 181, 0.1);
+    border-color: #0077b5;
+    box-shadow: 
+        0 0 20px rgba(0, 119, 181, 0.4),
+        inset 0 0 15px rgba(0, 119, 181, 0.1);
+}
+
+.email-card {
+    border-color: var(--color-primary);
+}
+
+/* Legacy contact-btn styles (kept for other sections) */
 .contact-buttons {
     display: flex;
     gap: 20px;
@@ -1071,6 +1373,149 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     100% {
         opacity: 1;
         transform: translateX(0);
+    }
+}
+
+/* === CONTACT SECTION RESPONSIVE === */
+@media (max-width: 768px) {
+    .contact-section {
+        gap: 25px;
+        padding: 0 15px;
+    }
+
+    .status-hud {
+        padding: 15px 20px;
+    }
+
+    .status-line {
+        font-size: 0.55em;
+        gap: 8px;
+    }
+
+    .quest-log {
+        padding: 20px;
+    }
+
+    .quest-log-header {
+        gap: 10px;
+        margin-bottom: 15px;
+        padding-bottom: 12px;
+    }
+
+    .quest-icon {
+        font-size: 1.3em;
+    }
+
+    .quest-title {
+        font-size: 0.65em;
+    }
+
+    .quest-list {
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .quest-item {
+        font-size: 0.55em;
+        gap: 10px;
+    }
+
+    .quest-rewards {
+        padding-top: 12px;
+    }
+
+    .rewards-title {
+        font-size: 0.6em;
+        margin-bottom: 10px;
+    }
+
+    .reward-item {
+        font-size: 0.5em;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+
+    .contact-message p {
+        font-size: 0.65em;
+    }
+
+    .contact-cards {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .contact-card {
+        min-width: 100%;
+        max-width: 100%;
+        padding: 18px;
+    }
+
+    .card-icon {
+        font-size: 1.8em;
+    }
+
+    .card-title {
+        font-size: 0.75em;
+    }
+
+    .card-subtitle {
+        font-size: 0.45em;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-section {
+        gap: 20px;
+    }
+
+    .status-hud {
+        padding: 12px 15px;
+    }
+
+    .status-line {
+        font-size: 0.5em;
+    }
+
+    .quest-log {
+        padding: 15px;
+    }
+
+    .quest-title {
+        font-size: 0.6em;
+    }
+
+    .quest-item {
+        font-size: 0.5em;
+    }
+
+    .rewards-title {
+        font-size: 0.55em;
+    }
+
+    .reward-item {
+        font-size: 0.45em;
+    }
+
+    .contact-message p {
+        font-size: 0.6em;
+    }
+
+    .contact-card {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .card-icon {
+        font-size: 1.5em;
+    }
+
+    .card-title {
+        font-size: 0.7em;
+    }
+
+    .card-subtitle {
+        font-size: 0.4em;
     }
 }
 
