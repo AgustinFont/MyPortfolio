@@ -1,4 +1,4 @@
-// === projects-data.js - Base de datos de proyectos por categorías ===
+// === projects-data.js - Projects database by categories ===
 const projectsData = {
     thesis: [
         {
@@ -114,7 +114,7 @@ const projectsData = {
                 ]
             },
             description: "A 2D platformer where the player can detach their soul to possess enemies, unlock new abilities, and solve puzzle-based challenges. This demo showcases the core mechanics, traversal, and creative possession-based gameplay",
-            tech: ["Unity", "C#", "Plataformer"],
+            tech: ["Unity", "C#", "Platformer"],
             links: {
                 play: null,
                 source: "https://github.com/...",
@@ -136,7 +136,7 @@ const projectsData = {
                     {type: "youtube", src: "https://www.youtube.com/watch?v=uVwGlzuEv74"}
                 ]
             },
-            description: "Puzzle game con mecánicas únicas de física. Ganador del Game Jam Local 2023. Desafía a los jugadores con niveles progresivamente más complejos.",
+            description: "Puzzle game with unique physics mechanics. Winner of Local Game Jam 2023. Challenges players with progressively more complex levels.",
             tech: ["Unity", "C#"],
             links: {
                 play: "https://itch.io/...",
@@ -163,7 +163,7 @@ const projectsData = {
                     {type: "image", src: "images/projects/modelado-5.png"}
                 ]
             },
-            description: "Proyecto de modelado 3D en 3ds Max. Creación de modelos, texturizado y renderizado de assets para proyectos universitarios.",
+            description: "3D modeling project in 3ds Max. Creation of models, texturing and rendering of assets for university projects.",
             tech: ["3D Modeling in 3ds Max"],
             links: {
                 play: null,
@@ -189,7 +189,7 @@ const projectsData = {
                     {type: "image", src: "images/projects/delta-4.png "}   
                 ]
             },
-            description: "Platformer 2D con mecánicas de movimiento fluidas. Inspirado en juegos clásicos pero con un toque moderno. Niveles diseñados para maximizar la diversión.",
+            description: "2D platformer with fluid movement mechanics. Inspired by classic games but with a modern touch. Levels designed to maximize fun.",
             tech: ["Unity", "C#", "Aseprite"],
             links: {
                 play: "https://itch.io/...",
@@ -197,6 +197,35 @@ const projectsData = {
                 steam: null
             },
             role: "Game Designer, Artist"
+        },
+        {
+            id: 11,
+            category: "university",
+            title: "Image Processing",
+            genre: "Image Processing",
+            platform: "PC",
+            year: "2020",
+            thumbnail: "images/projects/Screen4.png",
+            media: {
+                type: "carousel",
+                items: [
+                    {type: "image", src: "images/projects/Screen.png"},
+                    {type: "image", src: "images/projects/Screen2.png"},
+                    {type: "image", src: "images/projects/Screen3.png"},
+                    {type: "image", src: "images/projects/Screen4.png"},
+                    {type: "image", src: "images/projects/Screen5.png"},
+                    {type: "image", src: "images/projects/Screen6.png"},
+                    {type: "image", src: "images/projects/Screen7.png"}
+                ]
+            },
+            description: "Image processing and treatment project. Development of techniques for image manipulation, enhancement and creative effects.",
+            tech: ["Adobe Photoshop", "Image Processing"],
+            links: {
+                play: null,
+                source: null,
+                steam: null
+            },
+            role: "Graphic Designer"
         }
     ],
     design: [
@@ -219,7 +248,7 @@ const projectsData = {
                     {type: "image", src: "images/projects/design-1/century-6.png"}
                 ]
             },
-            description: "Proyecto comercial de diseño gráfico para negocio real. Creación de identidad visual, branding y materiales promocionales.",
+            description: "Commercial graphic design project for real business. Creation of visual identity, branding and promotional materials.",
             tech: ["Adobe Photoshop", "Adobe Illustrator", "Adobe InDesign"],
             links: {
                 play: null,
@@ -231,35 +260,59 @@ const projectsData = {
         {
             id: 9,
             category: "design",
+            title: "Design Project 2",
+            genre: "Graphic Design",
+            platform: "Digital",
+            year: "2023",
+            thumbnail: "images/projects/design-2/thumb.png",
+            media: {
+                type: "carousel",
+                items: [
+                    {type: "image", src: "images/projects/design-2/thumb.png"},
+                    {type: "image", src: "images/projects/design-2/es la que va.png"}
+                ]
+            },
+            description: "Commercial graphic design project for real business. Creation of visual identity, branding and promotional materials.",
+            tech: ["Adobe Photoshop", "Adobe Illustrator", "Adobe InDesign"],
+            links: {
+                play: null,
+                source: null,
+                steam: null
+            },
+            role: "Graphic Designer"
+        },
+        {
+            id: 12,
+            category: "design",
             title: "Lumos",
             genre: "Graphic Design",
             platform: "Digital",
             year: "2023",
-            thumbnail: "images/projects/design-2/lumos-thumb.png",
+            thumbnail: "images/projects/design-3/lumos-thumb.png",
             media: {
                 type: "carousel",
                 items: [
-                    {type: "image", src: "images/projects/design-2/Alicia.jpg"},
-                    {type: "image", src: "images/projects/design-2/Christmas.jpg"},
-                    {type: "image", src: "images/projects/design-2/Friends.jpg"},
-                    {type: "image", src: "images/projects/design-2/GreysAnatomy.jpg"},
-                    {type: "image", src: "images/projects/design-2/Grishaverse.jpg"},
-                    {type: "image", src: "images/projects/design-2/Gryffindor.jpg"},
-                    {type: "image", src: "images/projects/design-2/GryffindorV2.png"},
-                    {type: "image", src: "images/projects/design-2/HP.jpg"},
-                    {type: "image", src: "images/projects/design-2/Hufflepuff.jpg"},
-                    {type: "image", src: "images/projects/design-2/Hufflepuff3.png"},
-                    {type: "image", src: "images/projects/design-2/OrgulloYPrejuicio2.jpg"},
-                    {type: "image", src: "images/projects/design-2/Ravenclaw.jpg"},
-                    {type: "image", src: "images/projects/design-2/RavenclawV2.png"},
-                    {type: "image", src: "images/projects/design-2/ShadowHunter1.jpg"},
-                    {type: "image", src: "images/projects/design-2/ShadowHunter2.jpg"},
-                    {type: "image", src: "images/projects/design-2/Slytherin.jpg"},
-                    {type: "image", src: "images/projects/design-2/SlytherinV2.png"},
-                    {type: "image", src: "images/projects/design-2/TeenWold.jpg"}
+                    {type: "image", src: "images/projects/design-3/Alicia.jpg"},
+                    {type: "image", src: "images/projects/design-3/Christmas.jpg"},
+                    {type: "image", src: "images/projects/design-3/Friends.jpg"},
+                    {type: "image", src: "images/projects/design-3/GreysAnatomy.jpg"},
+                    {type: "image", src: "images/projects/design-3/Grishaverse.jpg"},
+                    {type: "image", src: "images/projects/design-3/Gryffindor.jpg"},
+                    {type: "image", src: "images/projects/design-3/GryffindorV2.png"},
+                    {type: "image", src: "images/projects/design-3/HP.jpg"},
+                    {type: "image", src: "images/projects/design-3/Hufflepuff.jpg"},
+                    {type: "image", src: "images/projects/design-3/Hufflepuff3.png"},
+                    {type: "image", src: "images/projects/design-3/OrgulloYPrejuicio2.jpg"},
+                    {type: "image", src: "images/projects/design-3/Ravenclaw.jpg"},
+                    {type: "image", src: "images/projects/design-3/RavenclawV2.png"},
+                    {type: "image", src: "images/projects/design-3/ShadowHunter1.jpg"},
+                    {type: "image", src: "images/projects/design-3/ShadowHunter2.jpg"},
+                    {type: "image", src: "images/projects/design-3/Slytherin.jpg"},
+                    {type: "image", src: "images/projects/design-3/SlytherinV2.png"},
+                    {type: "image", src: "images/projects/design-3/TeenWold.jpg"}
                 ]
             },
-            description: "Proyecto comercial de diseño gráfico para negocio real. Creación de contenido visual, branding y materiales promocionales.",
+            description: "Commercial graphic design project for real business. Creation of visual identity, branding and promotional materials.",
             tech: ["Adobe Photoshop", "Adobe Illustrator", "Adobe InDesign"],
             links: {
                 play: null,
@@ -271,20 +324,21 @@ const projectsData = {
         {
             id: 10,
             category: "design",
-            title: "LeviFortinero",
+            title: "IROH",
             genre: "Graphic Design",
             platform: "Digital",
             year: "2023",
-            thumbnail: "images/projects/design-3/LeviFortinero-thumb.jpg",
+            thumbnail: "images/projects/design-4/IROH.png",
             media: {
                 type: "carousel",
                 items: [
-                    {type: "image", src: "images/projects/design-3/LeviFortinero-thumb.jpg"},
-                    {type: "image", src: "images/projects/design-3/GokuFortinero.jpg"},
-                    {type: "image", src: "images/projects/design-3/MAXVelez.png"}
+                    {type: "image", src: "images/projects/design-4/IROH.png"},
+                    {type: "image", src: "images/projects/design-4/LeviFortinero-thumb.jpg"},
+                    {type: "image", src: "images/projects/design-4/MAXVelez.png"},
+                    {type: "image", src: "images/projects/design-4/MessiFortinera2.jpg"}
                 ]
             },
-            description: "Proyecto personal de diseño gráfico. Creaciones de fantasía y entretenimiento en tiempo libre.",
+            description: "Personal graphic design project. Fantasy and entertainment creations in free time.",
             tech: ["Adobe Photoshop", "Adobe Illustrator"],
             links: {
                 play: null,
@@ -296,7 +350,7 @@ const projectsData = {
     ]
 };
 
-// Categorías disponibles en orden
+// Available categories in order
 const categories = [
     { id: "thesis", name: "THESIS", label: "Thesis" },
     { id: "nagma", name: "NAGMA", label: "Nagma" },
@@ -305,7 +359,7 @@ const categories = [
 ];
 
 // Exportar para uso global
-// Forzar actualización para evitar caché
+// Force update to avoid cache
 if (typeof window !== 'undefined') {
     window.projectsData = projectsData;
     window.categories = categories;
