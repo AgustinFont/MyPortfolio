@@ -63,6 +63,9 @@ let characterModel = null;
 let characterMixer = null; // Para animaciones
 let characterAnimationAction = null;
 
+// Clock para normalizar velocidad de animación independiente del FPS
+const clock = new THREE.Clock();
+
 // --- Cargador GLTF ---
 const loader = new GLTFLoader();
 
@@ -244,17 +247,16 @@ function rotateToSection(sectionId) {
         }
     });
 
-    gsap.fromTo(
-        { z: zoomLevel + 1.5 },
-        {
-            z: zoomLevel,
-            duration: 2,
-            ease: "power1.inOut",
-            onUpdate: function () {
-                zoomLevel = this.targets()[0].z;
-            }
+    // Animación de zoom usando objeto temporal
+    const zoomObj = { z: zoomLevel + 1.5 };
+    gsap.to(zoomObj, {
+        z: zoomLevel,
+        duration: 2,
+        ease: "power1.inOut",
+        onUpdate: function () {
+            zoomLevel = zoomObj.z;
         }
-    );
+    });
 
     // --- Apagar el HUD y mostrar la sección ---
     const hud = document.querySelector(".hud");
@@ -343,9 +345,11 @@ window.addEventListener('blur', endModelDrag);
 function animate() {
     requestAnimationFrame(animate);
 
+    // Calcular delta basado en tiempo real para normalizar velocidad de animación
+    const delta = clock.getDelta();
+
     // Actualizar animación del character
     if (characterMixer) {
-        const delta = 0.016; // ~60fps
         characterMixer.update(delta);
     }
 

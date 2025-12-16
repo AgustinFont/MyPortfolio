@@ -1013,11 +1013,13 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     color: var(--color-accent);
     text-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
     margin-bottom: 12px;
+    text-align: center;
 }
 
 .reward-item {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 12px;
     margin-bottom: 10px;
     font-family: "Press Start 2P", monospace;
@@ -1159,6 +1161,23 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .email-card {
     border-color: var(--color-primary);
+}
+
+.whatsapp-card {
+    border-color: #25D366;
+}
+
+.whatsapp-card .card-title {
+    color: #25D366;
+    text-shadow: 0 0 8px rgba(37, 211, 102, 0.5);
+}
+
+.whatsapp-card:hover {
+    background: rgba(37, 211, 102, 0.1);
+    border-color: #25D366;
+    box-shadow: 
+        0 0 20px rgba(37, 211, 102, 0.4),
+        inset 0 0 15px rgba(37, 211, 102, 0.1);
 }
 
 /* Legacy contact-btn styles (kept for other sections) */
