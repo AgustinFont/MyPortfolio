@@ -98,8 +98,8 @@ const projectsData = {
         {
             id: 4,
             category: "university",
-            title: "Project Alpha",
-            genre: "Platformer",
+            title: "Soul Slave",
+            genre: "Platformer, Puzzle",
             platform: "PC",
             year: "2019",
             thumbnail: "images/projects/gamma-thumb.png",
@@ -117,7 +117,7 @@ const projectsData = {
             tech: ["Unity", "C#", "Platformer"],
             links: {
                 play: null,
-                source: "https://github.com/...",
+                source: null,
                 steam: null
             },
             role: "Level Designer, Narrative Designer, Developer"
@@ -128,7 +128,7 @@ const projectsData = {
             title: "AnyBall",
             genre: "Puzzle",
             platform: "Mobile",
-            year: "2023",
+            year: "2021",
             thumbnail: "images/projects/Anyball-thumb.png",
             media: {
                 type: "carousel",
@@ -136,19 +136,19 @@ const projectsData = {
                     {type: "youtube", src: "https://www.youtube.com/watch?v=uVwGlzuEv74"}
                 ]
             },
-            description: "Puzzle game with unique physics mechanics. Winner of Local Game Jam 2023. Challenges players with progressively more complex levels.",
-            tech: ["Unity", "C#"],
+            description: "Gameplay demo of a casual physics-based puzzle game inspired by slingshot mechanics, focused on destruction, timing, and level design, showcasing physics systems and Unity Ads integration.",
+            tech: ["Unity", "C#","Unity Ads"],
             links: {
-                play: "https://itch.io/...",
+                play: null,
                 source: null,
                 steam: null
             },
-            role: "Solo Developer"
+            role: "Game Designer, Developer"
         },
         {
             id: 6,
             category: "university",
-            title: "Soul Slave",
+            title: "3D Model showcase",
             genre: "3D Modeling",
             platform: "PC",
             year: "2019",

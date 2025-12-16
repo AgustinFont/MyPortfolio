@@ -1374,9 +1374,9 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     background: rgba(0, 0, 0, 0.95);
     z-index: 100;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 40px 20px;
+    padding: 60px 20px 20px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     transition: all 0.3s ease;
@@ -1475,12 +1475,13 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 }
 
 .project-detail {
-    max-width: 1600px;
+    max-width: 1200px;
     width: 100%;
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 50px;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 30px;
     align-items: start;
+    box-sizing: border-box;
 }
 
 .project-media {
@@ -1503,9 +1504,10 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     position: relative;
     width: 100%;
     height: 0;
-    padding-bottom: 65%; /* Aspect ratio más grande para mejor visualización */
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
     overflow: hidden;
-    min-height: 600px;
+    min-height: 400px;
+    max-height: 500px;
 }
 
 .carousel-slide {
@@ -1639,24 +1641,25 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     color: white;
     max-width: 100%;
     box-sizing: border-box;
-    padding-right: 8px;
+    padding: 0;
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
 
 .project-info h2 {
     font-family: "Press Start 2P", monospace;
-    font-size: 1.5em;
+    font-size: 1.3em;
     color: #00ffff;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
     word-break: break-word;
+    line-height: 1.4;
 }
 
 .project-meta {
     display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 15px;
     flex-wrap: wrap;
 }
 
@@ -1671,9 +1674,9 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 }
 
 .project-info p {
-    font-size: 1em;
-    line-height: 1.8;
-    margin-bottom: 25px;
+    font-size: 0.95em;
+    line-height: 1.7;
+    margin-bottom: 20px;
     color: #ffffff;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -1682,8 +1685,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 .project-tech {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 25px;
+    gap: 8px;
+    margin-bottom: 20px;
 }
 
 .project-tech span {
@@ -1697,7 +1700,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .project-links {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
@@ -1727,37 +1730,41 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 /* === BREAKPOINTS INTERMEDIOS PARA MODAL === */
 @media (max-width: 1400px) {
     .project-detail {
-        max-width: 1400px;
-        gap: 36px;
-        padding: 0 10px;
+        max-width: 1100px;
+        gap: 25px;
     }
     
     .project-modal {
-        padding: 32px 18px;
+        padding: 50px 15px 15px;
+    }
+    
+    .carousel-slides {
+        min-height: 380px;
+        max-height: 480px;
     }
     
     .project-info h2 {
-        font-size: 1.4em;
-    }
-    
-    .project-info p {
-        line-height: 1.7;
+        font-size: 1.2em;
     }
 }
 
 @media (max-width: 1200px) {
     .project-detail {
-        max-width: 1200px;
-        gap: 32px;
-        padding: 0 6px;
+        max-width: 1000px;
+        gap: 20px;
     }
     
     .project-modal {
-        padding: 28px 16px;
+        padding: 50px 12px 12px;
+    }
+    
+    .carousel-slides {
+        min-height: 350px;
+        max-height: 450px;
     }
     
     .project-info h2 {
-        font-size: 1.3em;
+        font-size: 1.1em;
     }
 }
 
