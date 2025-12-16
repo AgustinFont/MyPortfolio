@@ -25,10 +25,10 @@ class BugDriverGame {
             height: 40,
             angle: 0, // 0 = up, Math.PI/2 = right, Math.PI = down, -Math.PI/2 = left
             speed: 0,
-            maxSpeed: 5,
-            acceleration: 0.15,
-            friction: 0.95,
-            rotationSpeed: 0.08
+            maxSpeed: 4, // Reducido para mejor control
+            acceleration: 0.12, // Reducido
+            friction: 0.96, // Más fricción para mejor control
+            rotationSpeed: 0.06 // Reducido para rotación más suave
         };
         
         // Obstacles
@@ -39,6 +39,7 @@ class BugDriverGame {
         // City (buildings)
         this.buildings = [];
         this.roadLines = [];
+        this.intersections = []; // Intersecciones para doblar
         this.generateCity();
         
         // Input
@@ -105,47 +106,61 @@ class BugDriverGame {
     generateCity() {
         this.buildings = [];
         this.roadLines = [];
+        this.intersections = [];
         
-        // Generate buildings in a grid pattern
-        const blockSize = 100;
-        const roadWidth = 40;
+        // Calles más anchas para mejor gameplay
+        const blockSize = 150; // Aumentado de 100
+        const roadWidth = 80;  // Aumentado de 40
         const buildingSize = blockSize - roadWidth;
         
-        for (let x = -200; x < this.canvas.width + 200; x += blockSize) {
-            for (let y = -200; y < this.canvas.height + 200; y += blockSize) {
-                // Skip some blocks for variety
-                if (Math.random() > 0.3) {
-                    const height = 40 + Math.random() * 60;
+        // Generar edificios y calles en grid
+        for (let x = -300; x < this.canvas.width + 300; x += blockSize) {
+            for (let y = -300; y < this.canvas.height + 300; y += blockSize) {
+                // Edificios con más variedad
+                if (Math.random() > 0.25) {
+                    const height = 50 + Math.random() * 80;
+                    const windows = Math.floor(Math.random() * 4);
                     this.buildings.push({
                         x: x + roadWidth / 2,
                         y: y + roadWidth / 2,
                         width: buildingSize,
                         height: buildingSize,
                         buildingHeight: height,
-                        color: Math.random() > 0.5 ? '#003366' : '#004488'
+                        color: Math.random() > 0.5 ? '#003366' : '#004488',
+                        windows: windows
                     });
                 }
+                
+                // Intersecciones (centros de calles)
+                this.intersections.push({
+                    x: x + blockSize / 2,
+                    y: y + blockSize / 2,
+                    size: roadWidth
+                });
             }
         }
         
-        // Generate road lines (horizontal and vertical)
-        for (let y = 0; y < this.canvas.height + 200; y += blockSize) {
+        // Generar calles horizontales (más anchas y visibles)
+        for (let y = 0; y < this.canvas.height + 300; y += blockSize) {
             this.roadLines.push({
-                x1: -200,
-                y1: y,
-                x2: this.canvas.width + 200,
-                y2: y,
-                type: 'horizontal'
+                x1: -300,
+                y1: y + blockSize / 2,
+                x2: this.canvas.width + 300,
+                y2: y + blockSize / 2,
+                type: 'horizontal',
+                width: roadWidth
             });
         }
         
-        for (let x = 0; x < this.canvas.width + 200; x += blockSize) {
+        // Generar calles verticales (más anchas y visibles)
+        for (let x = 0; x < this.canvas.width + 300; x += blockSize) {
             this.roadLines.push({
-                x1: x,
-                y1: -200,
-                x2: x,
-                y2: this.canvas.height + 200,
-                type: 'vertical'
+                x1: x + blockSize / 2,
+                y1: -300,
+                x2: x + blockSize / 2,
+                y2: this.canvas.height + 300,
+                type: 'vertical',
+                width: roadWidth
             });
         }
     }
@@ -165,25 +180,34 @@ class BugDriverGame {
             accelerating = true;
         }
         if (this.keys['s'] || this.keys['arrowdown']) {
-            this.player.speed *= 0.9; // Brake
+            this.player.speed *= 0.85; // Brake más fuerte
         }
         
-        // Update rotation
+        // ARREGLO: Rotación independiente de velocidad (no se suma)
         if (turning !== 0) {
-            this.player.angle += turning * this.player.rotationSpeed * (this.player.speed / this.player.maxSpeed + 0.3);
+            // Rotación constante, no depende de velocidad
+            this.player.angle += turning * this.player.rotationSpeed;
         }
         
         // Update speed
         if (accelerating) {
-            this.player.speed = Math.min(this.player.speed + this.player.acceleration, this.player.maxSpeed);
+            this.player.speed = Math.min(
+                this.player.speed + this.player.acceleration, 
+                this.player.maxSpeed
+            );
         } else {
             this.player.speed *= this.player.friction;
         }
         
-        // Update position based on angle and speed
+        // ARREGLO: Movimiento en una sola dirección (sin sumar velocidades)
+        // Calcular movimiento una sola vez
+        const moveX = Math.sin(this.player.angle) * this.player.speed;
+        const moveY = -Math.cos(this.player.angle) * this.player.speed;
+        
+        // Aplicar movimiento
         if (this.player.speed > 0.1) {
-            this.player.x += Math.sin(this.player.angle) * this.player.speed;
-            this.player.y -= Math.cos(this.player.angle) * this.player.speed;
+            this.player.x += moveX;
+            this.player.y += moveY;
         }
         
         // Keep player on screen (wrap around)
@@ -198,25 +222,28 @@ class BugDriverGame {
         const type = types[Math.floor(Math.random() * types.length)];
         
         let x, y;
-        const side = Math.floor(Math.random() * 4);
         
-        switch(side) {
-            case 0: // Top
-                x = Math.random() * this.canvas.width;
-                y = -30;
-                break;
-            case 1: // Right
-                x = this.canvas.width + 30;
-                y = Math.random() * this.canvas.height;
-                break;
-            case 2: // Bottom
-                x = Math.random() * this.canvas.width;
-                y = this.canvas.height + 30;
-                break;
-            case 3: // Left
-                x = -30;
-                y = Math.random() * this.canvas.height;
-                break;
+        // MEJORA: Spawn en calles (intersecciones o calles), no desde bordes
+        if (this.roadLines.length > 0) {
+            const road = this.roadLines[Math.floor(Math.random() * this.roadLines.length)];
+            if (road.type === 'horizontal') {
+                // Spawn en calle horizontal
+                x = road.x1 + Math.random() * (road.x2 - road.x1);
+                y = road.y1 + (Math.random() - 0.5) * 20; // Pequeña variación
+            } else {
+                // Spawn en calle vertical
+                x = road.x1 + (Math.random() - 0.5) * 20;
+                y = road.y1 + Math.random() * (road.y2 - road.y1);
+            }
+        } else if (this.intersections.length > 0) {
+            // Fallback: spawn en intersección
+            const intersection = this.intersections[Math.floor(Math.random() * this.intersections.length)];
+            x = intersection.x + (Math.random() - 0.5) * 30;
+            y = intersection.y + (Math.random() - 0.5) * 30;
+        } else {
+            // Fallback final: spawn aleatorio
+            x = Math.random() * this.canvas.width;
+            y = Math.random() * this.canvas.height;
         }
         
         const obstacle = {
@@ -224,8 +251,8 @@ class BugDriverGame {
             y: y,
             type: type,
             size: type === 'bug' ? 25 : 30,
-            speed: 1 + Math.random() * 2 + (this.level * 0.3),
-            angle: Math.atan2(this.player.y - y, this.player.x - x) + (Math.random() - 0.5) * 0.5,
+            speed: 1.5 + Math.random() * 1.5 + (this.level * 0.2),
+            angle: Math.atan2(this.player.y - y, this.player.x - x) + (Math.random() - 0.5) * 0.3,
             rotation: 0,
             rotationSpeed: type === 'bug' ? 0.1 : 0.05
         };
@@ -370,54 +397,137 @@ class BugDriverGame {
     }
     
     renderCity() {
-        // Simple buildings (rectangles)
-        this.ctx.fillStyle = '#003366';
+        // Edificios mejorados con más variedad
         this.buildings.forEach(building => {
             // Simple parallax: buildings move slightly based on player movement
-            const parallaxX = (building.x - this.player.x) * 0.1;
-            const parallaxY = (building.y - this.player.y) * 0.1;
+            const parallaxX = (building.x - this.player.x) * 0.05;
+            const parallaxY = (building.y - this.player.y) * 0.05;
             
+            const bx = building.x + parallaxX;
+            const by = building.y + parallaxY;
+            
+            // Cuerpo del edificio
             this.ctx.fillStyle = building.color;
-            this.ctx.fillRect(
-                building.x + parallaxX,
-                building.y + parallaxY,
-                building.width,
-                building.height
-            );
+            this.ctx.fillRect(bx, by, building.width, building.height);
             
-            // Simple 3D effect (top face)
+            // Ventanas iluminadas (si tiene)
+            if (building.windows > 0) {
+                this.ctx.fillStyle = '#ffff00';
+                const windowSize = 8;
+                const spacing = building.width / (building.windows + 1);
+                for (let i = 1; i <= building.windows; i++) {
+                    this.ctx.fillRect(
+                        bx + spacing * i - windowSize / 2,
+                        by + 10,
+                        windowSize,
+                        windowSize
+                    );
+                    this.ctx.fillRect(
+                        bx + spacing * i - windowSize / 2,
+                        by + building.height - 20,
+                        windowSize,
+                        windowSize
+                    );
+                }
+            }
+            
+            // Efecto 3D mejorado (top face)
             this.ctx.fillStyle = '#004488';
             this.ctx.beginPath();
-            this.ctx.moveTo(building.x + parallaxX, building.y + parallaxY);
-            this.ctx.lineTo(building.x + parallaxX + 10, building.y + parallaxY - 10);
-            this.ctx.lineTo(building.x + parallaxX + building.width + 10, building.y + parallaxY - 10);
-            this.ctx.lineTo(building.x + parallaxX + building.width, building.y + parallaxY);
+            this.ctx.moveTo(bx, by);
+            this.ctx.lineTo(bx + 12, by - 12);
+            this.ctx.lineTo(bx + building.width + 12, by - 12);
+            this.ctx.lineTo(bx + building.width, by);
+            this.ctx.closePath();
+            this.ctx.fill();
+            
+            // Sombra lateral
+            this.ctx.fillStyle = '#002244';
+            this.ctx.beginPath();
+            this.ctx.moveTo(bx + building.width, by);
+            this.ctx.lineTo(bx + building.width + 12, by - 12);
+            this.ctx.lineTo(bx + building.width + 12, by + building.height - 12);
+            this.ctx.lineTo(bx + building.width, by + building.height);
             this.ctx.closePath();
             this.ctx.fill();
         });
     }
     
     renderRoads() {
-        this.ctx.strokeStyle = '#333333';
+        // MEJORA: Fondo de calles (gris oscuro) para mejor visibilidad
+        this.ctx.fillStyle = '#1a1a2e';
+        this.roadLines.forEach(road => {
+            if (road.type === 'horizontal') {
+                this.ctx.fillRect(
+                    road.x1, 
+                    road.y1 - road.width / 2, 
+                    road.x2 - road.x1, 
+                    road.width
+                );
+            } else {
+                this.ctx.fillRect(
+                    road.x1 - road.width / 2, 
+                    road.y1, 
+                    road.width, 
+                    road.y2 - road.y1
+                );
+            }
+        });
+        
+        // Líneas centrales de calles (amarillas, discontinuas)
+        this.ctx.strokeStyle = '#ffff00';
         this.ctx.lineWidth = 2;
+        this.ctx.setLineDash([15, 10]);
         
         this.roadLines.forEach(road => {
             this.ctx.beginPath();
-            this.ctx.moveTo(road.x1, road.y1);
-            this.ctx.lineTo(road.x2, road.y2);
-            this.ctx.stroke();
-            
-            // Road markings (dashed lines)
             if (road.type === 'horizontal') {
-                this.ctx.strokeStyle = '#ffff00';
-                this.ctx.setLineDash([10, 10]);
-                this.ctx.beginPath();
                 this.ctx.moveTo(road.x1, road.y1);
                 this.ctx.lineTo(road.x2, road.y2);
-                this.ctx.stroke();
-                this.ctx.setLineDash([]);
-                this.ctx.strokeStyle = '#333333';
+            } else {
+                this.ctx.moveTo(road.x1, road.y1);
+                this.ctx.lineTo(road.x2, road.y2);
             }
+            this.ctx.stroke();
+        });
+        
+        this.ctx.setLineDash([]);
+        
+        // Bordes de calles (gris claro)
+        this.ctx.strokeStyle = '#444466';
+        this.ctx.lineWidth = 1;
+        this.roadLines.forEach(road => {
+            if (road.type === 'horizontal') {
+                // Borde superior
+                this.ctx.beginPath();
+                this.ctx.moveTo(road.x1, road.y1 - road.width / 2);
+                this.ctx.lineTo(road.x2, road.y2 - road.width / 2);
+                this.ctx.stroke();
+                // Borde inferior
+                this.ctx.beginPath();
+                this.ctx.moveTo(road.x1, road.y1 + road.width / 2);
+                this.ctx.lineTo(road.x2, road.y2 + road.width / 2);
+                this.ctx.stroke();
+            } else {
+                // Borde izquierdo
+                this.ctx.beginPath();
+                this.ctx.moveTo(road.x1 - road.width / 2, road.y1);
+                this.ctx.lineTo(road.x2 - road.width / 2, road.y2);
+                this.ctx.stroke();
+                // Borde derecho
+                this.ctx.beginPath();
+                this.ctx.moveTo(road.x1 + road.width / 2, road.y1);
+                this.ctx.lineTo(road.x2 + road.width / 2, road.y2);
+                this.ctx.stroke();
+            }
+        });
+        
+        // Intersecciones (marcadores pequeños)
+        this.ctx.fillStyle = '#ffff00';
+        this.intersections.forEach(intersection => {
+            this.ctx.beginPath();
+            this.ctx.arc(intersection.x, intersection.y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
         });
     }
     
