@@ -175,44 +175,52 @@ const projectsData = {
             id: 7,
             category: "university",
             title: "Fluki",
-            genre: "Platformer",
+            genre: "3D Modeling",
             platform: "PC",
             year: "2019",
-            thumbnail: "images/projects/delta-thumb.png",
+            thumbnail: "images/projects/modelado-1.png",
             media: {
-            type: "carousel",
-            items: [
-                {type: "image", src: "images/projects/delta-1.png "},
-                {type: "image", src: "images/projects/delta-2.png "},
-                {type: "image", src: "images/projects/delta-3.png "},
-                {type: "image", src: "images/projects/delta-4.png "}   
-            ]
-        },
-            description: "Platformer 2D con mecánicas de movimiento fluidas. Inspirado en juegos clásicos pero con un toque moderno. Niveles diseñados para maximizar la diversión.",
-            tech: ["Unity", "C#", "Aseprite"],
+                type: "carousel",
+                items: [
+                    {type: "image", src: "images/projects/modelado-1.png"},
+                    {type: "image", src: "images/projects/modelado-2.png"},
+                    {type: "image", src: "images/projects/modelado-3.png"},
+                    {type: "image", src: "images/projects/modelado-4.png"},
+                    {type: "image", src: "images/projects/modelado-5.png"}
+                ]
+            },
+            description: "Proyecto de modelado 3D en 3ds Max. Creación de modelos, texturizado y renderizado de assets para proyectos universitarios.",
+            tech: ["3D Modeling in 3ds Max"],
             links: {
-                play: "https://itch.io/...",
-                source: "https://github.com/...",
+                play: null,
+                source: null,
                 steam: null
             },
-            role: "Game Designer, Artist"
+            role: "3D Artist"
         }
     ],
     design: [
         {
             id: 8,
             category: "design",
-            title: "Diseño Gráfico - Proyecto A",
+            title: "Century",
             genre: "Graphic Design",
             platform: "Digital",
             year: "2024",
-            thumbnail: "images/projects/diseno1-thumb.jpg",
+            thumbnail: "images/projects/design-1/century-thumb.png",
             media: {
-                type: "image",
-                src: "images/projects/diseno1-screenshot.jpg"
+                type: "carousel",
+                items: [
+                    {type: "image", src: "images/projects/design-1/century-1.png"},
+                    {type: "image", src: "images/projects/design-1/century-2.png"},
+                    {type: "image", src: "images/projects/design-1/century-3.png"},
+                    {type: "image", src: "images/projects/design-1/century-4.png"},
+                    {type: "image", src: "images/projects/design-1/century-5.png"},
+                    {type: "image", src: "images/projects/design-1/century-6.png"}
+                ]
             },
-            description: "Proyecto de diseño gráfico. Creación de identidad visual y materiales promocionales.",
-            tech: ["Photoshop", "Illustrator", "InDesign"],
+            description: "Proyecto comercial de diseño gráfico para negocio real. Creación de identidad visual, branding y materiales promocionales.",
+            tech: ["Adobe Photoshop", "Adobe Illustrator", "Adobe InDesign"],
             links: {
                 play: null,
                 source: null,
@@ -223,38 +231,61 @@ const projectsData = {
         {
             id: 9,
             category: "design",
-            title: "Diseño Gráfico - Proyecto B",
+            title: "Lumos",
             genre: "Graphic Design",
             platform: "Digital",
             year: "2023",
-            thumbnail: "images/projects/diseno2-thumb.jpg",
+            thumbnail: "images/projects/design-2/lumos-thumb.png",
             media: {
-                type: "image",
-                src: "images/projects/diseno2-screenshot.jpg"
+                type: "carousel",
+                items: [
+                    {type: "image", src: "images/projects/design-2/Alicia.jpg"},
+                    {type: "image", src: "images/projects/design-2/Christmas.jpg"},
+                    {type: "image", src: "images/projects/design-2/Friends.jpg"},
+                    {type: "image", src: "images/projects/design-2/GreysAnatomy.jpg"},
+                    {type: "image", src: "images/projects/design-2/Grishaverse.jpg"},
+                    {type: "image", src: "images/projects/design-2/Gryffindor.jpg"},
+                    {type: "image", src: "images/projects/design-2/GryffindorV2.png"},
+                    {type: "image", src: "images/projects/design-2/HP.jpg"},
+                    {type: "image", src: "images/projects/design-2/Hufflepuff.jpg"},
+                    {type: "image", src: "images/projects/design-2/Hufflepuff3.png"},
+                    {type: "image", src: "images/projects/design-2/OrgulloYPrejuicio2.jpg"},
+                    {type: "image", src: "images/projects/design-2/Ravenclaw.jpg"},
+                    {type: "image", src: "images/projects/design-2/RavenclawV2.png"},
+                    {type: "image", src: "images/projects/design-2/ShadowHunter1.jpg"},
+                    {type: "image", src: "images/projects/design-2/ShadowHunter2.jpg"},
+                    {type: "image", src: "images/projects/design-2/Slytherin.jpg"},
+                    {type: "image", src: "images/projects/design-2/SlytherinV2.png"},
+                    {type: "image", src: "images/projects/design-2/TeenWold.jpg"}
+                ]
             },
-            description: "Diseño de interfaz y experiencia de usuario. Creación de mockups y prototipos interactivos.",
-            tech: ["Figma", "Photoshop", "Illustrator"],
+            description: "Proyecto comercial de diseño gráfico para negocio real. Creación de contenido visual, branding y materiales promocionales.",
+            tech: ["Adobe Photoshop", "Adobe Illustrator", "Adobe InDesign"],
             links: {
                 play: null,
                 source: null,
                 steam: null
             },
-            role: "UI/UX Designer"
+            role: "Graphic Designer"
         },
         {
             id: 10,
             category: "design",
-            title: "Diseño Gráfico - Proyecto C",
+            title: "LeviFortinero",
             genre: "Graphic Design",
-            platform: "Print",
+            platform: "Digital",
             year: "2023",
-            thumbnail: "images/projects/diseno3-thumb.jpg",
+            thumbnail: "images/projects/design-3/LeviFortinero-thumb.jpg",
             media: {
-                type: "image",
-                src: "images/projects/diseno3-screenshot.jpg"
+                type: "carousel",
+                items: [
+                    {type: "image", src: "images/projects/design-3/LeviFortinero-thumb.jpg"},
+                    {type: "image", src: "images/projects/design-3/GokuFortinero.jpg"},
+                    {type: "image", src: "images/projects/design-3/MAXVelez.png"}
+                ]
             },
-            description: "Diseño editorial y layout. Creación de materiales impresos y digitales.",
-            tech: ["InDesign", "Photoshop", "Illustrator"],
+            description: "Proyecto personal de diseño gráfico. Creaciones de fantasía y entretenimiento en tiempo libre.",
+            tech: ["Adobe Photoshop", "Adobe Illustrator"],
             links: {
                 play: null,
                 source: null,

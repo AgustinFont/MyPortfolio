@@ -497,6 +497,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     padding: 80px 20px 40px;
     box-sizing: border-box;
     min-height: 100vh;
+    height: 100vh; /* Asegurar altura completa para scroll */
+    width: 100%; /* Asegurar ancho completo */
 }
 
 .section-inner,
@@ -535,6 +537,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     max-width: 900px;
     margin: 0 auto;
     padding: 20px 0;
+    box-sizing: border-box;
 }
 
 .about-header {
@@ -645,6 +648,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     max-width: 800px;
     margin-top: 20px;
     margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
 .skills-section h3 {
@@ -2067,23 +2071,23 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
     
     .abilities-grid {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: 12px;
-    }
-    
-    .ability-badge {
-        min-width: 115px;
-        max-width: 140px;
-    }
-    
-    .abilities-grid {
-        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
         gap: 10px;
     }
     
     .ability-badge {
-        min-width: 110px;
-        max-width: 130px;
+        min-width: 90px;
+        max-width: 120px;
+        padding: 8px;
+    }
+    
+    .abilities-section {
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+    
+    .skills-section {
+        margin-bottom: 20px;
     }
 
     .section-inner p,
@@ -2168,29 +2172,81 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
     .skills-abilities-container {
         justify-items: center;
+        gap: 20px;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0 10px;
     }
     
     .abilities-section {
         width: 100%;
-        max-width: none;
+        max-width: 100%;
         margin: 0 auto;
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding: 0;
+    }
+    
+    .skills-section {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding: 0;
     }
     
     .abilities-grid {
-        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        gap: 10px;
+        width: 100%;
+        max-width: 100%;
     }
 
     .ability-badge {
-        min-width: 100px;
-        max-width: 120px;
-        padding: 10px;
+        min-width: 85px;
+        max-width: 110px;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+    
+    .skills-grid {
+        grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+        gap: 10px;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .skill-badge {
+        max-width: 110px;
+        min-width: 85px;
+        padding: 8px;
+        box-sizing: border-box;
     }
 
     .section-content {
-        padding: 15px 10px;
+        padding: 60px 10px 30px;
         overflow-y: auto;
+        overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
+        height: 100vh;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .about-section {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 5px;
+        gap: 30px;
+    }
+    
+    .cover-letter-container {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px 15px;
+        margin: 0;
     }
 
     .section-inner,
@@ -2268,7 +2324,54 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
 
     .section-content {
-        padding: 10px 8px;
+        padding: 50px 8px 25px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        height: 100vh;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .about-section {
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        gap: 20px;
+    }
+    
+    .skills-abilities-container {
+        gap: 18px;
+        width: 100%;
+        padding: 0 5px;
+    }
+    
+    .abilities-grid {
+        grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+        gap: 8px;
+    }
+    
+    .ability-badge {
+        min-width: 70px;
+        max-width: 95px;
+        padding: 6px;
+    }
+    
+    .skills-grid {
+        grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+        gap: 8px;
+    }
+    
+    .skill-badge {
+        min-width: 70px;
+        max-width: 95px;
+        padding: 6px;
+    }
+    
+    .abilities-section,
+    .skills-section {
+        margin-top: 0;
+        margin-bottom: 15px;
     }
 }
 
@@ -2299,6 +2402,29 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     .section-inner,
     .project-card {
         max-width: 85%;
+    }
+}
+
+/* Pantallas muy altas (Samsung S24 Ultra, etc.) - Modo vertical */
+@media (min-height: 2800px) and (max-width: 500px) {
+    .section-content {
+        padding: 70px 15px 40px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .about-section {
+        gap: 35px;
+    }
+    
+    .skills-abilities-container {
+        gap: 30px;
+    }
+    
+    .abilities-section,
+    .skills-section {
+        margin-bottom: 25px;
     }
 }
 
