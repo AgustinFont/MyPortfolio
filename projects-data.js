@@ -232,10 +232,10 @@ const projectsData = {
         {
             id: 8,
             category: "design",
-            title: "Century",
+            title: "20th Century Garage",
             genre: "Graphic Design",
-            platform: "Digital",
-            year: "2024",
+            platform: "Digital, Mockups",
+            year: "2020",
             thumbnail: "images/projects/design-1/century-thumb.png",
             media: {
                 type: "carousel",
@@ -248,7 +248,7 @@ const projectsData = {
                     {type: "image", src: "images/projects/design-1/century-6.png"}
                 ]
             },
-            description: "Commercial graphic design project for real business. Creation of visual identity, branding and promotional materials.",
+            description: "Design of a logo and brand mockups for an automotive workshop, focused on creating a solid visual identity and realistic brand applications.",
             tech: ["Adobe Photoshop", "Adobe Illustrator", "Adobe InDesign"],
             links: {
                 play: null,
@@ -260,10 +260,10 @@ const projectsData = {
         {
             id: 9,
             category: "design",
-            title: "Design Project 2",
+            title: "Vono Streetwear",
             genre: "Graphic Design",
             platform: "Digital",
-            year: "2023",
+            year: "2022",
             thumbnail: "images/projects/design-2/thumb.png",
             media: {
                 type: "carousel",
@@ -284,10 +284,10 @@ const projectsData = {
         {
             id: 12,
             category: "design",
-            title: "Lumos",
+            title: "Lumos Shop",
             genre: "Graphic Design",
             platform: "Digital",
-            year: "2023",
+            year: "2021",
             thumbnail: "images/projects/design-3/lumos-thumb.png",
             media: {
                 type: "carousel",
@@ -312,7 +312,7 @@ const projectsData = {
                     {type: "image", src: "images/projects/design-3/TeenWold.jpg"}
                 ]
             },
-            description: "Commercial graphic design project for real business. Creation of visual identity, branding and promotional materials.",
+            description: "Design and production of custom candle labels and themed bookmarks, developed to match specific concepts, styles, and visual identities.",
             tech: ["Adobe Photoshop", "Adobe Illustrator", "Adobe InDesign"],
             links: {
                 play: null,
@@ -324,7 +324,7 @@ const projectsData = {
         {
             id: 10,
             category: "design",
-            title: "IROH",
+            title: "Just for fun",
             genre: "Graphic Design",
             platform: "Digital",
             year: "2023",

@@ -166,8 +166,38 @@
 
             addHoverHandlers();
 
-            window.addEventListener('mousedown', () => cursor.classList.add('cursor-down'));
-            window.addEventListener('mouseup', () => cursor.classList.remove('cursor-down'));
+            // Guardar colores originales
+            const originalBorderColor = getComputedStyle(cursor).borderColor || 'var(--color-secondary)';
+            const originalCoreBackground = getComputedStyle(core).background || 'rgba(255, 111, 0, 0.35)';
+            const originalCoreBoxShadow = getComputedStyle(core).boxShadow || '0 0 4px rgba(255, 111, 0, 0.22)';
+
+            // Función para generar color aleatorio
+            const getRandomColor = () => {
+                const r = Math.floor(Math.random() * 256);
+                const g = Math.floor(Math.random() * 256);
+                const b = Math.floor(Math.random() * 256);
+                return { r, g, b, rgb: `rgb(${r}, ${g}, ${b})`, rgba: (alpha) => `rgba(${r}, ${g}, ${b}, ${alpha})` };
+            };
+
+            window.addEventListener('mousedown', () => {
+                cursor.classList.add('cursor-down');
+                // Cambiar color aleatorio mientras se mantiene el click
+                const randomColor = getRandomColor();
+                cursor.style.borderColor = randomColor.rgb;
+                if (core) {
+                    core.style.background = randomColor.rgba(0.5);
+                    core.style.boxShadow = `0 0 4px ${randomColor.rgba(0.4)}, 0 0 8px ${randomColor.rgba(0.2)}`;
+                }
+            });
+            window.addEventListener('mouseup', () => {
+                cursor.classList.remove('cursor-down');
+                // Restaurar colores originales
+                cursor.style.borderColor = '';
+                if (core) {
+                    core.style.background = '';
+                    core.style.boxShadow = '';
+                }
+            });
         }
     });
 })();

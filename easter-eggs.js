@@ -44,7 +44,7 @@ function foundEasterEgg(eggId, eggName, eggDescription) {
     // Mostrar notificación (opcional)
     showEasterEggNotification(eggName);
     
-    console.log(`Easter Egg encontrado: ${eggName} (${eggDescription})`);
+    console.log(`Easter Egg found: ${eggName} (${eggDescription})`);
 }
 
 // Función para mostrar notificación de easter egg encontrado
@@ -52,7 +52,7 @@ function showEasterEggNotification(eggName) {
     // Crear elemento de notificación
     const notification = document.createElement('div');
     notification.className = 'easter-notification';
-    notification.textContent = `EASTER EGG ENCONTRADO: ${eggName}`;
+    notification.textContent = `EASTER EGG FOUND: ${eggName}`;
     notification.style.cssText = `
         position: fixed;
         top: 20px;
