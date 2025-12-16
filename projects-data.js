@@ -109,7 +109,8 @@ const projectsData = {
                     {type: "image", src: "images/projects/gamma-1.png "},
                     {type: "image", src: "images/projects/gamma-2.png "},
                     {type: "image", src: "images/projects/gamma-3.png "},
-                    {type: "image", src: "images/projects/gamma-4.png "}   
+                    {type: "image", src: "images/projects/gamma-4.png "},
+                    {type: "youtube", src: "https://www.youtube.com/watch?v=C7t-myucq5o"}
                 ]
             },
             description: "A 2D platformer where the player can detach their soul to possess enemies, unlock new abilities, and solve puzzle-based challenges. This demo showcases the core mechanics, traversal, and creative possession-based gameplay",
@@ -124,15 +125,14 @@ const projectsData = {
         {
             id: 5,
             category: "university",
-            title: "Project Beta",
+            title: "AnyBall",
             genre: "Puzzle",
             platform: "Mobile",
             year: "2023",
-            thumbnail: "images/projects/beta-thumb.jpg",
+            thumbnail: "images/projects/Anyball-thumb.png",
             media: {
                 type: "carousel",
                 items: [
-                    {type: "video", src: "videos/beta-demo.mp4"},
                     {type: "youtube", src: "https://www.youtube.com/watch?v=uVwGlzuEv74"}
                 ]
             },
@@ -159,8 +159,7 @@ const projectsData = {
                     {type: "image", src: "images/projects/gamma-1.png "},
                     {type: "image", src: "images/projects/gamma-2.png "},
                     {type: "image", src: "images/projects/gamma-3.png "},
-                    {type: "image", src: "images/projects/gamma-4.png "},
-                    {type: "youtube", src: "https://www.youtube.com/watch?v=C7t-myucq5o"}
+                    {type: "image", src: "images/projects/gamma-4.png "}   
                 ]
             },
             description: "A 2D platformer where the player can detach their soul to possess enemies, unlock new abilities, and solve puzzle-based challenges. This demo showcases the core mechanics, traversal, and creative possession-based gameplay",

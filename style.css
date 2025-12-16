@@ -233,7 +233,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 .hud {
     position: absolute;
     top: 50%;
-    right: 10%;
+    right: 8%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
@@ -245,6 +245,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     transform-style: preserve-3d;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+    min-width: 200px; /* Asegurar ancho mínimo para mejor legibilidad */
 }
 
 .playground-title {
@@ -369,66 +370,76 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 /* === ITEMS DEL MENÚ === */
 #menu li {
     font-family: "Press Start 2P", monospace;
-    font-size: 14px;
+    font-size: 16px; /* Aumentado de 14px para mejor legibilidad */
     color: #00ffff;
     cursor: pointer;
-    margin: 12px 0;
-    padding: 4px 8px;
+    margin: 16px 0; /* Aumentado de 12px para mejor separación visual */
+    padding: 10px 16px; /* Aumentado de 4px 8px para área de click más grande (Fitts Law) */
     transition:
-        color 0.3s ease,
-        text-shadow 0.4s ease,
-        transform 0.3s ease,
-        opacity 0.3s ease;
+        color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        text-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.25s ease;
     transform-origin: right center;
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     position: relative;
+    letter-spacing: 0.5px; /* Mejorar legibilidad del texto pixelado */
+    line-height: 1.6; /* Mejor espaciado vertical del texto */
+    border-radius: 2px; /* Sutil redondeo para modernidad */
 }
 
 /* Estado inactivo (por defecto) */
 #menu li.inactive {
-    opacity: 0.6;
+    opacity: 0.65; /* Ligeramente más visible que antes (0.6) */
     transform: scale(1);
     color: #00ffff;
+    text-shadow: 0 0 4px rgba(0, 255, 255, 0.3); /* Glow sutil para mejor visibilidad */
 }
 
 /* Estado activo (seleccionado con teclado o mouse) */
 #menu li.active {
     color: #ffffff;
     opacity: 1;
-    transform: scale(1.2);
-    animation: glowPulse 1.5s infinite ease-in-out;
+    transform: scale(1.15); /* Reducido de 1.2 para ser más sutil y profesional */
+    animation: glowPulse 2s infinite ease-in-out; /* Animación más lenta y suave */
+    background: rgba(0, 255, 255, 0.08); /* Fondo sutil para mejor contraste */
+    padding-left: 20px; /* Indentación visual para indicar selección */
 }
 
 /* Hover del mouse - glow titilante y agrandamiento */
 #menu li:hover {
     color: #ffffff !important;
     opacity: 1 !important;
-    transform: scale(1.25) !important;
-    animation: hoverGlow 1.2s infinite ease-in-out !important;
+    transform: scale(1.12) translateX(-4px) !important; /* Movimiento sutil hacia la izquierda + escala */
+    animation: hoverGlow 1.5s infinite ease-in-out !important; /* Animación más lenta */
+    background: rgba(0, 255, 255, 0.12); /* Fondo más visible en hover */
+    padding-left: 18px; /* Indentación en hover */
 }
 
 /* Cuando está activo Y con hover, combinar efectos */
 #menu li.active:hover {
-    transform: scale(1.3) !important;
-    animation: activeHoverGlow 1s infinite ease-in-out !important;
+    transform: scale(1.18) translateX(-6px) !important; /* Combinación más refinada */
+    animation: activeHoverGlow 1.3s infinite ease-in-out !important;
+    background: rgba(0, 255, 255, 0.15); /* Fondo más intenso cuando está activo + hover */
+    padding-left: 22px; /* Mayor indentación */
 }
 
 /* Animación de glow pulsante para activo (teclado) */
 @keyframes glowPulse {
     0%, 100% {
         text-shadow: 
-            0 0 8px #00ffff,
-            0 0 16px #00ffff,
-            0 0 24px #00ffff;
+            0 0 10px #00ffff,
+            0 0 20px #00ffff,
+            0 0 30px rgba(0, 255, 255, 0.6);
     }
     50% {
         text-shadow: 
-            0 0 4px #00cccc,
-            0 0 12px #00cccc,
-            0 0 20px #00cccc;
+            0 0 6px #00cccc,
+            0 0 16px #00cccc,
+            0 0 26px rgba(0, 204, 204, 0.5);
     }
 }
 
@@ -436,17 +447,17 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 @keyframes hoverGlow {
     0%, 100% {
         text-shadow: 
-            0 0 10px #00ffff,
-            0 0 20px #00ffff,
-            0 0 30px #00ffff,
-            0 0 40px rgba(0, 255, 255, 0.5);
+            0 0 12px #00ffff,
+            0 0 24px #00ffff,
+            0 0 36px rgba(0, 255, 255, 0.7),
+            0 0 48px rgba(0, 255, 255, 0.4);
     }
     50% {
         text-shadow: 
-            0 0 15px #00ffff,
-            0 0 30px #00ffff,
-            0 0 45px #00ffff,
-            0 0 60px rgba(0, 255, 255, 0.8);
+            0 0 16px #00ffff,
+            0 0 32px #00ffff,
+            0 0 48px rgba(0, 255, 255, 0.9),
+            0 0 64px rgba(0, 255, 255, 0.6);
     }
 }
 
@@ -454,17 +465,17 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 @keyframes activeHoverGlow {
     0%, 100% {
         text-shadow: 
-            0 0 12px #00ffff,
-            0 0 24px #00ffff,
-            0 0 36px #00ffff,
-            0 0 48px rgba(0, 255, 255, 0.6);
+            0 0 14px #00ffff,
+            0 0 28px #00ffff,
+            0 0 42px rgba(0, 255, 255, 0.8),
+            0 0 56px rgba(0, 255, 255, 0.5);
     }
     50% {
         text-shadow: 
             0 0 18px #00ffff,
             0 0 36px #00ffff,
-            0 0 54px #00ffff,
-            0 0 72px rgba(0, 255, 255, 1);
+            0 0 54px rgba(0, 255, 255, 1),
+            0 0 72px rgba(0, 255, 255, 0.7);
     }
 }
 
@@ -1965,11 +1976,13 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 @media (max-width: 1024px) {
     .hud {
         right: 5%;
+        min-width: 180px;
     }
 
     #menu li {
-        font-size: 12px;
-        margin: 10px 0;
+        font-size: 14px; /* Aumentado de 12px para mejor legibilidad */
+        margin: 14px 0; /* Aumentado proporcionalmente */
+        padding: 8px 14px; /* Mantener área de click generosa */
     }
 
     .section-inner,
@@ -1999,14 +2012,29 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
 
     #menu li {
-        font-size: 10px;
-        margin: 8px 0;
+        font-size: 11px; /* Aumentado de 10px para mejor legibilidad */
+        margin: 12px 0; /* Aumentado de 8px */
+        padding: 8px 12px; /* Mantener área de click */
         transform-origin: center;
     }
 
     #menu li:hover,
     #menu li.active {
-        transform: scale(1.15);
+        transform: scale(1.12); /* Ajustado proporcionalmente */
+    }
+    
+    #menu li.active {
+        padding-left: 16px; /* Indentación proporcional */
+    }
+    
+    #menu li:hover {
+        padding-left: 14px; /* Indentación proporcional */
+        transform: scale(1.1) translateY(-2px) !important; /* Movimiento vertical en móvil */
+    }
+    
+    #menu li.active:hover {
+        padding-left: 18px; /* Indentación proporcional */
+        transform: scale(1.13) translateY(-2px) !important;
     }
 
     .section-content {
@@ -2099,14 +2127,28 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
 
     #menu li {
-        font-size: 8px;
-        margin: 6px 0;
-        padding: 4px 0;
+        font-size: 9px; /* Aumentado de 8px para mejor legibilidad */
+        margin: 10px 0; /* Aumentado de 6px */
+        padding: 6px 10px; /* Mantener área de click, aumentado de 4px 0 */
     }
 
     #menu li:hover,
     #menu li.active {
         transform: scale(1.1);
+    }
+    
+    #menu li.active {
+        padding-left: 14px; /* Indentación proporcional */
+    }
+    
+    #menu li:hover {
+        padding-left: 12px; /* Indentación proporcional */
+        transform: scale(1.08) translateY(-2px) !important;
+    }
+    
+    #menu li.active:hover {
+        padding-left: 16px; /* Indentación proporcional */
+        transform: scale(1.12) translateY(-2px) !important;
     }
 
     .skills-grid {
@@ -2193,9 +2235,21 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 /* Móviles pequeños */
 @media (max-width: 360px) {
     #menu li {
-        font-size: 7px;
-        margin: 5px 0;
-        padding: 3px 6px;
+        font-size: 8px; /* Aumentado de 7px para mejor legibilidad */
+        margin: 8px 0; /* Aumentado de 5px */
+        padding: 5px 8px; /* Mantener área de click, aumentado de 3px 6px */
+    }
+    
+    #menu li.active {
+        padding-left: 12px; /* Indentación proporcional */
+    }
+    
+    #menu li:hover {
+        padding-left: 10px; /* Indentación proporcional */
+    }
+    
+    #menu li.active:hover {
+        padding-left: 14px; /* Indentación proporcional */
     }
 
     .section-inner h2,

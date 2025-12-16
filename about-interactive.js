@@ -3,8 +3,8 @@
 function navigateToCategory(categoryId) {
     // Mapeo correcto: categoryId del link -> ID real de la categoría
     const categoryIdMap = {
-        'universidad': 'universidad',  // ID real
-        'nagma': 'recorridos'         // El ID real es 'recorridos' aunque se muestre como NAGMA
+        'universidad': 'thesis',  // Da Vinci Escuela -> THESIS
+        'nagma': 'nagma'          // Nagma -> NAGMA
     };
     
     const realCategoryId = categoryIdMap[categoryId];
