@@ -903,15 +903,10 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 12px;
     font-family: "Press Start 2P", monospace;
     font-size: 0.65em;
     color: var(--color-primary);
     line-height: 1.8;
-}
-
-.status-line:last-child {
-    margin-bottom: 0;
 }
 
 .status-prefix {

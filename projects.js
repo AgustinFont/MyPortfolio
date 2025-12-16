@@ -217,7 +217,8 @@ function openProjectModal(project) {
             sourceLink.target = '_blank';
             sourceLink.rel = 'noopener noreferrer';
             sourceLink.className = 'project-link';
-            sourceLink.textContent = 'CODE';
+            // Si es el proyecto Thesis (id: 1), mostrar "CO-WORKER / COLLEAGUE", sino "CODE"
+            sourceLink.textContent = project.id === 1 ? 'CO-WORKER / COLLEAGUE' : 'CODE';
             linksContainer.appendChild(sourceLink);
         }
         
