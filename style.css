@@ -327,10 +327,44 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     align-items: center;
     justify-content: center;
     padding: 20px;
-    background: rgba(10, 10, 21, 0.78);
+    background: rgba(10, 10, 21, 0.95);
     z-index: 24;
 }
 
+.game-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 900px;
+    max-height: 700px;
+}
+
+#game-canvas {
+    width: 100%;
+    height: 100%;
+    max-width: 800px;
+    max-height: 600px;
+    border: 3px solid var(--color-primary);
+    box-shadow: 
+        0 0 30px rgba(0, 255, 255, 0.5),
+        inset 0 0 20px rgba(0, 255, 255, 0.1);
+    border-radius: 8px;
+    background: var(--color-bg);
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.game-container .play-mode-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 25;
+}
+
+/* Legacy play-mode-card (kept for compatibility) */
 .play-mode-card {
     width: min(420px, 90vw);
     background: rgba(0, 0, 0, 0.65);
@@ -761,6 +795,29 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     line-height: 1;
 }
 
+/* C# icon text overlay */
+.csharp-icon {
+    position: relative;
+}
+
+.csharp-icon .csharp-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.7em;
+    color: #00ffff;
+    text-shadow: 
+        -1px -1px 0 #0077cc,
+        1px -1px 0 #0077cc,
+        -1px 1px 0 #0077cc,
+        1px 1px 0 #0077cc,
+        0 0 4px #0077cc;
+    display: block;
+    z-index: 1;
+}
+
 .skill-name {
     font-family: "Press Start 2P", monospace;
     font-size: 0.65em;
@@ -768,6 +825,22 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     text-align: center;
     line-height: 1.3;
     word-break: break-word;
+}
+
+/* C# specific styling with outline */
+.skill-name.csharp-name {
+    color: var(--color-text-dim);
+    text-shadow: 
+        -1px -1px 0 #0077cc,
+        1px -1px 0 #0077cc,
+        -1px 1px 0 #0077cc,
+        1px 1px 0 #0077cc,
+        0 0 4px #0077cc,
+        0 0 8px rgba(0, 119, 204, 0.5);
+}
+
+.csharp-icon svg {
+    filter: drop-shadow(0 0 2px rgba(0, 255, 255, 0.5));
 }
 
 /* === SKILLS AND ABILITIES CONTAINER === */
@@ -2904,5 +2977,56 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     .section-inner,
     .project-card {
         max-width: 1000px;
+    }
+}
+
+/* === GAME RESPONSIVE === */
+@media (max-width: 1024px) {
+    .game-container {
+        max-width: 90vw;
+        max-height: 70vh;
+    }
+    
+    #game-canvas {
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-container {
+        max-width: 95vw;
+        max-height: 75vh;
+        padding: 10px;
+    }
+    
+    #game-canvas {
+        border-width: 2px;
+    }
+    
+    .game-container .play-mode-back {
+        top: 10px;
+        left: 10px;
+        font-size: 10px;
+        padding: 6px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-container {
+        max-width: 100vw;
+        max-height: 80vh;
+        padding: 5px;
+    }
+    
+    #game-canvas {
+        border-width: 2px;
+    }
+    
+    .game-container .play-mode-back {
+        top: 5px;
+        left: 5px;
+        font-size: 8px;
+        padding: 4px 8px;
     }
 }

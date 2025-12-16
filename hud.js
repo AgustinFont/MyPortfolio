@@ -72,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.backToMenu = function () {
         if (playMode) {
             // salir de modo juego
+            exitPlayMode();
             playMode = false;
             hud.classList.remove("play-mode");
             if (playModeOverlay) {
@@ -229,6 +230,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateMenu();
 
     // === PLAY MODE TOGGLE ===
+    let gameInstance = null;
+    
     function enterPlayMode() {
         playMode = true;
         hud.classList.add("play-mode");
@@ -240,6 +243,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (playModeOverlay) {
             playModeOverlay.style.display = "flex";
             gsap.fromTo(playModeOverlay, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" });
+            
+            // Initialize game
+            if (!gameInstance && window.BugDriverGame) {
+                gameInstance = new window.BugDriverGame('game-canvas');
+                gameInstance.init();
+            } else if (gameInstance) {
+                // Resume game if it exists
+                gameInstance.gameState = 'menu';
+            }
         }
 
         // Notificación y egg (solo primera vez)
@@ -249,6 +261,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.addEasterEgg("Ready to play", "Unlock play mode");
             }
             // Si hay un sistema de notificaciones, podríamos disparar aquí (placeholder)
+        }
+    }
+    
+    function exitPlayMode() {
+        if (gameInstance) {
+            gameInstance.destroy();
         }
     }
 
@@ -264,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (playModeBack) {
         playModeBack.addEventListener("click", () => {
+            exitPlayMode();
             window.backToMenu();
         });
     }
