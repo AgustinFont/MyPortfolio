@@ -1365,6 +1365,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     transition: all 0.3s ease;
+    box-sizing: border-box;
 }
 
 .project-modal.fullscreen {
@@ -1621,6 +1622,11 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .project-info {
     color: white;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding-right: 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .project-info h2 {
@@ -1629,6 +1635,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     color: #00ffff;
     margin-bottom: 20px;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    word-break: break-word;
 }
 
 .project-meta {
@@ -1653,6 +1660,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     line-height: 1.8;
     margin-bottom: 25px;
     color: #ffffff;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .project-tech {
@@ -1698,6 +1707,43 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .project-link:active {
     transform: translateY(0);
+}
+
+/* === BREAKPOINTS INTERMEDIOS PARA MODAL === */
+@media (max-width: 1400px) {
+    .project-detail {
+        max-width: 1400px;
+        gap: 36px;
+        padding: 0 10px;
+    }
+    
+    .project-modal {
+        padding: 32px 18px;
+    }
+    
+    .project-info h2 {
+        font-size: 1.4em;
+    }
+    
+    .project-info p {
+        line-height: 1.7;
+    }
+}
+
+@media (max-width: 1200px) {
+    .project-detail {
+        max-width: 1200px;
+        gap: 32px;
+        padding: 0 6px;
+    }
+    
+    .project-modal {
+        padding: 28px 16px;
+    }
+    
+    .project-info h2 {
+        font-size: 1.3em;
+    }
 }
 
 /* === RESPONSIVE GRID === */
@@ -1982,7 +2028,24 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     
     .skills-abilities-container {
         grid-template-columns: 1fr;
-        gap: 30px;
+        gap: 28px;
+        justify-items: center;
+    }
+    
+    .abilities-section {
+        width: 100%;
+        max-width: none;
+        margin: 0 auto;
+    }
+    
+    .abilities-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+    }
+    
+    .ability-badge {
+        min-width: 115px;
+        max-width: 140px;
     }
     
     .abilities-grid {
@@ -2061,9 +2124,19 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         font-size: 0.6em;
     }
 
+    .skills-abilities-container {
+        justify-items: center;
+    }
+    
+    .abilities-section {
+        width: 100%;
+        max-width: none;
+        margin: 0 auto;
+    }
+    
     .abilities-grid {
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 12px;
     }
 
     .ability-badge {

@@ -19,7 +19,7 @@ const projectsData = {
                     { type: "image", src: "images/projects/thesis-screenshot5.png" },
                     { type: "image", src: "images/projects/thesis-screenshot6.png" },
                     { type: "image", src: "images/projects/thesis-screenshot7.png" },
-                    { type: "youtube", src: "" }
+                    { type: "youtube", src: "https://www.youtube.com/watch?v=dJVc4_AxM0Y" }
                 ]
             },
             description: "This thesis presents the design and development of a 3D fantasy adventure game focused on exploration and combat. The project explores world-building, player progression, and interactive systems, combining environmental exploration with real-time combat mechanics. The game was developed as a full interactive experience, emphasizing level design, atmosphere, and player immersion.",
@@ -130,8 +130,11 @@ const projectsData = {
             year: "2023",
             thumbnail: "images/projects/beta-thumb.jpg",
             media: {
-                type: "video",
-                src: "videos/beta-demo.mp4"
+                type: "carousel",
+                items: [
+                    {type: "video", src: "videos/beta-demo.mp4"},
+                    {type: "youtube", src: "https://www.youtube.com/watch?v=uVwGlzuEv74"}
+                ]
             },
             description: "Puzzle game con mecánicas únicas de física. Ganador del Game Jam Local 2023. Desafía a los jugadores con niveles progresivamente más complejos.",
             tech: ["Unity", "C#"],
@@ -156,7 +159,8 @@ const projectsData = {
                     {type: "image", src: "images/projects/gamma-1.png "},
                     {type: "image", src: "images/projects/gamma-2.png "},
                     {type: "image", src: "images/projects/gamma-3.png "},
-                    {type: "image", src: "images/projects/gamma-4.png "}   
+                    {type: "image", src: "images/projects/gamma-4.png "},
+                    {type: "youtube", src: "https://www.youtube.com/watch?v=C7t-myucq5o"}
                 ]
             },
             description: "A 2D platformer where the player can detach their soul to possess enemies, unlock new abilities, and solve puzzle-based challenges. This demo showcases the core mechanics, traversal, and creative possession-based gameplay",
