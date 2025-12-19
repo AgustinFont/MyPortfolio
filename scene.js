@@ -176,13 +176,48 @@ function hideAllObjects() {
 }
 
 // --- Grid + entorno visual (interactivo) ---
-const gridSize = 12;
-const gridDivisions = 12;
-const grid = new THREE.GridHelper(gridSize, gridDivisions, 0x336699, 0x224466);
-grid.position.y = -1.5;
-grid.material.opacity = 0.15;
-grid.material.transparent = true;
-scene.add(grid);
+const gridSize = 18;
+const gridSegments = 48;
+const baseGridColor = new THREE.Color(0x224466);
+const highlightGridColor = new THREE.Color(0x66ccff);
+
+const gridGeometry = new THREE.PlaneGeometry(gridSize, gridSize, gridSegments, gridSegments);
+gridGeometry.rotateX(-Math.PI / 2);
+gridGeometry.translate(0, -1.5, 0);
+
+// Guardar posiciones base para restaurar deformación
+const gridBasePositions = gridGeometry.attributes.position.array.slice();
+
+// Colores por vértice
+const gridColors = new Float32Array((gridSegments + 1) * (gridSegments + 1) * 3);
+for (let i = 0; i < gridColors.length; i += 3) {
+  gridColors[i] = baseGridColor.r;
+  gridColors[i + 1] = baseGridColor.g;
+  gridColors[i + 2] = baseGridColor.b;
+}
+gridGeometry.setAttribute("color", new THREE.BufferAttribute(gridColors, 3));
+
+const gridMaterial = new THREE.MeshBasicMaterial({
+  wireframe: true,
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.6,
+});
+const gridMesh = new THREE.Mesh(gridGeometry, gridMaterial);
+scene.add(gridMesh);
+
+// Estado del puntero proyectado sobre el plano de la grid
+const pointerWorld = new THREE.Vector3();
+let hasPointer = false;
+const raycaster = new THREE.Raycaster();
+const gridPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 1.5); // y = -1.5
+
+function updatePointerWorld(clientX, clientY) {
+  const nx = (clientX / window.innerWidth) * 2 - 1;
+  const ny = -(clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera({ x: nx, y: ny }, camera);
+  hasPointer = raycaster.ray.intersectPlane(gridPlane, pointerWorld) !== null;
+}
 
 const envGeo = new THREE.BoxGeometry(20, 20, 20);
 const envMat = new THREE.MeshBasicMaterial({
@@ -321,6 +356,8 @@ function handlePointerMove(x, y) {
   mouseX = xNorm;
   mouseY = yNorm;
 
+  updatePointerWorld(x, y);
+
   if (isDraggingModel && characterModel && characterModel.visible) {
     const dragDelta = x - dragStartX;
     dragTargetRotationY = dragStartRotationY + dragDelta * 0.01;
@@ -375,6 +412,11 @@ window.addEventListener("blur", endModelDrag);
 window.addEventListener("touchend", endModelDrag, { passive: true });
 window.addEventListener("touchcancel", endModelDrag, { passive: true });
 
+// Limpiar el estado del puntero al salir de la ventana
+window.addEventListener("mouseleave", () => {
+  hasPointer = false;
+});
+
 // --- Loop principal ---
 function animate() {
   requestAnimationFrame(animate);
@@ -401,6 +443,50 @@ function animate() {
   camera.position.x += (mouseX * 0.3 - camera.position.x) * 0.02;
   camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.02;
   camera.lookAt(0, 0, 0);
+
+  // Deformación y color de la grid
+  if (gridMesh) {
+    const positions = gridGeometry.attributes.position.array;
+    const colors = gridGeometry.attributes.color.array;
+    const time = performance.now() * 0.001;
+
+    const rippleAmplitude = 0.4;
+    const rippleSpread = 4.0;
+    const idleWaveAmp = 0.05;
+
+    for (let i = 0; i < positions.length; i += 3) {
+      const ix = i;
+      const iy = i + 1;
+      const iz = i + 2;
+
+      let y = gridBasePositions[iy];
+
+      // Onda suave en reposo
+      y += Math.sin(time * 1.5 + gridBasePositions[ix] * 0.5 + gridBasePositions[iz] * 0.5) * idleWaveAmp;
+
+      let t = 0;
+      if (hasPointer) {
+        const dx = pointerWorld.x - positions[ix];
+        const dz = pointerWorld.z - positions[iz];
+        const dist = Math.sqrt(dx * dx + dz * dz);
+        const influence = Math.exp(-(dist * dist) / (rippleSpread * rippleSpread));
+        y += influence * rippleAmplitude;
+        t = Math.min(1, influence * 2);
+      }
+
+      positions[iy] = y;
+
+      const r = baseGridColor.r + (highlightGridColor.r - baseGridColor.r) * t;
+      const g = baseGridColor.g + (highlightGridColor.g - baseGridColor.g) * t;
+      const b = baseGridColor.b + (highlightGridColor.b - baseGridColor.b) * t;
+      colors[ix] = r;
+      colors[iy] = g;
+      colors[iz] = b;
+    }
+
+    gridGeometry.attributes.position.needsUpdate = true;
+    gridGeometry.attributes.color.needsUpdate = true;
+  }
 
   // Aplicar rotaciÃ³n temporal mientras se arrastra el modelo
   if (isDraggingModel && characterModel && characterModel.visible) {
