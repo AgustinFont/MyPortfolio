@@ -43,6 +43,11 @@ function foundEasterEgg(eggId, eggName, eggDescription) {
     
     // Mostrar notificación (opcional)
     showEasterEggNotification(eggName);
+
+    // Disparar fuegos artificiales laterales si la función existe
+    if (typeof window.triggerSideFireworks === "function") {
+        window.triggerSideFireworks();
+    }
     
     console.log(`Easter Egg found: ${eggName} (${eggDescription})`);
 }
