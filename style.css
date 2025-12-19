@@ -1292,15 +1292,16 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 /* Legacy contact-btn styles (kept for other sections) */
 .contact-buttons {
     display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+    gap: 14px;
+    flex-wrap: nowrap;
     justify-content: center;
+    white-space: nowrap;
 }
 
 .contact-btn {
     font-family: "Press Start 2P", monospace;
-    font-size: 0.9em;
-    padding: 15px 30px;
+    font-size: 0.85em;
+    padding: 12px 22px;
     background: transparent;
     border: 2px solid var(--color-primary);
     color: var(--color-primary);
@@ -1309,6 +1310,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     display: inline-block;
     position: relative;
     overflow: hidden;
+    min-width: 0;
 }
 
 .contact-btn::before {
@@ -1695,16 +1697,21 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
     
     .contact-buttons {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: nowrap;
         width: 100%;
-        gap: 12px;
+        gap: 10px;
+        justify-content: center;
+        white-space: nowrap;
+        overflow-x: auto;
+        padding: 0 6px;
     }
     
     .contact-btn {
         width: 100%;
         text-align: center;
-        font-size: 0.85em;
-        padding: 12px 14px;
+        font-size: 0.78em;
+        padding: 10px 12px;
     }
     
     .counter-value {

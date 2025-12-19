@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     duration: 0.4,
                     onComplete: () => {
                         playModeOverlay.style.display = "none";
+                        playModeOverlay.innerHTML = "";
                         playModeOverlay.style.opacity = 1;
                     }
                 });
@@ -242,6 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (playModeOverlay) {
             playModeOverlay.style.display = "flex";
+            playModeOverlay.innerHTML = "<div class='coming-soon'>Interactive window coming soon</div>";
             gsap.fromTo(playModeOverlay, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" });
         }
 

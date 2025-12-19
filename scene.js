@@ -236,76 +236,46 @@ const envMat = new THREE.MeshBasicMaterial({
 const envCube = new THREE.Mesh(envGeo, envMat);
 scene.add(envCube);
 
-// --- Ambient visuals (meteoritos, fireworks) ---
+// --- Ambient visuals (fireworks) ---
 const ambientEntities = [];
 const ambientSchedule = {
-  nextMeteor: 0,
   nextFirework: 0,
 };
 
-const meteorMat = new THREE.MeshBasicMaterial({ color: 0x99cfff, emissive: 0x66aaff, emissiveIntensity: 0.8 });
-const meteorGeo = new THREE.SphereGeometry(0.08, 8, 8);
-const meteorTrailMat = new THREE.LineBasicMaterial({ color: 0x66ccff, transparent: true, opacity: 0.55 });
-
 const fireworkMat = new THREE.PointsMaterial({
-  size: 0.1,
+  size: 0.12,
   transparent: true,
   opacity: 1,
-  color: 0xffe6aa,
+  color: 0xffffff,
   depthWrite: false,
   blending: THREE.AdditiveBlending,
   sizeAttenuation: true,
 });
-
-// Ondas por impacto (meteorito contra la grid)
-const impactWaves = [];
 
 function randRange(min, max) {
   return Math.random() * (max - min) + min;
 }
 
 function scheduleAmbient(timeNow) {
-  if (!ambientSchedule.nextMeteor) ambientSchedule.nextMeteor = timeNow + randRange(6, 11);
   if (!ambientSchedule.nextFirework) ambientSchedule.nextFirework = timeNow + randRange(8, 14);
 }
 
 function spawnMeteor(timeNow) {
-  const g = new THREE.Group();
-  const body = new THREE.Mesh(meteorGeo, meteorMat.clone());
-  const trailSegments = 8;
-  const trailPositions = new Float32Array(trailSegments * 3);
-  const trailGeo = new THREE.BufferGeometry();
-  trailGeo.setAttribute("position", new THREE.BufferAttribute(trailPositions, 3));
-  const trail = new THREE.Line(trailGeo, meteorTrailMat.clone());
-  g.add(body);
-  g.add(trail);
-  const startX = randRange(-8, 8);
-  const startZ = -12;
-  const startY = randRange(3, 6);
-  g.position.set(startX, startY, startZ);
-  const vel = new THREE.Vector3(randRange(-0.4, 0.4), randRange(0.5, 0.8), randRange(3.0, 4.2));
-  const acc = new THREE.Vector3(0, -2.8, 0); // gravedad suave
-  ambientEntities.push({
-    type: "meteor",
-    obj: g,
-    vel,
-    acc,
-    life: 6,
-    born: timeNow,
-    trail,
-    trailPositions,
-  });
-  scene.add(g);
+  // meteoritos desactivados
 }
 
 function spawnFireworkAt(origin, power = 1) {
-  const count = Math.floor(28 * power);
+  const count = Math.floor(48 * power); // más partículas
   const positions = new Float32Array(count * 3);
   const velocities = [];
+  const hue = Math.random();
+  const fwMat = fireworkMat.clone();
+  fwMat.color.setHSL(hue, 0.85, 0.65);
+  fwMat.opacity = 1.05;
   for (let i = 0; i < count; i++) {
     const dir = new THREE.Vector3(randRange(-1, 1), randRange(0.2, 1.2), randRange(-1, 1))
       .normalize()
-      .multiplyScalar(randRange(1.6, 2.8) * power);
+      .multiplyScalar(randRange(2.4, 3.6) * power);
     velocities.push(dir);
     positions[i * 3 + 0] = 0;
     positions[i * 3 + 1] = 0;
@@ -313,16 +283,22 @@ function spawnFireworkAt(origin, power = 1) {
   }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-  const points = new THREE.Points(geo, fireworkMat.clone());
+  const points = new THREE.Points(geo, fwMat);
   points.position.copy(origin);
   ambientEntities.push({
     type: "firework",
     obj: points,
     velocities,
-    life: 1.4,
+    life: 1.6,
     born: performance.now() * 0.001,
   });
   scene.add(points);
+
+  // Segundo estallido más pequeño
+  setTimeout(() => {
+    const secondary = origin.clone().add(new THREE.Vector3(randRange(-0.4, 0.4), randRange(0.2, 0.6), randRange(-0.4, 0.4)));
+    spawnFireworkAt(secondary, power * 0.6);
+  }, 180);
 }
 
 function spawnFirework(timeNow) {
@@ -333,10 +309,6 @@ function spawnFirework(timeNow) {
 function updateAmbient(delta, timeNow) {
   scheduleAmbient(timeNow);
 
-  if (timeNow >= ambientSchedule.nextMeteor) {
-    spawnMeteor(timeNow);
-    ambientSchedule.nextMeteor = timeNow + randRange(6, 11);
-  }
   if (timeNow >= ambientSchedule.nextFirework) {
     spawnFirework(timeNow);
     ambientSchedule.nextFirework = timeNow + randRange(9, 14);
@@ -350,53 +322,19 @@ function updateAmbient(delta, timeNow) {
       ambientEntities.splice(i, 1);
       continue;
     }
-    if (e.type === "meteor") {
-      e.vel.addScaledVector(e.acc, delta);
-      e.obj.position.addScaledVector(e.vel, delta);
-
-      // Trail histórico
-      const trailArr = e.trailPositions;
-      for (let t = trailArr.length - 3; t >= 3; t -= 3) {
-        trailArr[t] = trailArr[t - 3];
-        trailArr[t + 1] = trailArr[t - 2];
-        trailArr[t + 2] = trailArr[t - 1];
-      }
-      trailArr[0] = 0;
-      trailArr[1] = 0;
-      trailArr[2] = 0;
-      e.trail.geometry.attributes.position.needsUpdate = true;
-
-      const fade = 1 - age / e.life;
-      e.obj.children.forEach((c) => {
-        if (c.material && c.material.opacity !== undefined) {
-          c.material.opacity = Math.max(0, fade);
-        }
-      });
-
-      // Impacto con la grid
-      if (e.obj.position.y <= -1.5) {
-        impactWaves.push({
-          pos: new THREE.Vector3(e.obj.position.x, -1.5, e.obj.position.z),
-          born: timeNow,
-          life: 1.2,
-          strength: 1.0,
-        });
-        scene.remove(e.obj);
-        ambientEntities.splice(i, 1);
-        continue;
-      }
-    } else if (e.type === "firework") {
-      const positions = e.obj.geometry.attributes.position.array;
+    if (e.type === "firework") {
+    const positions = e.obj.geometry.attributes.position.array;
       for (let p = 0; p < e.velocities.length; p++) {
         const v = e.velocities[p];
         positions[p * 3 + 0] += v.x * delta;
         positions[p * 3 + 1] += v.y * delta;
         positions[p * 3 + 2] += v.z * delta;
-        v.y -= 1.2 * delta;
+      v.y -= 1.6 * delta;       // caída más rápida
+      v.multiplyScalar(Math.pow(0.9, delta * 60)); // drag ligero
       }
       e.obj.geometry.attributes.position.needsUpdate = true;
       const fade = 1 - age / e.life;
-      e.obj.material.opacity = Math.max(0, fade);
+    e.obj.material.opacity = Math.max(0, fade * 1.1);
     }
   }
 }
@@ -727,20 +665,6 @@ function animate() {
         const jagged = 1 + rippleJaggedness * Math.sin(seed * 3.7 + timeNow * 2.2);
         y += influence * rippleAmplitude * jagged * edgeFade;
         t += Math.min(1, influence * 2) * edgeFade;
-      }
-
-      // Ondas por impacto de meteoritos
-      for (let w = impactWaves.length - 1; w >= 0; w--) {
-        const wave = impactWaves[w];
-        const wAge = timeNow - wave.born;
-        if (wAge > wave.life) continue;
-        const decay = 1 - wAge / wave.life;
-        const dxw = wave.pos.x - positions[ix];
-        const dzw = wave.pos.z - positions[iz];
-        const distW = Math.sqrt(dxw * dxw + dzw * dzw);
-        const waveInfluence = Math.exp(-(distW * distW) / (impactSpread * impactSpread)) * decay * wave.strength;
-        y += waveInfluence * impactWaveAmp;
-        t += waveInfluence * 1.1 * edgeFade;
       }
 
       t = Math.min(1, t);
