@@ -136,6 +136,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (e.key.toLowerCase() === "d") {
+            if (typeof window.startDemoTour === "function") {
+                window.startDemoTour();
+            }
+            return;
+        }
+
         // Navegación con teclado
         if (e.key === "ArrowDown") {
             e.preventDefault();
@@ -254,6 +261,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.backToMenu();
             } else {
                 enterPlayMode();
+            }
+        });
+    }
+
+    const demoToggle = document.getElementById("demo-toggle");
+    if (demoToggle) {
+        demoToggle.addEventListener("click", () => {
+            if (typeof window.startDemoTour === "function") {
+                window.startDemoTour();
             }
         });
     }

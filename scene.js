@@ -366,6 +366,166 @@ const envMat = new THREE.MeshBasicMaterial({
 const envCube = new THREE.Mesh(envGeo, envMat);
 scene.add(envCube);
 
+// --- Ambient visuals (meteoritos, flyby, fireworks) ---
+const ambientEntities = [];
+const ambientSchedule = {
+  nextMeteor: 0,
+  nextFirework: 0,
+  nextFlyby: 0,
+};
+
+const meteorMat = new THREE.MeshBasicMaterial({ color: 0x99cfff, emissive: 0x66aaff, emissiveIntensity: 0.8 });
+const meteorGeo = new THREE.SphereGeometry(0.08, 8, 8);
+const meteorTrailMat = new THREE.LineBasicMaterial({ color: 0x66ccff, transparent: true, opacity: 0.5 });
+
+const fireworkMat = new THREE.PointsMaterial({
+  size: 0.06,
+  transparent: true,
+  opacity: 1,
+  color: 0xffdd88,
+  depthWrite: false,
+});
+
+const flybyMat = new THREE.MeshBasicMaterial({ color: 0xff8a5c, transparent: true, opacity: 0.8 });
+const flybyGeo = new THREE.BoxGeometry(0.25, 0.08, 0.6);
+
+function randRange(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function scheduleAmbient(timeNow) {
+  if (!ambientSchedule.nextMeteor) ambientSchedule.nextMeteor = timeNow + randRange(6, 11);
+  if (!ambientSchedule.nextFirework) ambientSchedule.nextFirework = timeNow + randRange(8, 14);
+  if (!ambientSchedule.nextFlyby) ambientSchedule.nextFlyby = timeNow + randRange(12, 18);
+}
+
+function spawnMeteor(timeNow) {
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(meteorGeo, meteorMat.clone());
+  const trailGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+  const trail = new THREE.Line(trailGeo, meteorTrailMat.clone());
+  g.add(body);
+  g.add(trail);
+  const startX = randRange(-8, 8);
+  const startZ = -12;
+  const startY = randRange(2, 5);
+  g.position.set(startX, startY, startZ);
+  const vel = new THREE.Vector3(randRange(-0.6, 0.6), randRange(-0.4, -0.1), randRange(2.5, 3.5));
+  ambientEntities.push({
+    type: "meteor",
+    obj: g,
+    vel,
+    life: 5,
+    born: timeNow,
+    trail,
+  });
+  scene.add(g);
+}
+
+function spawnFirework(timeNow) {
+  const count = 24;
+  const positions = new Float32Array(count * 3);
+  const velocities = [];
+  for (let i = 0; i < count; i++) {
+    const dir = new THREE.Vector3(randRange(-1, 1), randRange(0.2, 1.2), randRange(-1, 1)).normalize().multiplyScalar(randRange(1.2, 2.2));
+    velocities.push(dir);
+    positions[i * 3 + 0] = 0;
+    positions[i * 3 + 1] = 0;
+    positions[i * 3 + 2] = 0;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  const points = new THREE.Points(geo, fireworkMat.clone());
+  const origin = new THREE.Vector3(randRange(-5, 5), randRange(2.5, 4.5), randRange(-10, -6));
+  points.position.copy(origin);
+  ambientEntities.push({
+    type: "firework",
+    obj: points,
+    velocities,
+    life: 1.2,
+    born: timeNow,
+  });
+  scene.add(points);
+}
+
+function spawnFlyby(timeNow) {
+  const ship = new THREE.Mesh(flybyGeo, flybyMat.clone());
+  const y = randRange(1.8, 3.2);
+  const z = randRange(-8, -5);
+  const dir = Math.random() > 0.5 ? 1 : -1;
+  const startX = dir > 0 ? -9 : 9;
+  ship.position.set(startX, y, z);
+  ship.rotation.y = dir > 0 ? Math.PI * 0.5 : -Math.PI * 0.5;
+  ambientEntities.push({
+    type: "flyby",
+    obj: ship,
+    vel: new THREE.Vector3(3.2 * dir, randRange(-0.1, 0.1), 0),
+    life: 6,
+    born: timeNow,
+  });
+  scene.add(ship);
+}
+
+function updateAmbient(delta, timeNow) {
+  scheduleAmbient(timeNow);
+
+  if (timeNow >= ambientSchedule.nextMeteor) {
+    spawnMeteor(timeNow);
+    ambientSchedule.nextMeteor = timeNow + randRange(6, 11);
+  }
+  if (timeNow >= ambientSchedule.nextFirework) {
+    spawnFirework(timeNow);
+    ambientSchedule.nextFirework = timeNow + randRange(9, 14);
+  }
+  if (timeNow >= ambientSchedule.nextFlyby) {
+    spawnFlyby(timeNow);
+    ambientSchedule.nextFlyby = timeNow + randRange(12, 18);
+  }
+
+  for (let i = ambientEntities.length - 1; i >= 0; i--) {
+    const e = ambientEntities[i];
+    const age = timeNow - e.born;
+    if (age > e.life) {
+      scene.remove(e.obj);
+      ambientEntities.splice(i, 1);
+      continue;
+    }
+    if (e.type === "meteor") {
+      e.obj.position.addScaledVector(e.vel, delta);
+      const trailPoints = e.trail.geometry.attributes.position.array;
+      trailPoints[0] = 0;
+      trailPoints[1] = 0;
+      trailPoints[2] = 0;
+      trailPoints[3] = -e.vel.x * 0.8;
+      trailPoints[4] = -e.vel.y * 0.8;
+      trailPoints[5] = -e.vel.z * 0.8;
+      e.trail.geometry.attributes.position.needsUpdate = true;
+      const fade = 1 - age / e.life;
+      e.obj.children.forEach((c) => {
+        if (c.material && c.material.opacity !== undefined) {
+          c.material.opacity = Math.max(0, fade);
+        }
+      });
+    } else if (e.type === "firework") {
+      const positions = e.obj.geometry.attributes.position.array;
+      for (let p = 0; p < e.velocities.length; p++) {
+        const v = e.velocities[p];
+        positions[p * 3 + 0] += v.x * delta;
+        positions[p * 3 + 1] += v.y * delta;
+        positions[p * 3 + 2] += v.z * delta;
+        v.y -= 0.8 * delta;
+      }
+      e.obj.geometry.attributes.position.needsUpdate = true;
+      const fade = 1 - age / e.life;
+      e.obj.material.opacity = Math.max(0, fade);
+    } else if (e.type === "flyby") {
+      e.obj.position.addScaledVector(e.vel, delta);
+      const fade = 1 - age / e.life;
+      if (e.obj.material.opacity !== undefined) e.obj.material.opacity = Math.max(0, fade);
+    }
+  }
+}
+
 // Pelota inicial
 resetBall();
 
@@ -448,6 +608,68 @@ function rotateToSection(sectionId) {
   // para evitar conflictos y recargas duplicadas. Esta funciÃ³n solo maneja la rotaciÃ³n 3D.
 }
 
+// --- Demo rápida (tour de secciones con toasts) ---
+let demoRunning = false;
+function showDemoToast(text, duration = 1200) {
+  let el = document.getElementById("demo-toast");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "demo-toast";
+    el.style.position = "fixed";
+    el.style.top = "20px";
+    el.style.right = "20px";
+    el.style.padding = "10px 14px";
+    el.style.background = "rgba(20,30,60,0.85)";
+    el.style.border = "1px solid #66ccff";
+    el.style.borderRadius = "6px";
+    el.style.color = "#e8f6ff";
+    el.style.fontFamily = "Montserrat, sans-serif";
+    el.style.fontSize = "13px";
+    el.style.letterSpacing = "0.4px";
+    el.style.zIndex = "9999";
+    el.style.pointerEvents = "none";
+    el.style.opacity = "0";
+    document.body.appendChild(el);
+  }
+  el.textContent = text;
+  el.style.display = "block";
+  gsap.killTweensOf(el);
+  gsap.fromTo(el, { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" });
+  gsap.to(el, {
+    opacity: 0,
+    delay: duration / 1000,
+    duration: 0.3,
+    onComplete: () => {
+      el.style.display = "none";
+    },
+  });
+}
+
+function startDemoTour() {
+  if (demoRunning) return;
+  demoRunning = true;
+  const steps = [
+    { section: "about", label: "Sobre mí" },
+    { section: "projects", label: "Proyectos" },
+    { section: "contact", label: "Contacto" },
+    { section: "looking", label: "Looking For" },
+  ];
+  let idx = 0;
+  const runStep = () => {
+    if (idx >= steps.length) {
+      demoRunning = false;
+      if (typeof window.backToMenu === "function") window.backToMenu();
+      return;
+    }
+    const s = steps[idx];
+    showDemoToast(`Demo: ${s.label}`, 1.6);
+    rotateToSection(s.section);
+    idx++;
+    setTimeout(runStep, 1700);
+  };
+  runStep();
+}
+
 // --- BotÃ³n "Back" ---
 function backToMenu() {
   hideAllObjects();
@@ -526,8 +748,8 @@ function endBallDrag(clientX, clientY) {
   ballState.dragging = false;
   getPointOnGrid(clientX, clientY, ballState.dragCurrentWorld);
   const pull = new THREE.Vector3().subVectors(ballState.dragStartWorld, ballState.dragCurrentWorld);
-  const forceScale = 1.6;
-  const maxForce = 6.5;
+  const forceScale = 2.4;
+  const maxForce = 9.5;
   pull.y = 0;
   if (pull.length() === 0) return;
   pull.multiplyScalar(forceScale);
@@ -537,11 +759,6 @@ function endBallDrag(clientX, clientY) {
   ballState.vel.copy(pull);
   ballState.hasLaunched = true;
   ballModeActive = true;
-  ensureGoalAndObstacles();
-  goalGroup.visible = true;
-  obstacles.forEach((o) => (o.visible = true));
-  stars.forEach((s) => (s.visible = true));
-  if (stars.length > 0) randomizeStars();
 }
 
 function respawnBall() {
@@ -608,48 +825,8 @@ function updateObstacles(time) {
 }
 
 function checkCollisions() {
-  if (!ballGroup || !ballModeActive) return;
-  const ballPos = ballState.pos;
-
-  // Gol: dentro del arco
-  if (goalGroup && goalGroup.visible) {
-    const gx = goalGroup.position.x;
-    const gz = goalGroup.position.z;
-    const withinX = Math.abs(ballPos.x - gx) < 2.2;
-    const withinZ = ballPos.z < gz + 0.2;
-    if (withinX && withinZ) {
-      ballScore += 100;
-      console.log("GOL! Puntos:", ballScore);
-      respawnBall();
-      randomizeStars();
-    }
-  }
-
-  // Obstáculos (colisión simple AABB)
-  obstacles.forEach((o) => {
-    if (!o.visible) return;
-    const dx = Math.abs(ballPos.x - o.position.x);
-    const dz = Math.abs(ballPos.z - o.position.z);
-    if (dx < 0.5 && dz < 0.5) {
-      ballState.vel.x *= -0.7;
-      ballState.vel.z *= -0.7;
-    }
-  });
-
-  // Estrellas (recolección)
-  stars.forEach((s) => {
-    if (!s.visible) return;
-    const dist = s.position.distanceTo(ballPos);
-    if (dist < 0.6) {
-      ballScore += 25;
-      console.log("Estrella +25. Puntos:", ballScore);
-      s.visible = false;
-      setTimeout(() => {
-        s.visible = true;
-        randomizeStars();
-      }, 800);
-    }
-  });
+  // Arco y estrellas desactivados
+  return;
 }
 
 document.addEventListener(
@@ -766,6 +943,7 @@ function animate() {
   updateBall(delta, timeNow);
   updateObstacles(timeNow);
   checkCollisions();
+  updateAmbient(delta, timeNow);
 
   // Deformación y color de la grid (onda + ruido para irregularidad)
   if (gridMesh) {
@@ -891,6 +1069,7 @@ window.addEventListener("orientationchange", () => {
 // --- Exponer globalmente ---
 window.rotateToSection = rotateToSection;
 window.backToMenu = backToMenu;
+window.startDemoTour = startDemoTour;
 
 // === LANDING ANIMATION ===
 function initLandingAnimation() {
