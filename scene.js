@@ -176,8 +176,8 @@ function hideAllObjects() {
 }
 
 // --- Grid + entorno visual (interactivo) ---
-const gridSize = 14;
-const gridSegments = 20; // menos polígonos, look cuadriculado
+const gridSize = 28;
+const gridSegments = 28; // mayor tamaño, densidad similar
 const baseGridColor = new THREE.Color(0x224466);
 const highlightGridColor = new THREE.Color(0x66ccff);
 const accentGridColor = new THREE.Color(0xff8a5c); // tono naranja/rosa para el pico
@@ -455,12 +455,12 @@ function animate() {
     const colors = gridGeometry.attributes.color.array;
     const time = performance.now() * 0.001;
 
-    const rippleAmplitude = 0.65; // altura de la cresta (solo con puntero)
-    const rippleSpread = 2.8; // radio de influencia
-    const idleWaveAmp = 0.01; // respiración muy leve
-    const noiseStrength = 0.05; // irregularidad suave en idle
-    const noiseFreq = 1.3; // velocidad del ruido
-    const rippleJaggedness = 0.35; // dentado en la ola
+    const rippleAmplitude = 0.55; // altura del pico con puntero
+    const rippleSpread = 1.8; // radio de influencia más pequeño (zona activa chica)
+    const idleWaveAmp = 0.003; // casi nada en idle
+    const noiseStrength = 0.02; // irregularidad mínima en idle
+    const noiseFreq = 1.2; // velocidad del ruido
+    const rippleJaggedness = 0.25; // dentado moderado
 
     for (let i = 0, v = 0; i < positions.length; i += 3, v++) {
       const ix = i;
@@ -471,11 +471,15 @@ function animate() {
       const baseZ = gridBasePositions[iz];
       let y = gridBasePositions[iy];
 
-      // Ruido por vértice para cresta irregular
+      // Factor de atenuación hacia los bordes para achicar la zona activa
+      const edge = Math.max(Math.abs(baseX), Math.abs(baseZ)) / (gridSize * 0.5);
+      const edgeFade = Math.max(0, 1 - edge * 0.65);
+
+      // Ruido suave
       const seed = gridNoiseSeeds[v];
       const noise = Math.sin(time * noiseFreq + seed + baseX * 0.35 + baseZ * 0.4) * noiseStrength;
 
-      // Onda suave en reposo
+      // Idle casi plano
       y += Math.sin(time * 1.5 + baseX * 0.5 + baseZ * 0.5) * idleWaveAmp;
       y += noise;
 
@@ -486,14 +490,14 @@ function animate() {
         const dist = Math.sqrt(dx * dx + dz * dz);
         const influence = Math.exp(-(dist * dist) / (rippleSpread * rippleSpread));
         const jagged = 1 + rippleJaggedness * Math.sin(seed * 3.7 + time * 2.2);
-        y += influence * rippleAmplitude * jagged;
-        t = Math.min(1, influence * 2);
+        y += influence * rippleAmplitude * jagged * edgeFade;
+        t = Math.min(1, influence * 2) * edgeFade;
       }
 
       positions[iy] = y;
 
       // Mezcla de color: base -> highlight -> accent (complementario)
-      const mixAccent = Math.pow(t, 1.2); // acentúa el color complementario en el pico
+      const mixAccent = Math.pow(t, 1.2);
       const mixHighlight = t * (1 - mixAccent);
 
       const r =
