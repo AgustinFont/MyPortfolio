@@ -236,12 +236,11 @@ const envMat = new THREE.MeshBasicMaterial({
 const envCube = new THREE.Mesh(envGeo, envMat);
 scene.add(envCube);
 
-// --- Ambient visuals (meteoritos, flyby, fireworks) ---
+// --- Ambient visuals (meteoritos, fireworks) ---
 const ambientEntities = [];
 const ambientSchedule = {
   nextMeteor: 0,
   nextFirework: 0,
-  nextFlyby: 0,
 };
 
 const meteorMat = new THREE.MeshBasicMaterial({ color: 0x99cfff, emissive: 0x66aaff, emissiveIntensity: 0.8 });
@@ -258,9 +257,6 @@ const fireworkMat = new THREE.PointsMaterial({
   sizeAttenuation: true,
 });
 
-const flybyMat = new THREE.MeshBasicMaterial({ color: 0xff8a5c, transparent: true, opacity: 0.8 });
-const flybyGeo = new THREE.BoxGeometry(0.25, 0.08, 0.6);
-
 // Ondas por impacto (meteorito contra la grid)
 const impactWaves = [];
 
@@ -271,7 +267,6 @@ function randRange(min, max) {
 function scheduleAmbient(timeNow) {
   if (!ambientSchedule.nextMeteor) ambientSchedule.nextMeteor = timeNow + randRange(6, 11);
   if (!ambientSchedule.nextFirework) ambientSchedule.nextFirework = timeNow + randRange(8, 14);
-  if (!ambientSchedule.nextFlyby) ambientSchedule.nextFlyby = timeNow + randRange(12, 18);
 }
 
 function spawnMeteor(timeNow) {
@@ -335,24 +330,6 @@ function spawnFirework(timeNow) {
   spawnFireworkAt(origin, 1);
 }
 
-function spawnFlyby(timeNow) {
-  const ship = new THREE.Mesh(flybyGeo, flybyMat.clone());
-  const y = randRange(1.8, 3.2);
-  const z = randRange(-8, -5);
-  const dir = Math.random() > 0.5 ? 1 : -1;
-  const startX = dir > 0 ? -9 : 9;
-  ship.position.set(startX, y, z);
-  ship.rotation.y = dir > 0 ? Math.PI * 0.5 : -Math.PI * 0.5;
-  ambientEntities.push({
-    type: "flyby",
-    obj: ship,
-    vel: new THREE.Vector3(3.2 * dir, randRange(-0.1, 0.1), 0),
-    life: 6,
-    born: timeNow,
-  });
-  scene.add(ship);
-}
-
 function updateAmbient(delta, timeNow) {
   scheduleAmbient(timeNow);
 
@@ -363,10 +340,6 @@ function updateAmbient(delta, timeNow) {
   if (timeNow >= ambientSchedule.nextFirework) {
     spawnFirework(timeNow);
     ambientSchedule.nextFirework = timeNow + randRange(9, 14);
-  }
-  if (timeNow >= ambientSchedule.nextFlyby) {
-    spawnFlyby(timeNow);
-    ambientSchedule.nextFlyby = timeNow + randRange(12, 18);
   }
 
   for (let i = ambientEntities.length - 1; i >= 0; i--) {
@@ -424,10 +397,6 @@ function updateAmbient(delta, timeNow) {
       e.obj.geometry.attributes.position.needsUpdate = true;
       const fade = 1 - age / e.life;
       e.obj.material.opacity = Math.max(0, fade);
-    } else if (e.type === "flyby") {
-      e.obj.position.addScaledVector(e.vel, delta);
-      const fade = 1 - age / e.life;
-      if (e.obj.material.opacity !== undefined) e.obj.material.opacity = Math.max(0, fade);
     }
   }
 }
