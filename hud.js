@@ -243,7 +243,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (playModeOverlay) {
             playModeOverlay.style.display = "flex";
-            playModeOverlay.innerHTML = "<div class='coming-soon'>Interactive window coming soon</div>";
+            playModeOverlay.innerHTML = `
+                <div class="coming-soon-wrapper">
+                  <div class="coming-soon-title">Interactive window coming soon</div>
+                  <button id="play-mode-back-inline" class="play-mode-back-btn">Back</button>
+                </div>
+            `;
+            const backInline = document.getElementById("play-mode-back-inline");
+            if (backInline) {
+                backInline.addEventListener("click", () => window.backToMenu());
+            }
             gsap.fromTo(playModeOverlay, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" });
         }
 

@@ -368,16 +368,12 @@ function rotateToSection(sectionId) {
   hideAllObjects();
 
   // Determinar objeto visible y Ã¡ngulo objetivo
+  const showCharacter = sectionId !== "about" && sectionId !== "contact";
   switch (sectionId) {
     case "about":
       targetAngle = 0;
       break;
     case "projects":
-      // Mostrar modelo Ãºnico
-      if (characterModel) {
-        characterModel.visible = true;
-        modelsGroup.visible = true;
-      }
       targetAngle = Math.PI / 2;
       break;
     case "looking":
@@ -389,6 +385,11 @@ function rotateToSection(sectionId) {
     case "easter":
       targetAngle = Math.PI * 2;
       break;
+  }
+
+  if (showCharacter && characterModel) {
+    characterModel.visible = true;
+    modelsGroup.visible = true;
   }
 
   // --- RotaciÃ³n y zoom de cÃ¡mara ---

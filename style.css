@@ -367,6 +367,48 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     z-index: 24;
 }
 
+.coming-soon-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    text-align: center;
+    max-width: 360px;
+    padding: 20px;
+}
+
+.coming-soon-title {
+    font-family: "Press Start 2P", monospace;
+    font-size: 1em;
+    color: #e8f6ff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+.play-mode-back-btn {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.85em;
+    padding: 12px 18px;
+    border: 2px solid var(--color-primary);
+    background: transparent;
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    min-width: 140px;
+}
+
+.play-mode-back-btn:hover,
+.play-mode-back-btn:focus-visible {
+    background: rgba(0, 255, 255, 0.12);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.35);
+    outline: none;
+}
+
+.play-mode-back-btn:active {
+    transform: translateY(1px);
+}
+
 .game-container {
     position: relative;
     width: 100%;
@@ -398,6 +440,23 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     top: 20px;
     left: 20px;
     z-index: 25;
+}
+
+@media (max-width: 768px) {
+    .coming-soon-wrapper {
+        max-width: 90vw;
+        padding: 16px;
+        gap: 12px;
+    }
+    .coming-soon-title {
+        font-size: 0.9em;
+        line-height: 1.35;
+    }
+    .play-mode-back-btn {
+        font-size: 0.78em;
+        padding: 10px 14px;
+        min-width: 120px;
+    }
 }
 
 /* Legacy play-mode-card (kept for compatibility) */
