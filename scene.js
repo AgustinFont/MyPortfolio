@@ -35,6 +35,11 @@ const INTERACTIVE_ENABLED = false;
 // Clock para normalizar velocidad de animación independiente del FPS (definir antes de initScene)
 const clock = new THREE.Clock();
 
+// --- Variables para modelos 3D --- (mover arriba para evitar TDZ en animate)
+let characterModel = null;
+let characterMixer = null; // Para animaciones
+let characterAnimationAction = null;
+
 // --- Renderizador ---
 let renderer = null;
 
@@ -91,11 +96,6 @@ scene.add(group);
 const modelsGroup = new THREE.Group();
 modelsGroup.position.set(0, 0, 0);
 group.add(modelsGroup);
-
-// --- Variables para modelos 3D ---
-let characterModel = null;
-let characterMixer = null; // Para animaciones
-let characterAnimationAction = null;
 
 // --- Cargador GLTF ---
 const loader = new GLTFLoader();
