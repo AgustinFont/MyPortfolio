@@ -159,12 +159,67 @@ group.add(meshCube, meshCyl, meshCone, meshTorus);
 meshCube.visible = true;
 meshCyl.visible = meshCone.visible = meshTorus.visible = false;
 
-// --- Grid + entorno visual ---
-const grid = new THREE.GridHelper(12, 12, 0x336699, 0x224466);
+// --- Grid + entorno visual (interactivo) ---
+const gridSize = 12;
+const gridDivisions = 12;
+const grid = new THREE.GridHelper(gridSize, gridDivisions, 0x336699, 0x224466);
 grid.position.y = -1.5;
 grid.material.opacity = 0.15;
 grid.material.transparent = true;
 scene.add(grid);
+
+// Sistema de ondas para el grid
+const wavePoints = [];
+const maxWaves = 5;
+const waveDecay = 0.95;
+const waveSpeed = 0.02;
+
+// Crear geometría personalizada para el grid con ondas
+const gridGeometry = new THREE.BufferGeometry();
+const gridVertices = [];
+const gridIndices = [];
+const gridColors = [];
+
+// Generar vértices del grid
+for (let i = 0; i <= gridDivisions; i++) {
+    for (let j = 0; j <= gridDivisions; j++) {
+        const x = (i / gridDivisions - 0.5) * gridSize;
+        const z = (j / gridDivisions - 0.5) * gridSize;
+        gridVertices.push(x, -1.5, z);
+        gridColors.push(0.2, 0.4, 0.6, 0.15); // RGBA
+    }
+}
+
+// Generar índices para las líneas del grid
+for (let i = 0; i < gridDivisions; i++) {
+    for (let j = 0; j < gridDivisions; j++) {
+        const a = i * (gridDivisions + 1) + j;
+        const b = a + 1;
+        const c = a + (gridDivisions + 1);
+        const d = c + 1;
+        
+        // Líneas horizontales
+        gridIndices.push(a, b);
+        // Líneas verticales
+        gridIndices.push(a, c);
+    }
+}
+
+gridGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(gridVertices), 3));
+gridGeometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(gridColors), 4));
+gridGeometry.setIndex(gridIndices);
+
+const gridMaterial = new THREE.LineBasicMaterial({
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.3
+});
+
+const interactiveGrid = new THREE.LineSegments(gridGeometry, gridMaterial);
+scene.add(interactiveGrid);
+
+// Ocultar el grid original y usar el interactivo
+grid.visible = false;
 
 const envGeo = new THREE.BoxGeometry(20, 20, 20);
 const envMat = new THREE.MeshBasicMaterial({
@@ -260,6 +315,7 @@ function rotateToSection(sectionId) {
 
     // NOTA: La manipulación del DOM (ocultar HUD, mostrar contenido) se maneja en hud.js
     // para evitar conflictos y recargas duplicadas. Esta función solo maneja la rotación 3D.
+
 }
 
 // --- Botón "Back" ---
@@ -277,17 +333,79 @@ function backToMenu() {
 
 // === Parallax de cámara con movimiento del mouse ===
 let mouseX = 0, mouseY = 0;
+let mouseWorldX = 0, mouseWorldZ = 0;
+let lastWaveTime = 0;
+const waveCooldown = 200; // ms entre ondas
+
 const canvas = renderer.domElement;
 const isProjectsVisible = () => {
     const section = document.getElementById('projects-content');
     return section && section.offsetParent !== null;
 };
 
+// Función para convertir coordenadas de pantalla a mundo 3D (en el plano del grid)
+function screenToWorld(x, y) {
+    const vector = new THREE.Vector3();
+    const mouse = new THREE.Vector2();
+    
+    mouse.x = (x / window.innerWidth) * 2 - 1;
+    mouse.y = -(y / window.innerHeight) * 2 + 1;
+    
+    vector.set(mouse.x, mouse.y, 0.5);
+    vector.unproject(camera);
+    
+    const dir = vector.sub(camera.position).normalize();
+    const planeY = -1.5; // Altura del grid
+    const distance = (planeY - camera.position.y) / dir.y;
+    
+    if (distance > 0) {
+        const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+        return pos;
+    }
+    
+    // Fallback: usar posición aproximada basada en el mouse
+    return new THREE.Vector3(
+        (mouse.x * gridSize) * 0.5,
+        planeY,
+        (mouse.y * gridSize) * 0.5
+    );
+}
+
+// Función para crear una onda en el grid
+function createWave(x, z) {
+    const now = Date.now();
+    if (now - lastWaveTime < waveCooldown) return;
+    lastWaveTime = now;
+    
+    wavePoints.push({
+        x: x,
+        z: z,
+        radius: 0,
+        intensity: 1.0,
+        speed: waveSpeed
+    });
+    
+    // Limitar número de ondas activas
+    if (wavePoints.length > maxWaves) {
+        wavePoints.shift();
+    }
+}
+
 document.addEventListener("mousemove", (e) => {
     const xNorm = (e.clientX / window.innerWidth - 0.5) * 2; // -1 a 1
     const yNorm = (e.clientY / window.innerHeight - 0.5) * 2;
     mouseX = xNorm;
     mouseY = yNorm;
+    
+    // Calcular posición del mouse en el mundo 3D (en el plano del grid)
+    const worldPos = screenToWorld(e.clientX, e.clientY);
+    mouseWorldX = worldPos.x;
+    mouseWorldZ = worldPos.z;
+    
+    // Crear ondas suaves mientras el mouse se mueve (más frecuente pero controlado)
+    if (Math.random() > 0.92) { // Crear ondas suavemente
+        createWave(mouseWorldX, mouseWorldZ);
+    }
     
     // Si estamos arrastrando el modelo, actualizar el objetivo de rotación
     if (isDraggingModel && characterModel && characterModel.visible) {
@@ -348,6 +466,119 @@ function animate() {
     camera.position.x += (mouseX * 0.3 - camera.position.x) * 0.02;
     camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.02;
     camera.lookAt(0, 0, 0);
+
+    // === Sistema de ondas en el grid ===
+    const positions = interactiveGrid.geometry.attributes.position;
+    const colors = interactiveGrid.geometry.attributes.color;
+    const baseY = -1.5;
+    
+    // Resetear posiciones base primero
+    for (let j = 0; j < positions.count; j++) {
+        const x = positions.getX(j);
+        const z = positions.getZ(j);
+        positions.setY(j, baseY);
+        
+        // Color base
+        colors.setXYZW(j, 0.2, 0.4, 0.6, 0.15);
+    }
+    
+    // Aplicar todas las ondas
+    for (let i = wavePoints.length - 1; i >= 0; i--) {
+        const wave = wavePoints[i];
+        wave.radius += wave.speed;
+        wave.intensity *= waveDecay;
+        
+        // Eliminar ondas que se han desvanecido
+        if (wave.intensity < 0.01 || wave.radius > gridSize * 1.5) {
+            wavePoints.splice(i, 1);
+            continue;
+        }
+        
+        // Aplicar deformación de ondas a los vértices del grid
+        for (let j = 0; j < positions.count; j++) {
+            const x = positions.getX(j);
+            const z = positions.getZ(j);
+            const y = positions.getY(j);
+            
+            const dx = x - wave.x;
+            const dz = z - wave.z;
+            const dist = Math.sqrt(dx * dx + dz * dz);
+            const waveWidth = 0.8;
+            
+            if (dist < wave.radius + waveWidth && dist > wave.radius - waveWidth) {
+                const normalizedDist = (dist - (wave.radius - waveWidth)) / (waveWidth * 2);
+                const waveEffect = Math.sin(normalizedDist * Math.PI) * wave.intensity * 0.4;
+                positions.setY(j, y + waveEffect);
+                
+                // Cambiar color basado en la intensidad de la onda
+                const colorIntensity = wave.intensity * 0.5;
+                const r = 0.2;
+                const g = 0.4 + colorIntensity;
+                const b = 0.6 + colorIntensity;
+                const a = 0.15 + wave.intensity * 0.25;
+                colors.setXYZW(j, r, g, b, a);
+            }
+        }
+    }
+    
+    // Deformación suave basada en la posición del cursor
+    const cursorInfluence = 0.2;
+    const cursorMaxDist = 2.5;
+    
+    for (let j = 0; j < positions.count; j++) {
+        const x = positions.getX(j);
+        const z = positions.getZ(j);
+        const y = positions.getY(j);
+        
+        const dx = x - mouseWorldX;
+        const dz = z - mouseWorldZ;
+        const dist = Math.sqrt(dx * dx + dz * dz);
+        
+        if (dist < cursorMaxDist) {
+            const influence = (1 - dist / cursorMaxDist) * cursorInfluence;
+            const wavePattern = Math.sin(dist * 3) * influence;
+            positions.setY(j, y + wavePattern);
+            
+            // Resaltar color cerca del cursor
+            const colorBoost = influence * 0.4;
+            const r = 0.2;
+            const g = 0.4 + colorBoost;
+            const b = 0.6 + colorBoost;
+            const a = Math.min(0.15 + influence * 0.35, 0.5);
+            colors.setXYZW(j, r, g, b, a);
+        }
+    }
+    
+    positions.needsUpdate = true;
+    colors.needsUpdate = true;
+
+    // === Rotación del cubo hacia el cursor ===
+    if (meshCube.visible) {
+        const cubePos = meshCube.position;
+        const dx = mouseWorldX - cubePos.x;
+        const dz = mouseWorldZ - cubePos.z;
+        const dist = Math.sqrt(dx * dx + dz * dz);
+        
+        if (dist > 0.1) { // Solo rotar si hay movimiento significativo
+            // Calcular ángulo hacia el cursor
+            const angleToCursor = Math.atan2(dx, dz);
+            
+            // Normalizar ángulo para transición suave
+            let currentAngle = meshCube.rotation.y;
+            let targetAngle = angleToCursor;
+            
+            // Ajustar para transición más suave (evitar saltos de 360°)
+            let diff = targetAngle - currentAngle;
+            if (diff > Math.PI) diff -= Math.PI * 2;
+            if (diff < -Math.PI) diff += Math.PI * 2;
+            
+            // Rotar suavemente hacia el cursor
+            meshCube.rotation.y += diff * 0.08;
+        }
+        
+        // Rotación continua suave adicional (idle)
+        meshCube.rotation.y += 0.005;
+    }
 
     // Aplicar rotación temporal mientras se arrastra el modelo
     if (isDraggingModel && characterModel && characterModel.visible) {
