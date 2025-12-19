@@ -29,6 +29,9 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, zoomLevel);
 camera.lookAt(0, 0, 0);
 
+// Clock para normalizar velocidad de animación independiente del FPS (definir antes de initScene)
+const clock = new THREE.Clock();
+
 // --- Renderizador ---
 let renderer = null;
 
@@ -90,9 +93,6 @@ group.add(modelsGroup);
 let characterModel = null;
 let characterMixer = null; // Para animaciones
 let characterAnimationAction = null;
-
-// Clock para normalizar velocidad de animación independiente del FPS
-const clock = new THREE.Clock();
 
 // --- Cargador GLTF ---
 const loader = new GLTFLoader();
@@ -1120,6 +1120,8 @@ let resizeTimeout;
 function handleResize() {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
+        if (!renderer) return; // No hacer nada si el renderer no está inicializado
+        
         const width = window.innerWidth;
         const height = window.innerHeight;
         
