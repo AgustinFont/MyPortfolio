@@ -176,8 +176,8 @@ function hideAllObjects() {
 }
 
 // --- Grid + entorno visual (interactivo) ---
-const gridSize = 18;
-const gridSegments = 48;
+const gridSize = 14;
+const gridSegments = 20; // menos polígonos, look cuadriculado
 const baseGridColor = new THREE.Color(0x224466);
 const highlightGridColor = new THREE.Color(0x66ccff);
 
@@ -185,8 +185,12 @@ const gridGeometry = new THREE.PlaneGeometry(gridSize, gridSize, gridSegments, g
 gridGeometry.rotateX(-Math.PI / 2);
 gridGeometry.translate(0, -1.5, 0);
 
-// Guardar posiciones base para restaurar deformación
+// Guardar posiciones base y seeds de ruido por vértice
 const gridBasePositions = gridGeometry.attributes.position.array.slice();
+const gridNoiseSeeds = new Float32Array((gridSegments + 1) * (gridSegments + 1));
+for (let i = 0; i < gridNoiseSeeds.length; i++) {
+  gridNoiseSeeds[i] = Math.random() * Math.PI * 2;
+}
 
 // Colores por vértice
 const gridColors = new Float32Array((gridSegments + 1) * (gridSegments + 1) * 3);
@@ -412,7 +416,7 @@ window.addEventListener("blur", endModelDrag);
 window.addEventListener("touchend", endModelDrag, { passive: true });
 window.addEventListener("touchcancel", endModelDrag, { passive: true });
 
-// Limpiar el estado del puntero al salir de la ventana
+// Limpiar estado del puntero al salir de la ventana
 window.addEventListener("mouseleave", () => {
   hasPointer = false;
 });
@@ -444,25 +448,35 @@ function animate() {
   camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.02;
   camera.lookAt(0, 0, 0);
 
-  // Deformación y color de la grid
+  // Deformación y color de la grid (onda + ruido para irregularidad)
   if (gridMesh) {
     const positions = gridGeometry.attributes.position.array;
     const colors = gridGeometry.attributes.color.array;
     const time = performance.now() * 0.001;
 
-    const rippleAmplitude = 0.4;
-    const rippleSpread = 4.0;
-    const idleWaveAmp = 0.05;
+    const rippleAmplitude = 0.55; // altura de la cresta
+    const rippleSpread = 3.0; // radio de influencia
+    const idleWaveAmp = 0.035; // respiración suave
+    const noiseStrength = 0.14; // irregularidad
+    const noiseFreq = 1.3; // velocidad del ruido
+    const rippleJaggedness = 0.3; // dentado en la ola
 
-    for (let i = 0; i < positions.length; i += 3) {
+    for (let i = 0, v = 0; i < positions.length; i += 3, v++) {
       const ix = i;
       const iy = i + 1;
       const iz = i + 2;
 
+      const baseX = gridBasePositions[ix];
+      const baseZ = gridBasePositions[iz];
       let y = gridBasePositions[iy];
 
+      // Ruido por vértice para cresta irregular
+      const seed = gridNoiseSeeds[v];
+      const noise = Math.sin(time * noiseFreq + seed + baseX * 0.35 + baseZ * 0.4) * noiseStrength;
+
       // Onda suave en reposo
-      y += Math.sin(time * 1.5 + gridBasePositions[ix] * 0.5 + gridBasePositions[iz] * 0.5) * idleWaveAmp;
+      y += Math.sin(time * 1.5 + baseX * 0.5 + baseZ * 0.5) * idleWaveAmp;
+      y += noise;
 
       let t = 0;
       if (hasPointer) {
@@ -470,7 +484,8 @@ function animate() {
         const dz = pointerWorld.z - positions[iz];
         const dist = Math.sqrt(dx * dx + dz * dz);
         const influence = Math.exp(-(dist * dist) / (rippleSpread * rippleSpread));
-        y += influence * rippleAmplitude;
+        const jagged = 1 + rippleJaggedness * Math.sin(seed * 3.7 + time * 2.2);
+        y += influence * rippleAmplitude * jagged;
         t = Math.min(1, influence * 2);
       }
 
