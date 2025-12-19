@@ -295,6 +295,17 @@ const particlesMat = new THREE.PointsMaterial({
 const particles = new THREE.Points(particlesGeo, particlesMat);
 scene.add(particles);
 
+// Sistema de partículas para el cubo (definir antes de rotateToSection)
+const cubeParticles = [];
+const maxCubeParticles = isMobile ? 30 : 50;
+const cubeParticlePool = [];
+
+// Objetivos flotantes (definir antes de usar en rotateToSection)
+const targets = [];
+const maxTargets = 3;
+let targetSpawnTimer = 0;
+const targetSpawnInterval = 5000; // ms
+
 // --- Cámara idle (ligero movimiento) ---
 gsap.to(camera.position, {
     y: "+=0.2",
@@ -402,17 +413,6 @@ function backToMenu() {
         }
     });
 }
-
-// Sistema de partículas para el cubo
-const cubeParticles = [];
-const maxCubeParticles = isMobile ? 30 : 50;
-const cubeParticlePool = [];
-
-// Objetivos flotantes
-const targets = [];
-const maxTargets = 3;
-let targetSpawnTimer = 0;
-const targetSpawnInterval = 5000; // ms
 
 // Función para crear partícula del cubo
 function createCubeParticle(position, velocity, color = 0x00ffff) {
@@ -798,14 +798,6 @@ function animate() {
     
     // No renderizar si el renderer no está inicializado
     if (!renderer) return;
-    
-    // #region agent log
-    if (typeof window.animateCallCount === 'undefined') window.animateCallCount = 0;
-    window.animateCallCount++;
-    if (window.animateCallCount === 1 || window.animateCallCount % 60 === 0) {
-        fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:442',message:'Animate loop running',data:{callCount:window.animateCallCount},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-    }
-    // #endregion
 
     // Calcular delta basado en tiempo real para normalizar velocidad de animación
     const delta = clock.getDelta();
