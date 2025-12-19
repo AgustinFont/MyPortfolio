@@ -180,6 +180,7 @@ const gridSize = 14;
 const gridSegments = 20; // menos polígonos, look cuadriculado
 const baseGridColor = new THREE.Color(0x224466);
 const highlightGridColor = new THREE.Color(0x66ccff);
+const accentGridColor = new THREE.Color(0xff8a5c); // tono naranja/rosa para el pico
 
 const gridGeometry = new THREE.PlaneGeometry(gridSize, gridSize, gridSegments, gridSegments);
 gridGeometry.rotateX(-Math.PI / 2);
@@ -454,12 +455,12 @@ function animate() {
     const colors = gridGeometry.attributes.color.array;
     const time = performance.now() * 0.001;
 
-    const rippleAmplitude = 0.55; // altura de la cresta
-    const rippleSpread = 3.0; // radio de influencia
-    const idleWaveAmp = 0.035; // respiración suave
-    const noiseStrength = 0.14; // irregularidad
+    const rippleAmplitude = 0.65; // altura de la cresta (solo con puntero)
+    const rippleSpread = 2.8; // radio de influencia
+    const idleWaveAmp = 0.01; // respiración muy leve
+    const noiseStrength = 0.05; // irregularidad suave en idle
     const noiseFreq = 1.3; // velocidad del ruido
-    const rippleJaggedness = 0.3; // dentado en la ola
+    const rippleJaggedness = 0.35; // dentado en la ola
 
     for (let i = 0, v = 0; i < positions.length; i += 3, v++) {
       const ix = i;
@@ -491,9 +492,22 @@ function animate() {
 
       positions[iy] = y;
 
-      const r = baseGridColor.r + (highlightGridColor.r - baseGridColor.r) * t;
-      const g = baseGridColor.g + (highlightGridColor.g - baseGridColor.g) * t;
-      const b = baseGridColor.b + (highlightGridColor.b - baseGridColor.b) * t;
+      // Mezcla de color: base -> highlight -> accent (complementario)
+      const mixAccent = Math.pow(t, 1.2); // acentúa el color complementario en el pico
+      const mixHighlight = t * (1 - mixAccent);
+
+      const r =
+        baseGridColor.r * (1 - t) +
+        highlightGridColor.r * mixHighlight +
+        accentGridColor.r * mixAccent;
+      const g =
+        baseGridColor.g * (1 - t) +
+        highlightGridColor.g * mixHighlight +
+        accentGridColor.g * mixAccent;
+      const b =
+        baseGridColor.b * (1 - t) +
+        highlightGridColor.b * mixHighlight +
+        accentGridColor.b * mixAccent;
       colors[ix] = r;
       colors[iy] = g;
       colors[iz] = b;
