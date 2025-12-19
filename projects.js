@@ -17,6 +17,9 @@ function getProjectsByCategory(categoryId) {
 
 // Función para renderizar las categorías
 function renderCategories() {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'projects.js:19',message:'renderCategories called',data:{currentCategoryIndex,currentCategory},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'G'})}).catch(()=>{});
+    // #endregion
     const tabsContainer = document.getElementById('categories-tabs');
     if (!tabsContainer || !window.categories) return;
 
@@ -29,9 +32,13 @@ function renderCategories() {
         tab.dataset.categoryIndex = index;
         tab.textContent = category.name;
         tab.setAttribute('role', 'tab');
-        tab.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+        // #region agent log
+        const shouldBeActive = index === currentCategoryIndex;
+        fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'projects.js:32',message:'Creating tab',data:{index,categoryId:category.id,currentCategoryIndex,shouldBeActive,isFirst:index===0},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H'})}).catch(()=>{});
+        // #endregion
+        tab.setAttribute('aria-selected', shouldBeActive ? 'true' : 'false');
         
-        if (index === 0) {
+        if (shouldBeActive) {
             tab.classList.add('active');
         }
 
@@ -644,6 +651,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Renderizar cuando se carga la página o cuando se muestra la sección de proyectos
 function initProjects(targetCategoryId = null) {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'projects.js:646',message:'initProjects called',data:{targetCategoryId,pendingCategory,currentCategoryIndex,currentCategory},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'I'})}).catch(()=>{});
+    // #endregion
     // Esperar a que se carguen los datos de proyectos
     if (window.projectsData && window.categories) {
         // Verificar que projectsData sea un objeto, no un array
@@ -657,6 +667,9 @@ function initProjects(targetCategoryId = null) {
         
         // Si hay una categoría pendiente o target, usarla
         const categoryToShow = pendingCategory || targetCategoryId;
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'projects.js:658',message:'Checking category to show',data:{categoryToShow,currentCategoryIndex,currentCategory},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'J'})}).catch(()=>{});
+        // #endregion
         if (categoryToShow && window.categories) {
             const categoryIndex = window.categories.findIndex(cat => cat.id === categoryToShow);
             if (categoryIndex !== -1) {
@@ -667,7 +680,16 @@ function initProjects(targetCategoryId = null) {
         }
         
         // Si no hay categoría específica, usar la actual
-        renderProjectsGrid();
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'projects.js:670',message:'No target category, using current',data:{currentCategoryIndex,currentCategory},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'K'})}).catch(()=>{});
+        // #endregion
+        // Restaurar categoría activa si existe
+        if (currentCategoryIndex >= 0 && window.categories && window.categories[currentCategoryIndex]) {
+            const category = window.categories[currentCategoryIndex];
+            selectCategory(category.id, currentCategoryIndex);
+        } else {
+            renderProjectsGrid();
+        }
     } else {
         console.warn('Esperando datos de proyectos...');
         // Intentar de nuevo después de un breve delay

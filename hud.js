@@ -22,11 +22,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === Mostrar sección seleccionada ===
     function goToSection(sectionId) {
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'hud.js:24',message:'goToSection called',data:{sectionId,playMode,inSection},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
         if (playMode) return; // en modo juego no navega secciones
         if (inSection) return;
         inSection = true;
 
         const content = document.getElementById(sectionId + "-content");
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'hud.js:30',message:'Content element check',data:{contentExists:!!content,contentDisplay:content?.style?.display,contentInnerHTML:content?.innerHTML?.substring(0,50)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+        // #endregion
         if (!hud || !content) return;
 
         if (playgroundTitle) {
@@ -38,10 +44,16 @@ document.addEventListener('DOMContentLoaded', () => {
             duration: 0.6,
             ease: "power2.in",
             onComplete: () => {
+                // #region agent log
+                fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'hud.js:40',message:'Before showing content',data:{sectionId,contentDisplayBefore:content.style.display,contentHasChildren:content.children.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+                // #endregion
                 hud.style.display = "none";
                 content.style.display = "flex";
                 // Scroll al inicio de la sección
                 content.scrollTop = 0;
+                // #region agent log
+                fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'hud.js:45',message:'Starting GSAP animation',data:{sectionId},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+                // #endregion
                 gsap.fromTo(content, 
                     { opacity: 0, y: 20 }, 
                     { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
@@ -63,6 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'hud.js:66',message:'Calling rotateToSection',data:{sectionId,rotateToSectionExists:typeof window.rotateToSection === "function"},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+        // #endregion
         if (typeof window.rotateToSection === "function") {
             window.rotateToSection(sectionId);
         }
