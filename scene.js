@@ -211,6 +211,24 @@ const gridMaterial = new THREE.MeshBasicMaterial({
 const gridMesh = new THREE.Mesh(gridGeometry, gridMaterial);
 scene.add(gridMesh);
 
+// --- Ball mode (pelota + meta + obstáculos) ---
+let ballGroup = null;
+let ball = null;
+let ballOutline = null;
+const ballState = {
+  pos: new THREE.Vector3(0, -1.45, 2.5),
+  vel: new THREE.Vector3(),
+  dragging: false,
+  dragStartWorld: new THREE.Vector3(),
+  dragCurrentWorld: new THREE.Vector3(),
+  hasLaunched: false,
+};
+let ballModeActive = false;
+let goalGroup = null;
+const obstacles = [];
+const stars = [];
+let ballScore = 0;
+
 // Estado del puntero proyectado sobre el plano de la grid
 const pointerWorld = new THREE.Vector3();
 let hasPointer = false;
@@ -224,6 +242,120 @@ function updatePointerWorld(clientX, clientY) {
   hasPointer = raycaster.ray.intersectPlane(gridPlane, pointerWorld) !== null;
 }
 
+// Obtener punto sobre el plano de la grid (devuelve false si no hay intersección)
+function getPointOnGrid(clientX, clientY, target) {
+  const nx = (clientX / window.innerWidth) * 2 - 1;
+  const ny = -(clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera({ x: nx, y: ny }, camera);
+  return raycaster.ray.intersectPlane(gridPlane, target || new THREE.Vector3());
+}
+
+function ensureBall() {
+  if (ballGroup) return;
+  const ballGeo = new THREE.SphereGeometry(0.35, 16, 16);
+  const ballMat = new THREE.MeshStandardMaterial({
+    color: 0xf5f5f5,
+    metalness: 0.1,
+    roughness: 0.35,
+    emissive: 0x0a0a0a,
+    emissiveIntensity: 0.35,
+  });
+  ball = new THREE.Mesh(ballGeo, ballMat);
+
+  // Outline/costura con acento
+  const outlineGeo = ballGeo.clone();
+  const outlineMat = new THREE.MeshBasicMaterial({
+    color: accentGridColor,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.35,
+  });
+  ballOutline = new THREE.Mesh(outlineGeo, outlineMat);
+  ballOutline.scale.set(1.04, 1.04, 1.04);
+
+  ballGroup = new THREE.Group();
+  ballGroup.add(ball);
+  ballGroup.add(ballOutline);
+  ballGroup.position.copy(ballState.pos);
+  scene.add(ballGroup);
+}
+
+function resetBall() {
+  ensureBall();
+  ballState.vel.set(0, 0, 0);
+  ballState.dragging = false;
+  ballState.hasLaunched = false;
+  ballState.pos.set(0, -1.45, 2.5);
+  if (ballGroup) ballGroup.position.copy(ballState.pos);
+}
+
+function ensureGoalAndObstacles() {
+  if (goalGroup) return;
+  goalGroup = new THREE.Group();
+  const postMat = new THREE.MeshBasicMaterial({
+    color: 0x66ccff,
+    transparent: true,
+    opacity: 0.6,
+  });
+  const barGeo = new THREE.BoxGeometry(0.15, 2.0, 0.15);
+  const crossGeo = new THREE.BoxGeometry(4.5, 0.15, 0.15);
+
+  const leftPost = new THREE.Mesh(barGeo, postMat);
+  leftPost.position.set(-2.25, -0.5, 0);
+  const rightPost = leftPost.clone();
+  rightPost.position.x = 2.25;
+  const crossbar = new THREE.Mesh(crossGeo, postMat);
+  crossbar.position.set(0, 0.5, 0);
+
+  goalGroup.add(leftPost, rightPost, crossbar);
+  goalGroup.position.set(0, -1.0, -7.5);
+  goalGroup.visible = false;
+  scene.add(goalGroup);
+
+  // Obstáculos simples (barreras que oscilan)
+  const obsMat = new THREE.MeshBasicMaterial({
+    color: 0xff8a5c,
+    transparent: true,
+    opacity: 0.45,
+  });
+  const obsGeo = new THREE.BoxGeometry(0.6, 0.8, 0.2);
+  const obsPositions = [
+    { x: -1.2, z: -6.0, phase: 0 },
+    { x: 0.0, z: -6.4, phase: Math.PI * 0.5 },
+    { x: 1.2, z: -6.0, phase: Math.PI },
+  ];
+  obsPositions.forEach((p) => {
+    const m = new THREE.Mesh(obsGeo, obsMat);
+    m.position.set(p.x, -1.1, p.z);
+    m.userData.phase = p.phase;
+    m.visible = false;
+    obstacles.push(m);
+    scene.add(m);
+  });
+
+  // Estrellas recolectables
+  const starGeo = new THREE.IcosahedronGeometry(0.18, 0);
+  const starMat = new THREE.MeshBasicMaterial({
+    color: 0xffdd55,
+    emissive: 0xffbb33,
+    emissiveIntensity: 0.9,
+  });
+  for (let i = 0; i < 4; i++) {
+    const s = new THREE.Mesh(starGeo, starMat);
+    s.visible = false;
+    stars.push(s);
+    scene.add(s);
+  }
+}
+
+function randomizeStars() {
+  stars.forEach((s) => {
+    const rx = THREE.MathUtils.randFloatSpread(3.5);
+    const rz = THREE.MathUtils.randFloat(-7.8, -5.5);
+    s.position.set(rx, -1.0 + Math.random() * 0.4, rz);
+  });
+}
+
 const envGeo = new THREE.BoxGeometry(20, 20, 20);
 const envMat = new THREE.MeshBasicMaterial({
   color: 0x113366,
@@ -233,6 +365,9 @@ const envMat = new THREE.MeshBasicMaterial({
 });
 const envCube = new THREE.Mesh(envGeo, envMat);
 scene.add(envCube);
+
+// Pelota inicial
+resetBall();
 
 // --- PartÃ­culas flotantes (optimizado para mÃ³viles) ---
 const particlesGeo = new THREE.BufferGeometry();
@@ -363,10 +498,158 @@ function handlePointerMove(x, y) {
 
   updatePointerWorld(x, y);
 
+  if (ballState.dragging) {
+    getPointOnGrid(x, y, ballState.dragCurrentWorld);
+  }
+
   if (isDraggingModel && characterModel && characterModel.visible) {
     const dragDelta = x - dragStartX;
     dragTargetRotationY = dragStartRotationY + dragDelta * 0.01;
   }
+}
+
+function tryStartBallDrag(clientX, clientY) {
+  if (!ballGroup) ensureBall();
+  const nx = (clientX / window.innerWidth) * 2 - 1;
+  const ny = -(clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera({ x: nx, y: ny }, camera);
+  const intersects = raycaster.intersectObject(ballGroup, true);
+  if (intersects.length === 0) return false;
+  ballState.dragging = true;
+  getPointOnGrid(clientX, clientY, ballState.dragStartWorld);
+  ballState.dragCurrentWorld.copy(ballState.dragStartWorld);
+  return true;
+}
+
+function endBallDrag(clientX, clientY) {
+  if (!ballState.dragging) return;
+  ballState.dragging = false;
+  getPointOnGrid(clientX, clientY, ballState.dragCurrentWorld);
+  const pull = new THREE.Vector3().subVectors(ballState.dragStartWorld, ballState.dragCurrentWorld);
+  const forceScale = 1.6;
+  const maxForce = 6.5;
+  pull.y = 0;
+  if (pull.length() === 0) return;
+  pull.multiplyScalar(forceScale);
+  if (pull.length() > maxForce) {
+    pull.setLength(maxForce);
+  }
+  ballState.vel.copy(pull);
+  ballState.hasLaunched = true;
+  ballModeActive = true;
+  ensureGoalAndObstacles();
+  goalGroup.visible = true;
+  obstacles.forEach((o) => (o.visible = true));
+  stars.forEach((s) => (s.visible = true));
+  if (stars.length > 0) randomizeStars();
+}
+
+function respawnBall() {
+  resetBall();
+}
+
+function updateBall(delta, time) {
+  if (!ballGroup) return;
+
+  // Si está siendo arrastrada, seguir el puntero
+  if (ballState.dragging) {
+    ballState.pos.copy(ballState.dragStartWorld);
+    ballState.pos.y = -1.45;
+    ballGroup.position.copy(ballState.pos);
+    return;
+  }
+
+  // Integración simple
+  ballState.pos.addScaledVector(ballState.vel, delta);
+
+  // Fricción
+  const friction = 1.6;
+  const damp = Math.max(0, 1 - friction * delta);
+  ballState.vel.multiplyScalar(damp);
+
+  // Rebotes simples en bordes de la grid
+  const limit = gridSize * 0.48;
+  if (ballState.pos.x > limit) {
+    ballState.pos.x = limit;
+    ballState.vel.x *= -0.55;
+  }
+  if (ballState.pos.x < -limit) {
+    ballState.pos.x = -limit;
+    ballState.vel.x *= -0.55;
+  }
+  if (ballState.pos.z > limit) {
+    ballState.pos.z = limit;
+    ballState.vel.z *= -0.55;
+  }
+  if (ballState.pos.z < -limit) {
+    ballState.pos.z = -limit;
+    ballState.vel.z *= -0.55;
+  }
+
+  // Reposicionar mesh
+  ballState.pos.y = -1.45;
+  ballGroup.position.copy(ballState.pos);
+
+  // Respawn si se detiene
+  const speed = ballState.vel.length();
+  if (speed < 0.15 && ballState.hasLaunched) {
+    respawnBall();
+  }
+}
+
+function updateObstacles(time) {
+  const amp = 0.8;
+  const speed = 1.2;
+  obstacles.forEach((o) => {
+    if (!o.visible) return;
+    const phase = o.userData.phase || 0;
+    o.position.x = Math.sin(time * speed + phase) * amp;
+  });
+}
+
+function checkCollisions() {
+  if (!ballGroup || !ballModeActive) return;
+  const ballPos = ballState.pos;
+
+  // Gol: dentro del arco
+  if (goalGroup && goalGroup.visible) {
+    const gx = goalGroup.position.x;
+    const gz = goalGroup.position.z;
+    const withinX = Math.abs(ballPos.x - gx) < 2.2;
+    const withinZ = ballPos.z < gz + 0.2;
+    if (withinX && withinZ) {
+      ballScore += 100;
+      console.log("GOL! Puntos:", ballScore);
+      respawnBall();
+      randomizeStars();
+    }
+  }
+
+  // Obstáculos (colisión simple AABB)
+  obstacles.forEach((o) => {
+    if (!o.visible) return;
+    const dx = Math.abs(ballPos.x - o.position.x);
+    const dz = Math.abs(ballPos.z - o.position.z);
+    if (dx < 0.5 && dz < 0.5) {
+      ballState.vel.x *= -0.7;
+      ballState.vel.z *= -0.7;
+    }
+  });
+
+  // Estrellas (recolección)
+  stars.forEach((s) => {
+    if (!s.visible) return;
+    const dist = s.position.distanceTo(ballPos);
+    if (dist < 0.6) {
+      ballScore += 25;
+      console.log("Estrella +25. Puntos:", ballScore);
+      s.visible = false;
+      setTimeout(() => {
+        s.visible = true;
+        randomizeStars();
+      }, 800);
+    }
+  });
 }
 
 document.addEventListener(
@@ -389,6 +672,7 @@ document.addEventListener(
 );
 
 window.addEventListener("mousedown", (e) => {
+  if (tryStartBallDrag(e.clientX, e.clientY)) return;
   if (characterModel && characterModel.visible && isProjectsVisible()) {
     isDraggingModel = true;
     dragStartX = e.clientX;
@@ -400,22 +684,51 @@ window.addEventListener("mousedown", (e) => {
 window.addEventListener(
   "touchstart",
   (e) => {
-    if (e.touches.length > 0 && characterModel && characterModel.visible && isProjectsVisible()) {
+    if (e.touches.length > 0) {
       const touch = e.touches[0];
-      isDraggingModel = true;
-      dragStartX = touch.clientX;
-      dragStartRotationY = characterModel.rotation.y;
-      dragTargetRotationY = dragStartRotationY;
+      if (tryStartBallDrag(touch.clientX, touch.clientY)) return;
+      if (characterModel && characterModel.visible && isProjectsVisible()) {
+        isDraggingModel = true;
+        dragStartX = touch.clientX;
+        dragStartRotationY = characterModel.rotation.y;
+        dragTargetRotationY = dragStartRotationY;
+      }
     }
   },
   { passive: true }
 );
 
-window.addEventListener("mouseup", endModelDrag);
-window.addEventListener("mouseleave", endModelDrag);
+window.addEventListener("mouseup", (e) => {
+  endBallDrag(e.clientX, e.clientY);
+  endModelDrag();
+});
+window.addEventListener("mouseleave", (e) => {
+  endBallDrag(e.clientX || 0, e.clientY || 0);
+  endModelDrag();
+});
 window.addEventListener("blur", endModelDrag);
-window.addEventListener("touchend", endModelDrag, { passive: true });
-window.addEventListener("touchcancel", endModelDrag, { passive: true });
+window.addEventListener(
+  "touchend",
+  (e) => {
+    const touch = e.changedTouches && e.changedTouches[0];
+    if (touch) {
+      endBallDrag(touch.clientX, touch.clientY);
+    }
+    endModelDrag();
+  },
+  { passive: true }
+);
+window.addEventListener(
+  "touchcancel",
+  (e) => {
+    const touch = e.changedTouches && e.changedTouches[0];
+    if (touch) {
+      endBallDrag(touch.clientX, touch.clientY);
+    }
+    endModelDrag();
+  },
+  { passive: true }
+);
 
 // Limpiar estado del puntero al salir de la ventana
 window.addEventListener("mouseleave", () => {
@@ -431,6 +744,7 @@ function animate() {
 
   // Calcular delta basado en tiempo real para normalizar velocidad de animaciÃ³n
   const delta = clock.getDelta();
+  const timeNow = performance.now() * 0.001;
 
   // Actualizar animaciÃ³n del character
   if (characterMixer) {
@@ -449,11 +763,14 @@ function animate() {
   camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.02;
   camera.lookAt(0, 0, 0);
 
+  updateBall(delta, timeNow);
+  updateObstacles(timeNow);
+  checkCollisions();
+
   // Deformación y color de la grid (onda + ruido para irregularidad)
   if (gridMesh) {
     const positions = gridGeometry.attributes.position.array;
     const colors = gridGeometry.attributes.color.array;
-    const time = performance.now() * 0.001;
 
     const rippleAmplitude = 0.55; // altura del pico con puntero
     const rippleSpread = 1.8; // radio de influencia más pequeño (zona activa chica)
@@ -477,10 +794,10 @@ function animate() {
 
       // Ruido suave
       const seed = gridNoiseSeeds[v];
-      const noise = Math.sin(time * noiseFreq + seed + baseX * 0.35 + baseZ * 0.4) * noiseStrength;
+      const noise = Math.sin(timeNow * noiseFreq + seed + baseX * 0.35 + baseZ * 0.4) * noiseStrength;
 
       // Idle casi plano
-      y += Math.sin(time * 1.5 + baseX * 0.5 + baseZ * 0.5) * idleWaveAmp;
+      y += Math.sin(timeNow * 1.5 + baseX * 0.5 + baseZ * 0.5) * idleWaveAmp;
       y += noise;
 
       let t = 0;
@@ -489,10 +806,23 @@ function animate() {
         const dz = pointerWorld.z - positions[iz];
         const dist = Math.sqrt(dx * dx + dz * dz);
         const influence = Math.exp(-(dist * dist) / (rippleSpread * rippleSpread));
-        const jagged = 1 + rippleJaggedness * Math.sin(seed * 3.7 + time * 2.2);
+        const jagged = 1 + rippleJaggedness * Math.sin(seed * 3.7 + timeNow * 2.2);
         y += influence * rippleAmplitude * jagged * edgeFade;
-        t = Math.min(1, influence * 2) * edgeFade;
+        t += Math.min(1, influence * 2) * edgeFade;
       }
+
+      if (ballGroup) {
+        const dxB = ballState.pos.x - positions[ix];
+        const dzB = ballState.pos.z - positions[iz];
+        const distB = Math.sqrt(dxB * dxB + dzB * dzB);
+        const ballSpread = 2.0;
+        const ballInfluence = Math.exp(-(distB * distB) / (ballSpread * ballSpread));
+        const ballAmp = 0.35;
+        y += ballInfluence * ballAmp * edgeFade;
+        t += ballInfluence * 1.2 * edgeFade;
+      }
+
+      t = Math.min(1, t);
 
       positions[iy] = y;
 
