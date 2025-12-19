@@ -202,9 +202,6 @@ gsap.to(camera.position, {
 
 // --- Transición de secciones ---
 function rotateToSection(sectionId) {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:204',message:'rotateToSection called',data:{sectionId},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-    // #endregion
     hideAllObjects();
 
     // Determinar objeto visible y ángulo objetivo
@@ -261,35 +258,8 @@ function rotateToSection(sectionId) {
         }
     });
 
-    // --- Apagar el HUD y mostrar la sección ---
-    const hud = document.querySelector(".hud");
-    const content = document.getElementById(sectionId + "-content");
-
-    if (!hud) {
-        console.warn("HUD no encontrado; se omite animación de transición.");
-        if (content) content.style.display = "block";
-        return;
-    }
-
-    if (!content) {
-        console.warn(`Sección ${sectionId} no encontrada; se omite animación de contenido.`);
-        gsap.to(hud, { opacity: 0, duration: 0.8, onComplete: () => { hud.style.display = "none"; } });
-        return;
-    }
-
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:277',message:'scene.js manipulating DOM',data:{sectionId,contentExists:!!content,contentDisplayBefore:content?.style?.display},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
-    // #endregion
-    gsap.to(hud, {
-        opacity: 0, duration: 0.8, onComplete: () => {
-            hud.style.display = "none";
-            content.style.display = "block";
-            // #region agent log
-            fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:280',message:'scene.js setting content display',data:{sectionId,contentDisplayAfter:content.style.display},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
-            // #endregion
-            gsap.fromTo(content, { opacity: 0 }, { opacity: 1, duration: 1 });
-        }
-    });
+    // NOTA: La manipulación del DOM (ocultar HUD, mostrar contenido) se maneja en hud.js
+    // para evitar conflictos y recargas duplicadas. Esta función solo maneja la rotación 3D.
 }
 
 // --- Botón "Back" ---
