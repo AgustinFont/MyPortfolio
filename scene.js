@@ -72,11 +72,13 @@ function initScene() {
     }
 }
 
+// Esperar a que termine la evaluación del módulo y el DOM
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initScene);
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initScene, 0);
+    });
 } else {
-    // DOM ya está listo
-    initScene();
+    setTimeout(initScene, 0);
 }
 
 // --- Luces ---
@@ -164,22 +166,17 @@ function loadModels() {
 // Cargar modelos apenas esté disponible el loader
 loadModels();
 
-// Helper para ocultar todos los objetos
+// Helper para ocultar el modelo
 function hideAllObjects() {
-    meshCube.visible = meshCyl.visible = meshCone.visible = meshTorus.visible = false;
     if (characterModel) characterModel.visible = false;
     modelsGroup.visible = false;
 }
 
-// --- Objetos placeholder ---
-const materialBase = new THREE.MeshStandardMaterial({ color: 0x00aaff, roughness: 0.4 });
-
-// === Sistema Cube Launcher ===
-let cubeState = {
+// --- Placeholders desactivados (dummy para evitar referencias) ---
+const cubeState = {
     isLaunched: false,
-    velocity: new THREE.Vector3(0, 0, 0),
-    position: new THREE.Vector3(0, 0, 0),
-    basePosition: new THREE.Vector3(0, 0, 0),
+    velocity: new THREE.Vector3(),
+    basePosition: new THREE.Vector3(),
     friction: 0.98,
     isCharging: false,
     chargeStartPos: null,
@@ -190,27 +187,28 @@ let cubeState = {
     isReturning: false
 };
 
-const meshCube = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 1.2), materialBase.clone());
-meshCube.material.color.set(0x0077cc);
-meshCube.material.emissive = new THREE.Color(0x000000);
-meshCube.material.emissiveIntensity = 0;
+const makeDummyMesh = () => {
+    const obj = new THREE.Object3D();
+    obj.material = { emissive: { setHex: () => {} }, emissiveIntensity: 0 };
+    obj.scale = { setScalar: () => {} };
+    obj.visible = false;
+    return obj;
+};
 
-// Inicializar posición base del cubo
-cubeState.basePosition.set(0, 0, 0);
-cubeState.position.set(0, 0, 0);
+const meshCube = makeDummyMesh();
+const meshCyl = makeDummyMesh();
+const meshCone = makeDummyMesh();
+const meshTorus = makeDummyMesh();
 
-const meshCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 1.6, 24), materialBase.clone());
-meshCyl.material.color.set(0xff6f00);
-
-const meshCone = new THREE.Mesh(new THREE.ConeGeometry(0.8, 1.6, 24), materialBase.clone());
-meshCone.material.color.set(0xffdd33);
-
-const meshTorus = new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.2, 12, 24), materialBase.clone());
-meshTorus.material.color.set(0x55ffdd);
-
-group.add(meshCube, meshCyl, meshCone, meshTorus);
-meshCube.visible = true;
-meshCyl.visible = meshCone.visible = meshTorus.visible = false;
+// Placeholders para sistemas eliminados
+const cubeParticles = [];
+const cubeParticlePool = [];
+const targets = [];
+function createCubeParticle() { return null; }
+function createTarget() {}
+function checkTargetCollision() { return false; }
+function startCubeCharge() { return false; }
+function launchCube() {}
 
 // --- Grid + entorno visual (interactivo) ---
 const gridSize = 12;
@@ -222,6 +220,10 @@ grid.material.transparent = true;
 scene.add(grid);
 
 // Sistema de ondas deshabilitado temporalmente (debug): mantenemos solo GridHelper básico
+const wavePoints = [];
+const maxWaves = 0;
+const waveDecay = 0;
+const waveSpeed = 0;
 
 const envGeo = new THREE.BoxGeometry(20, 20, 20);
 const envMat = new THREE.MeshBasicMaterial({
@@ -248,17 +250,6 @@ const particlesMat = new THREE.PointsMaterial({
 const particles = new THREE.Points(particlesGeo, particlesMat);
 scene.add(particles);
 
-// Sistema de partículas para el cubo (definir antes de rotateToSection)
-const cubeParticles = [];
-const maxCubeParticles = isMobile ? 30 : 50;
-const cubeParticlePool = [];
-
-// Objetivos flotantes (definir antes de usar en rotateToSection)
-const targets = [];
-const maxTargets = 3;
-let targetSpawnTimer = 0;
-const targetSpawnInterval = 5000; // ms
-
 // --- Cámara idle (ligero movimiento) ---
 gsap.to(camera.position, {
     y: "+=0.2",
@@ -272,19 +263,9 @@ gsap.to(camera.position, {
 function rotateToSection(sectionId) {
     hideAllObjects();
     
-    // Limpiar objetivos cuando se cambia de sección
-    targets.forEach(target => {
-        scene.remove(target);
-        target.geometry.dispose();
-        target.material.dispose();
-    });
-    targets.length = 0;
-    targetSpawnTimer = 0;
-
     // Determinar objeto visible y ángulo objetivo
     switch (sectionId) {
         case "about": 
-            // En about ya no mostramos el cubo, se muestra el modelo correspondiente
             targetAngle = 0; 
             break;
         case "projects": 
@@ -292,22 +273,16 @@ function rotateToSection(sectionId) {
             if (characterModel) {
                 characterModel.visible = true;
                 modelsGroup.visible = true;
-            } else {
-                // Fallback al cilindro si el modelo no está cargado
-                meshCyl.visible = true;
             }
             targetAngle = Math.PI / 2; 
             break;
         case "looking": 
-            meshCone.visible = true; 
             targetAngle = Math.PI; 
             break;
         case "contact": 
-            meshTorus.visible = true; 
             targetAngle = Math.PI * 1.5; 
             break;
         case "easter": 
-            meshCyl.visible = true; 
             targetAngle = Math.PI * 2; 
             break;
     }
@@ -343,20 +318,7 @@ function rotateToSection(sectionId) {
 // --- Botón "Back" ---
 function backToMenu() {
     hideAllObjects();
-    
-    // Mostrar cubo en landing
-    meshCube.visible = true;
-    // Resetear cubo a posición base cuando vuelve a landing
-    if (INTERACTIVE_ENABLED && cubeState.isLaunched) {
-        cubeState.isLaunched = false;
-        cubeState.isReturning = false;
-        cubeState.velocity.set(0, 0, 0);
-    }
-    meshCube.position.copy(cubeState.basePosition);
-    meshCube.rotation.set(0, 0, 0);
-    meshCube.material.emissiveIntensity = 0;
-    meshCube.scale.setScalar(1.0);
-    
+
     document.querySelectorAll(".section-content").forEach(sec => {
         gsap.to(sec, { opacity: 0, duration: 0.6, onComplete: () => sec.style.display = "none" });
     });
@@ -760,6 +722,8 @@ function animate() {
     
     // No renderizar si el renderer no está inicializado
     if (!renderer) return;
+    // Evitar TDZ si algo no se inicializó aún
+    if (typeof meshCube === 'undefined' || typeof meshCyl === 'undefined') return;
 
     // Calcular delta basado en tiempo real para normalizar velocidad de animación
     const delta = clock.getDelta();
