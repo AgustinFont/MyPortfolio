@@ -145,6 +145,12 @@ const materialBase = new THREE.MeshStandardMaterial({ color: 0x00aaff, roughness
 
 const meshCube = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 1.2), materialBase.clone());
 meshCube.material.color.set(0x0077cc);
+meshCube.material.emissive = new THREE.Color(0x000000);
+meshCube.material.emissiveIntensity = 0;
+
+// Inicializar posición base del cubo
+cubeState.basePosition.set(0, 0, 0);
+cubeState.position.set(0, 0, 0);
 
 const meshCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 1.6, 24), materialBase.clone());
 meshCyl.material.color.set(0xff6f00);
@@ -174,7 +180,7 @@ const maxWaves = 5;
 const waveDecay = 0.95;
 const waveSpeed = 0.02;
 
-// Crear geometría personalizada para el grid con ondas
+// Crear geometría personalizada para el grid con ondas y colores dinámicos
 const gridGeometry = new THREE.BufferGeometry();
 const gridVertices = [];
 const gridIndices = [];
@@ -186,7 +192,7 @@ for (let i = 0; i <= gridDivisions; i++) {
         const x = (i / gridDivisions - 0.5) * gridSize;
         const z = (j / gridDivisions - 0.5) * gridSize;
         gridVertices.push(x, -1.5, z);
-        gridColors.push(0.2, 0.4, 0.6, 0.15); // RGBA
+        gridColors.push(0.2, 0.4, 0.6, 0.15); // RGBA base (cyan oscuro)
     }
 }
 
@@ -196,7 +202,6 @@ for (let i = 0; i < gridDivisions; i++) {
         const a = i * (gridDivisions + 1) + j;
         const b = a + 1;
         const c = a + (gridDivisions + 1);
-        const d = c + 1;
         
         // Líneas horizontales
         gridIndices.push(a, b);
@@ -258,11 +263,20 @@ gsap.to(camera.position, {
 // --- Transición de secciones ---
 function rotateToSection(sectionId) {
     hideAllObjects();
+    
+    // Limpiar objetivos cuando se cambia de sección
+    targets.forEach(target => {
+        scene.remove(target);
+        target.geometry.dispose();
+        target.material.dispose();
+    });
+    targets.length = 0;
+    targetSpawnTimer = 0;
 
     // Determinar objeto visible y ángulo objetivo
     switch (sectionId) {
         case "about": 
-            meshCube.visible = true; 
+            // En about ya no mostramos el cubo, se muestra el modelo correspondiente
             targetAngle = 0; 
             break;
         case "projects": 
@@ -321,6 +335,20 @@ function rotateToSection(sectionId) {
 // --- Botón "Back" ---
 function backToMenu() {
     hideAllObjects();
+    
+    // Mostrar cubo en landing
+    meshCube.visible = true;
+    // Resetear cubo a posición base cuando vuelve a landing
+    if (cubeState.isLaunched) {
+        cubeState.isLaunched = false;
+        cubeState.isReturning = false;
+        cubeState.velocity.set(0, 0, 0);
+    }
+    meshCube.position.copy(cubeState.basePosition);
+    meshCube.rotation.set(0, 0, 0);
+    meshCube.material.emissiveIntensity = 0;
+    meshCube.scale.setScalar(1.0);
+    
     document.querySelectorAll(".section-content").forEach(sec => {
         gsap.to(sec, { opacity: 0, duration: 0.6, onComplete: () => sec.style.display = "none" });
     });
@@ -329,6 +357,122 @@ function backToMenu() {
             document.querySelector(".hud").style.display = "block";
         }
     });
+}
+
+// === Sistema Cube Launcher ===
+let cubeState = {
+    isLaunched: false,
+    velocity: new THREE.Vector3(0, 0, 0),
+    position: new THREE.Vector3(0, 0, 0),
+    basePosition: new THREE.Vector3(0, 0, 0),
+    friction: 0.98,
+    isCharging: false,
+    chargeStartPos: null,
+    chargeCurrentPos: null,
+    chargePower: 0,
+    maxChargePower: 3.0,
+    returnSpeed: 0.15,
+    isReturning: false
+};
+
+// Sistema de partículas para el cubo
+const cubeParticles = [];
+const maxCubeParticles = isMobile ? 30 : 50;
+const cubeParticlePool = [];
+
+// Objetivos flotantes
+const targets = [];
+const maxTargets = 3;
+let targetSpawnTimer = 0;
+const targetSpawnInterval = 5000; // ms
+
+// Función para crear partícula del cubo
+function createCubeParticle(position, velocity, color = 0x00ffff) {
+    let particle;
+    if (cubeParticlePool.length > 0) {
+        particle = cubeParticlePool.pop();
+        particle.position.copy(position);
+        particle.velocity.copy(velocity);
+        particle.life = 1.0;
+        particle.color = color;
+    } else {
+        const geo = new THREE.SphereGeometry(0.05, 8, 8);
+        const mat = new THREE.MeshBasicMaterial({ color: color, transparent: true });
+        particle = new THREE.Mesh(geo, mat);
+        particle.position.copy(position);
+        particle.velocity = velocity.clone();
+        particle.life = 1.0;
+        particle.color = color;
+        scene.add(particle);
+    }
+    cubeParticles.push(particle);
+    return particle;
+}
+
+// Función para crear objetivo
+function createTarget() {
+    const geo = new THREE.RingGeometry(0.3, 0.5, 16);
+    const mat = new THREE.MeshBasicMaterial({ 
+        color: 0xff6f00, 
+        transparent: true, 
+        opacity: 0.8,
+        side: THREE.DoubleSide
+    });
+    const target = new THREE.Mesh(geo, mat);
+    
+    // Posición aleatoria en el grid
+    const angle = Math.random() * Math.PI * 2;
+    const radius = 4 + Math.random() * 3;
+    target.position.set(
+        Math.cos(angle) * radius,
+        -1.2 + Math.random() * 1.5,
+        Math.sin(angle) * radius
+    );
+    
+    target.rotation.x = Math.PI / 2;
+    target.userData = {
+        bobSpeed: 0.5 + Math.random() * 0.5,
+        bobOffset: Math.random() * Math.PI * 2,
+        pulseSpeed: 1 + Math.random()
+    };
+    
+    scene.add(target);
+    targets.push(target);
+}
+
+// Función para detectar colisión con objetivo
+function checkTargetCollision(cubePos) {
+    for (let i = targets.length - 1; i >= 0; i--) {
+        const target = targets[i];
+        const dist = cubePos.distanceTo(target.position);
+        if (dist < 0.8) {
+            // Colisión! Explosión de partículas
+            for (let j = 0; j < 15; j++) {
+                const angle = (Math.PI * 2 * j) / 15;
+                const speed = 0.3 + Math.random() * 0.2;
+                const vel = new THREE.Vector3(
+                    Math.cos(angle) * speed,
+                    (Math.random() - 0.5) * 0.3,
+                    Math.sin(angle) * speed
+                );
+                createCubeParticle(target.position.clone(), vel, 0xff6f00);
+            }
+            
+            // Rebote del cubo
+            const dir = cubePos.clone().sub(target.position).normalize();
+            cubeState.velocity.multiplyScalar(0.5);
+            cubeState.velocity.add(dir.multiplyScalar(0.8));
+            
+            // Remover objetivo
+            scene.remove(target);
+            target.geometry.dispose();
+            target.material.dispose();
+            targets.splice(i, 1);
+            
+            return true;
+        }
+    }
+    return false;
 }
 
 // === Parallax de cámara con movimiento del mouse ===
@@ -343,8 +487,49 @@ const isProjectsVisible = () => {
     return section && section.offsetParent !== null;
 };
 
+const isAboutVisible = () => {
+    const section = document.getElementById('about-content');
+    return section && section.offsetParent !== null;
+};
+
+// Función para detectar si estamos en la landing (ninguna sección abierta)
+const isLanding = () => {
+    const projectsSection = document.getElementById('projects-content');
+    const aboutSection = document.getElementById('about-content');
+    const lookingSection = document.getElementById('looking-content');
+    const contactSection = document.getElementById('contact-content');
+    
+    const anySectionOpen = 
+        (projectsSection && projectsSection.offsetParent !== null) ||
+        (aboutSection && aboutSection.offsetParent !== null) ||
+        (lookingSection && lookingSection.offsetParent !== null) ||
+        (contactSection && contactSection.offsetParent !== null);
+    
+    return !anySectionOpen;
+};
+
+// Función para crear una onda en el grid
+function createWave(x, z) {
+    const now = Date.now();
+    if (now - lastWaveTime < waveCooldown) return;
+    lastWaveTime = now;
+    
+    wavePoints.push({
+        x: x,
+        z: z,
+        radius: 0,
+        intensity: 1.0,
+        speed: waveSpeed
+    });
+    
+    // Limitar número de ondas activas
+    if (wavePoints.length > maxWaves) {
+        wavePoints.shift();
+    }
+}
+
 // Función para convertir coordenadas de pantalla a mundo 3D (en el plano del grid)
-function screenToWorld(x, y) {
+function screenToWorld(x, y, planeY = -1.5) {
     const vector = new THREE.Vector3();
     const mouse = new THREE.Vector2();
     
@@ -355,7 +540,6 @@ function screenToWorld(x, y) {
     vector.unproject(camera);
     
     const dir = vector.sub(camera.position).normalize();
-    const planeY = -1.5; // Altura del grid
     const distance = (planeY - camera.position.y) / dir.y;
     
     if (distance > 0) {
@@ -369,6 +553,26 @@ function screenToWorld(x, y) {
         planeY,
         (mouse.y * gridSize) * 0.5
     );
+}
+
+// Función para convertir pantalla a mundo 3D (cualquier altura)
+function screenToWorld3D(x, y, targetY = 0) {
+    const mouse = new THREE.Vector2(
+        (x / window.innerWidth) * 2 - 1,
+        -(y / window.innerHeight) * 2 + 1
+    );
+    
+    const vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+    vector.unproject(camera);
+    
+    const dir = vector.sub(camera.position).normalize();
+    const distance = (targetY - camera.position.y) / dir.y;
+    
+    if (distance > 0) {
+        return camera.position.clone().add(dir.multiplyScalar(distance));
+    }
+    
+    return new THREE.Vector3(mouse.x * 5, targetY, mouse.y * 5);
 }
 
 // Función para crear una onda en el grid
@@ -391,38 +595,143 @@ function createWave(x, z) {
     }
 }
 
-document.addEventListener("mousemove", (e) => {
-    const xNorm = (e.clientX / window.innerWidth - 0.5) * 2; // -1 a 1
-    const yNorm = (e.clientY / window.innerHeight - 0.5) * 2;
+// Función unificada para manejar movimiento (mouse y touch)
+function handlePointerMove(x, y) {
+    const xNorm = (x / window.innerWidth - 0.5) * 2; // -1 a 1
+    const yNorm = (y / window.innerHeight - 0.5) * 2;
     mouseX = xNorm;
     mouseY = yNorm;
     
-    // Calcular posición del mouse en el mundo 3D (en el plano del grid)
-    const worldPos = screenToWorld(e.clientX, e.clientY);
+    // Calcular posición del pointer en el mundo 3D (en el plano del grid)
+    const worldPos = screenToWorld(x, y);
     mouseWorldX = worldPos.x;
     mouseWorldZ = worldPos.z;
     
-    // Crear ondas suaves mientras el mouse se mueve (más frecuente pero controlado)
-    if (Math.random() > 0.92) { // Crear ondas suavemente
+    // Crear ondas suaves mientras el pointer se mueve
+    if (Math.random() > 0.92) {
         createWave(mouseWorldX, mouseWorldZ);
+    }
+    
+    // Si estamos cargando el cubo (en landing)
+    if (cubeState.isCharging && meshCube.visible && isLanding()) {
+        const currentWorldPos = screenToWorld3D(x, y, meshCube.position.y);
+        cubeState.chargeCurrentPos = currentWorldPos;
+        
+        // Calcular poder de carga basado en distancia
+        if (cubeState.chargeStartPos) {
+            const dragVec = cubeState.chargeStartPos.clone().sub(currentWorldPos);
+            cubeState.chargePower = Math.min(dragVec.length() * 0.3, cubeState.maxChargePower);
+            
+            // Efecto visual: hacer el cubo más brillante
+            const intensity = cubeState.chargePower / cubeState.maxChargePower;
+            meshCube.material.emissive.setHex(0x0077cc);
+            meshCube.material.emissiveIntensity = intensity * 0.8;
+            meshCube.scale.setScalar(1.0 + intensity * 0.2);
+        }
     }
     
     // Si estamos arrastrando el modelo, actualizar el objetivo de rotación
     if (isDraggingModel && characterModel && characterModel.visible) {
-        const dragDelta = e.clientX - dragStartX;
+        const dragDelta = x - dragStartX;
         dragTargetRotationY = dragStartRotationY + dragDelta * 0.01;
     }
+}
+
+document.addEventListener("mousemove", (e) => {
+    handlePointerMove(e.clientX, e.clientY);
 });
+
+// Soporte touch
+document.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+    if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        handlePointerMove(touch.clientX, touch.clientY);
+    }
+}, { passive: false });
+
+// === Sistema de interacción del cubo (click/drag para lanzar) ===
+function startCubeCharge(x, y) {
+    if (!meshCube.visible || !isLanding()) return false;
+    
+    const worldPos = screenToWorld3D(x, y, meshCube.position.y);
+    const cubeScreenPos = meshCube.position.clone();
+    cubeScreenPos.applyMatrix4(camera.matrixWorldInverse);
+    
+    // Verificar si el click está cerca del cubo (aproximado)
+    const dist = worldPos.distanceTo(meshCube.position);
+    if (dist < 2.0) {
+        cubeState.isCharging = true;
+        cubeState.chargeStartPos = worldPos.clone();
+        cubeState.chargeCurrentPos = worldPos.clone();
+        cubeState.chargePower = 0;
+        cubeState.basePosition = meshCube.position.clone();
+        return true;
+    }
+    return false;
+}
+
+function launchCube(x, y) {
+    if (!cubeState.isCharging) return;
+    
+    const currentWorldPos = screenToWorld3D(x, y, meshCube.position.y);
+    if (cubeState.chargeStartPos) {
+        // Calcular dirección opuesta al arrastre
+        const dragVec = cubeState.chargeStartPos.clone().sub(currentWorldPos);
+        const power = Math.min(dragVec.length() * 0.3, cubeState.maxChargePower);
+        
+        if (power > 0.1) {
+            dragVec.normalize();
+            cubeState.velocity = dragVec.multiplyScalar(power);
+            cubeState.isLaunched = true;
+            cubeState.isReturning = false;
+            
+            // Partículas de lanzamiento
+            for (let i = 0; i < 10; i++) {
+                const angle = (Math.PI * 2 * i) / 10;
+                const speed = 0.2;
+                const vel = new THREE.Vector3(
+                    Math.cos(angle) * speed,
+                    Math.random() * 0.1,
+                    Math.sin(angle) * speed
+                );
+                createCubeParticle(meshCube.position.clone(), vel, 0x00ffff);
+            }
+        }
+    }
+    
+    cubeState.isCharging = false;
+    meshCube.material.emissiveIntensity = 0;
+    meshCube.scale.setScalar(1.0);
+}
 
 // --- Rotación del modelo al arrastrar (global, aunque el HUD esté encima) ---
 window.addEventListener('mousedown', (e) => {
-    if (!characterModel || !characterModel.visible) return;
-    if (!isProjectsVisible()) return;
-    isDraggingModel = true;
-    dragStartX = e.clientX;
-    dragStartRotationY = characterModel.rotation.y;
-    dragTargetRotationY = dragStartRotationY;
+    // Prioridad: cubo si está visible en landing
+    if (meshCube.visible && isLanding()) {
+        if (startCubeCharge(e.clientX, e.clientY)) {
+            return; // Interceptar el evento
+        }
+    }
+    
+    // Luego modelo de projects
+    if (characterModel && characterModel.visible && isProjectsVisible()) {
+        isDraggingModel = true;
+        dragStartX = e.clientX;
+        dragStartRotationY = characterModel.rotation.y;
+        dragTargetRotationY = dragStartRotationY;
+    }
 });
+
+// Soporte touch para cubo
+window.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 0 && meshCube.visible && isLanding()) {
+        const touch = e.touches[0];
+        if (startCubeCharge(touch.clientX, touch.clientY)) {
+            e.preventDefault();
+        }
+    }
+}, { passive: false });
 
 const endModelDrag = () => {
     if (!isDraggingModel || !characterModel) return;
@@ -434,9 +743,47 @@ const endModelDrag = () => {
     });
 };
 
-window.addEventListener('mouseup', endModelDrag);
-window.addEventListener('mouseleave', endModelDrag);
-window.addEventListener('blur', endModelDrag);
+window.addEventListener('mouseup', (e) => {
+    if (cubeState.isCharging) {
+        launchCube(e.clientX, e.clientY);
+    }
+    endModelDrag();
+});
+
+window.addEventListener('mouseleave', () => {
+    if (cubeState.isCharging) {
+        cubeState.isCharging = false;
+        meshCube.material.emissiveIntensity = 0;
+        meshCube.scale.setScalar(1.0);
+    }
+    endModelDrag();
+});
+
+window.addEventListener('blur', () => {
+    if (cubeState.isCharging) {
+        cubeState.isCharging = false;
+        meshCube.material.emissiveIntensity = 0;
+        meshCube.scale.setScalar(1.0);
+    }
+    endModelDrag();
+});
+
+// Touch end para cubo
+window.addEventListener('touchend', (e) => {
+    if (cubeState.isCharging && e.changedTouches.length > 0) {
+        const touch = e.changedTouches[0];
+        launchCube(touch.clientX, touch.clientY);
+        e.preventDefault();
+    }
+}, { passive: false });
+
+window.addEventListener('touchcancel', () => {
+    if (cubeState.isCharging) {
+        cubeState.isCharging = false;
+        meshCube.material.emissiveIntensity = 0;
+        meshCube.scale.setScalar(1.0);
+    }
+});
 
 // --- Loop principal ---
 function animate() {
@@ -467,10 +814,15 @@ function animate() {
     camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.02;
     camera.lookAt(0, 0, 0);
 
-    // === Sistema de ondas en el grid ===
+    // === Sistema de ondas en el grid con colores mejorados ===
     const positions = interactiveGrid.geometry.attributes.position;
     const colors = interactiveGrid.geometry.attributes.color;
     const baseY = -1.5;
+    
+    // Color base (cyan oscuro)
+    const baseColor = { r: 0.2, g: 0.4, b: 0.6, a: 0.15 };
+    // Color complementario (naranja claro para contraste)
+    const complementColor = { r: 1.0, g: 0.6, b: 0.2, a: 0.4 };
     
     // Resetear posiciones base primero
     for (let j = 0; j < positions.count; j++) {
@@ -479,7 +831,7 @@ function animate() {
         positions.setY(j, baseY);
         
         // Color base
-        colors.setXYZW(j, 0.2, 0.4, 0.6, 0.15);
+        colors.setXYZW(j, baseColor.r, baseColor.g, baseColor.b, baseColor.a);
     }
     
     // Aplicar todas las ondas
@@ -510,18 +862,18 @@ function animate() {
                 const waveEffect = Math.sin(normalizedDist * Math.PI) * wave.intensity * 0.4;
                 positions.setY(j, y + waveEffect);
                 
-                // Cambiar color basado en la intensidad de la onda
-                const colorIntensity = wave.intensity * 0.5;
-                const r = 0.2;
-                const g = 0.4 + colorIntensity;
-                const b = 0.6 + colorIntensity;
-                const a = 0.15 + wave.intensity * 0.25;
+                // Mezclar color base con complementario basado en intensidad
+                const colorMix = wave.intensity * 0.7; // Más intenso el cambio de color
+                const r = baseColor.r + (complementColor.r - baseColor.r) * colorMix;
+                const g = baseColor.g + (complementColor.g - baseColor.g) * colorMix;
+                const b = baseColor.b + (complementColor.b - baseColor.b) * colorMix;
+                const a = baseColor.a + (complementColor.a - baseColor.a) * colorMix;
                 colors.setXYZW(j, r, g, b, a);
             }
         }
     }
     
-    // Deformación suave basada en la posición del cursor
+    // Deformación suave basada en la posición del cursor con colores mejorados
     const cursorInfluence = 0.2;
     const cursorMaxDist = 2.5;
     
@@ -539,45 +891,206 @@ function animate() {
             const wavePattern = Math.sin(dist * 3) * influence;
             positions.setY(j, y + wavePattern);
             
-            // Resaltar color cerca del cursor
-            const colorBoost = influence * 0.4;
-            const r = 0.2;
-            const g = 0.4 + colorBoost;
-            const b = 0.6 + colorBoost;
-            const a = Math.min(0.15 + influence * 0.35, 0.5);
+            // Mezclar color base con complementario (más claro y vibrante)
+            const colorMix = influence * 0.8; // Cambio de color más pronunciado
+            const r = baseColor.r + (complementColor.r - baseColor.r) * colorMix;
+            const g = baseColor.g + (complementColor.g - baseColor.g) * colorMix;
+            const b = baseColor.b + (complementColor.b - baseColor.b) * colorMix;
+            const a = Math.min(baseColor.a + influence * 0.5, 0.7); // Más opaco cuando se deforma
             colors.setXYZW(j, r, g, b, a);
+        }
+    }
+    
+    // Efecto de color cuando el cubo pasa cerca del grid
+    if (cubeState.isLaunched && meshCube.visible) {
+        const cubeGridY = -1.5;
+        const cubeDistToGrid = Math.abs(meshCube.position.y - cubeGridY);
+        if (cubeDistToGrid < 1.5) {
+            for (let j = 0; j < positions.count; j++) {
+                const x = positions.getX(j);
+                const z = positions.getZ(j);
+                const y = positions.getY(j);
+                
+                const dx = x - meshCube.position.x;
+                const dz = z - meshCube.position.z;
+                const dist = Math.sqrt(dx * dx + dz * dz);
+                const effectDist = 1.5;
+                
+                if (dist < effectDist) {
+                    const influence = (1 - dist / effectDist) * 0.3;
+                    const colorMix = influence * 0.6;
+                    const r = baseColor.r + (complementColor.r - baseColor.r) * colorMix;
+                    const g = baseColor.g + (complementColor.g - baseColor.g) * colorMix;
+                    const b = baseColor.b + (complementColor.b - baseColor.b) * colorMix;
+                    const a = Math.min(baseColor.a + influence * 0.4, 0.6);
+                    colors.setXYZW(j, r, g, b, a);
+                }
+            }
         }
     }
     
     positions.needsUpdate = true;
     colors.needsUpdate = true;
 
-    // === Rotación del cubo hacia el cursor ===
-    if (meshCube.visible) {
-        const cubePos = meshCube.position;
-        const dx = mouseWorldX - cubePos.x;
-        const dz = mouseWorldZ - cubePos.z;
-        const dist = Math.sqrt(dx * dx + dz * dz);
+    // === Sistema Cube Launcher: Física y animación ===
+    if (meshCube.visible && isLanding()) {
+        if (cubeState.isLaunched) {
+            // Aplicar física
+            cubeState.velocity.multiplyScalar(cubeState.friction);
+            meshCube.position.add(cubeState.velocity);
+            
+            // Rotación basada en velocidad
+            const speed = cubeState.velocity.length();
+            meshCube.rotation.x += speed * 0.1;
+            meshCube.rotation.y += speed * 0.15;
+            meshCube.rotation.z += speed * 0.08;
+            
+            // Partículas de estela
+            if (Math.random() > 0.7 && speed > 0.1) {
+                const trailVel = cubeState.velocity.clone().multiplyScalar(-0.3);
+                trailVel.y += (Math.random() - 0.5) * 0.1;
+                createCubeParticle(meshCube.position.clone(), trailVel, 0x00ffff);
+            }
+            
+            // Verificar colisión con objetivos
+            checkTargetCollision(meshCube.position);
+            
+            // Límites del mundo (world wrap)
+            const worldBounds = 8;
+            if (Math.abs(meshCube.position.x) > worldBounds) {
+                meshCube.position.x = -Math.sign(meshCube.position.x) * worldBounds;
+                // Efecto portal
+                for (let i = 0; i < 20; i++) {
+                    const angle = (Math.PI * 2 * i) / 20;
+                    const vel = new THREE.Vector3(
+                        Math.cos(angle) * 0.4,
+                        (Math.random() - 0.5) * 0.2,
+                        Math.sin(angle) * 0.4
+                    );
+                    createCubeParticle(meshCube.position.clone(), vel, 0xff00ff);
+                }
+            }
+            if (Math.abs(meshCube.position.z) > worldBounds) {
+                meshCube.position.z = -Math.sign(meshCube.position.z) * worldBounds;
+                for (let i = 0; i < 20; i++) {
+                    const angle = (Math.PI * 2 * i) / 20;
+                    const vel = new THREE.Vector3(
+                        Math.cos(angle) * 0.4,
+                        (Math.random() - 0.5) * 0.2,
+                        Math.sin(angle) * 0.4
+                    );
+                    createCubeParticle(meshCube.position.clone(), vel, 0xff00ff);
+                }
+            }
+            
+            // Gravedad suave
+            if (meshCube.position.y > cubeState.basePosition.y) {
+                meshCube.position.y -= 0.02;
+            }
+            
+            // Decidir modo de retorno basado en velocidad
+            const speedThreshold = 0.15;
+            if (cubeState.velocity.length() < speedThreshold && !cubeState.isReturning) {
+                // Modo boomerang: explotar y volver
+                if (speed < 0.1) {
+                    // Explosión
+                    for (let i = 0; i < 25; i++) {
+                        const angle = (Math.PI * 2 * i) / 25;
+                        const speed = 0.2 + Math.random() * 0.2;
+                        const vel = new THREE.Vector3(
+                            Math.cos(angle) * speed,
+                            (Math.random() - 0.5) * 0.3,
+                            Math.sin(angle) * speed
+                        );
+                        createCubeParticle(meshCube.position.clone(), vel, 0xff6f00);
+                    }
+                    cubeState.isReturning = true;
+                }
+            }
+            
+            // Retorno suave a posición base
+            if (cubeState.isReturning) {
+                const returnVec = cubeState.basePosition.clone().sub(meshCube.position);
+                const returnDist = returnVec.length();
+                
+                if (returnDist > 0.1) {
+                    returnVec.normalize().multiplyScalar(cubeState.returnSpeed);
+                    meshCube.position.add(returnVec);
+                    
+                    // Rotación suave hacia posición original
+                    meshCube.rotation.x *= 0.95;
+                    meshCube.rotation.y *= 0.95;
+                    meshCube.rotation.z *= 0.95;
+                } else {
+                    // Llegó a casa
+                    meshCube.position.copy(cubeState.basePosition);
+                    cubeState.isLaunched = false;
+                    cubeState.isReturning = false;
+                    cubeState.velocity.set(0, 0, 0);
+                    meshCube.rotation.set(0, 0, 0);
+                }
+            }
+        } else if (!cubeState.isCharging) {
+            // Rotación del cubo hacia el cursor (solo cuando no está lanzado)
+            const cubePos = meshCube.position;
+            const dx = mouseWorldX - cubePos.x;
+            const dz = mouseWorldZ - cubePos.z;
+            const dist = Math.sqrt(dx * dx + dz * dz);
+            
+            if (dist > 0.1) {
+                const angleToCursor = Math.atan2(dx, dz);
+                let currentAngle = meshCube.rotation.y;
+                let targetAngle = angleToCursor;
+                
+                let diff = targetAngle - currentAngle;
+                if (diff > Math.PI) diff -= Math.PI * 2;
+                if (diff < -Math.PI) diff += Math.PI * 2;
+                
+                meshCube.rotation.y += diff * 0.08;
+            }
+            
+            meshCube.rotation.y += 0.005;
+        }
+    }
+    
+    // === Actualizar partículas del cubo ===
+    for (let i = cubeParticles.length - 1; i >= 0; i--) {
+        const particle = cubeParticles[i];
+        particle.position.add(particle.velocity);
+        particle.velocity.multiplyScalar(0.95);
+        particle.life -= 0.02;
         
-        if (dist > 0.1) { // Solo rotar si hay movimiento significativo
-            // Calcular ángulo hacia el cursor
-            const angleToCursor = Math.atan2(dx, dz);
-            
-            // Normalizar ángulo para transición suave
-            let currentAngle = meshCube.rotation.y;
-            let targetAngle = angleToCursor;
-            
-            // Ajustar para transición más suave (evitar saltos de 360°)
-            let diff = targetAngle - currentAngle;
-            if (diff > Math.PI) diff -= Math.PI * 2;
-            if (diff < -Math.PI) diff += Math.PI * 2;
-            
-            // Rotar suavemente hacia el cursor
-            meshCube.rotation.y += diff * 0.08;
+        if (particle.material) {
+            particle.material.opacity = particle.life;
         }
         
-        // Rotación continua suave adicional (idle)
-        meshCube.rotation.y += 0.005;
+        if (particle.life <= 0) {
+            cubeParticles.splice(i, 1);
+            particle.position.set(0, -100, 0); // Mover fuera de vista
+            particle.velocity.set(0, 0, 0);
+            cubeParticlePool.push(particle);
+        }
+    }
+    
+    // === Actualizar objetivos ===
+    targetSpawnTimer += delta * 1000;
+    if (targets.length < maxTargets && targetSpawnTimer > targetSpawnInterval && meshCube.visible && isLanding()) {
+        createTarget();
+        targetSpawnTimer = 0;
+    }
+    
+    for (let i = 0; i < targets.length; i++) {
+        const target = targets[i];
+        const userData = target.userData;
+        
+        // Animación de flotación
+        target.position.y = -1.2 + Math.sin(clock.elapsedTime * userData.bobSpeed + userData.bobOffset) * 0.3;
+        
+        // Pulso de opacidad
+        target.material.opacity = 0.6 + Math.sin(clock.elapsedTime * userData.pulseSpeed) * 0.2;
+        
+        // Rotación suave
+        target.rotation.z += 0.01;
     }
 
     // Aplicar rotación temporal mientras se arrastra el modelo
@@ -678,7 +1191,13 @@ function initLandingAnimation() {
                 gsap.to(sceneContainer, {
                     opacity: 1,
                     duration: 1.5,
-                    ease: "power2.in"
+                    ease: "power2.in",
+                    onComplete: () => {
+                        // Asegurar que el cubo esté visible en la landing
+                        meshCube.visible = true;
+                        meshCube.position.copy(cubeState.basePosition);
+                        meshCube.rotation.set(0, 0, 0);
+                    }
                 });
             }
 
@@ -736,7 +1255,12 @@ window.addEventListener("load", () => {
 
         const sceneContainer = document.querySelector("#scene-container");
         if (sceneContainer) {
-            gsap.fromTo(sceneContainer, { opacity: 0 }, { opacity: 1, duration: 1.2, delay: 0.2 });
+            gsap.fromTo(sceneContainer, { opacity: 0 }, { opacity: 1, duration: 1.2, delay: 0.2, onComplete: () => {
+                // Asegurar que el cubo esté visible en la landing
+                meshCube.visible = true;
+                meshCube.position.copy(cubeState.basePosition);
+                meshCube.rotation.set(0, 0, 0);
+            }});
         }
     }
 });
