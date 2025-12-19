@@ -509,7 +509,6 @@ let mouseWorldX = 0, mouseWorldZ = 0;
 let lastWaveTime = 0;
 const waveCooldown = 200; // ms entre ondas
 
-const canvas = renderer.domElement;
 const isProjectsVisible = () => {
     const section = document.getElementById('projects-content');
     return section && section.offsetParent !== null;
@@ -535,26 +534,6 @@ const isLanding = () => {
     
     return !anySectionOpen;
 };
-
-// Función para crear una onda en el grid
-function createWave(x, z) {
-    const now = Date.now();
-    if (now - lastWaveTime < waveCooldown) return;
-    lastWaveTime = now;
-    
-    wavePoints.push({
-        x: x,
-        z: z,
-        radius: 0,
-        intensity: 1.0,
-        speed: waveSpeed
-    });
-    
-    // Limitar número de ondas activas
-    if (wavePoints.length > maxWaves) {
-        wavePoints.shift();
-    }
-}
 
 // Función para convertir coordenadas de pantalla a mundo 3D (en el plano del grid)
 function screenToWorld(x, y, planeY = -1.5) {
