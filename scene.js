@@ -30,6 +30,9 @@ camera.position.set(0, 0, zoomLevel);
 camera.lookAt(0, 0, 0);
 
 // --- Renderizador ---
+// #region agent log
+fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:32',message:'Initializing renderer',data:{hasSceneContainer:!!document.getElementById("scene-container")},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+// #endregion
 const renderer = new THREE.WebGLRenderer({ 
     antialias: true, 
     alpha: true,
@@ -38,7 +41,21 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
 renderer.setClearColor(0x0a0a15, 1);
-document.getElementById("scene-container").appendChild(renderer.domElement);
+// #region agent log
+fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:41',message:'Before appending renderer',data:{sceneContainerExists:!!document.getElementById("scene-container")},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+// #endregion
+const sceneContainer = document.getElementById("scene-container");
+if (sceneContainer) {
+    sceneContainer.appendChild(renderer.domElement);
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:45',message:'Renderer appended successfully',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
+} else {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:48',message:'ERROR: scene-container not found',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
+    console.error("scene-container not found!");
+}
 
 // --- Luces ---
 const hemiLight = new THREE.HemisphereLight(0xffffff, 0x333333, 0.8);
@@ -785,9 +802,16 @@ window.addEventListener('touchcancel', () => {
     }
 });
 
-// --- Loop principal ---
+    // --- Loop principal ---
 function animate() {
     requestAnimationFrame(animate);
+    // #region agent log
+    if (typeof window.animateCallCount === 'undefined') window.animateCallCount = 0;
+    window.animateCallCount++;
+    if (window.animateCallCount === 1 || window.animateCallCount % 60 === 0) {
+        fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:442',message:'Animate loop running',data:{callCount:window.animateCallCount},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+    }
+    // #endregion
 
     // Calcular delta basado en tiempo real para normalizar velocidad de animación
     const delta = clock.getDelta();
@@ -1132,6 +1156,9 @@ window.backToMenu = backToMenu;
 
 // === LANDING ANIMATION ===
 function initLandingAnimation() {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:1134',message:'initLandingAnimation called',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
     const landingScreen = document.getElementById('landing-screen');
     const terminalText = document.getElementById('terminal-text');
     const terminalLines = terminalText?.querySelectorAll('.terminal-line');
@@ -1139,7 +1166,16 @@ function initLandingAnimation() {
     const hud = document.querySelector(".hud");
     // const introBeep = document.getElementById('intro-beep'); // sonido opcional (comentado)
 
-    if (!landingScreen || !terminalLines) return;
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:1142',message:'Checking landing elements',data:{hasLandingScreen:!!landingScreen,hasTerminalText:!!terminalText,terminalLinesCount:terminalLines?.length||0,hasSceneContainer:!!sceneContainer,hasHud:!!hud},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+    // #endregion
+
+    if (!landingScreen || !terminalLines) {
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:1144',message:'EARLY RETURN: missing elements',data:{hasLandingScreen:!!landingScreen,hasTerminalLines:!!terminalLines},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+        // #endregion
+        return;
+    }
 
     // Mostrar terminal text
     gsap.to(terminalText, {
@@ -1239,10 +1275,20 @@ function initLandingAnimation() {
 
 // --- Fade inicial (solo si no hay landing screen) ---
 window.addEventListener("load", () => {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:1241',message:'Window load event fired',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
     const landingScreen = document.getElementById('landing-screen');
+    
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:1244',message:'Checking for landing screen',data:{hasLandingScreen:!!landingScreen},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
     
     if (landingScreen) {
         // Iniciar animación de landing
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:1246',message:'Calling initLandingAnimation',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
         initLandingAnimation();
     } else {
         // Fallback: animación simple si no hay landing screen
