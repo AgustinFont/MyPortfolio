@@ -82,6 +82,27 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     -webkit-tap-highlight-color: transparent;
 }
 
+/* Mejoras generales para móviles */
+@media (max-width: 768px) {
+    /* Prevenir zoom accidental en inputs */
+    input, textarea, select {
+        font-size: 16px !important;
+    }
+    
+    /* Asegurar que los elementos interactivos tengan área de touch adecuada */
+    button, a, .category-tab, .project-item, .contact-card {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Mejorar scroll en iOS */
+    .section-content,
+    .project-modal {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+}
+
 /* Mejorar renderizado en móviles */
 #scene-container {
     width: 100%;
@@ -122,6 +143,21 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         0 0 20px #00ff00;
     line-height: 1.8;
     opacity: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+@media (max-width: 480px) {
+    .terminal-text {
+        font-size: 14px;
+        padding: 15px;
+    }
+    
+    .terminal-line {
+        margin: 8px 0;
+    }
 }
 
 .terminal-line {
@@ -2176,6 +2212,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     padding: 0;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    /* Asegurar que el contenido no se desborde */
+    overflow: visible;
 }
 
 .project-info h2 {
@@ -2185,6 +2223,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     margin-bottom: 15px;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
     word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
     line-height: 1.4;
 }
 
@@ -2212,6 +2252,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     color: #ffffff;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 .project-tech {
@@ -2310,7 +2351,9 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     .project-detail {
         grid-template-columns: 1fr;
         gap: 30px;
-        max-width: 1200px;
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .carousel-slides {
@@ -2324,9 +2367,11 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
     
     .carousel-btn {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         font-size: 1.5em;
+        min-width: 44px;
+        min-height: 44px;
     }
     
     .carousel-prev {
@@ -2335,6 +2380,10 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     
     .carousel-next {
         right: 5px;
+    }
+    
+    .project-modal {
+        padding: 50px 15px 20px;
     }
 }
 
@@ -2358,18 +2407,92 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     .category-tab {
         font-size: 0.6em;
         padding: 8px 15px;
+        min-height: 44px; /* Área de touch mínima */
     }
     
     .project-item-title {
         font-size: 0.8em;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.4;
     }
     
     .project-thumbnail {
         height: 150px;
+        object-fit: cover;
     }
     
     .projects-container {
         padding: 30px 15px;
+        box-sizing: border-box;
+        width: 100%;
+    }
+    
+    .project-modal {
+        padding: 50px 15px 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+    
+    .project-detail {
+        gap: 25px;
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .carousel-slides {
+        min-height: 250px;
+        max-height: 350px;
+        padding-bottom: 56.25%;
+    }
+    
+    .project-info {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .project-info h2 {
+        font-size: 1.1em;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+        line-height: 1.3;
+    }
+    
+    .project-info p {
+        font-size: 0.9em;
+        line-height: 1.6;
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .project-tech {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .project-tech span {
+        font-size: 0.75em;
+        padding: 4px 8px;
+        word-break: break-word;
+    }
+    
+    .project-link {
+        font-size: 0.7em;
+        padding: 10px 16px;
+        min-height: 44px; /* Área de touch mínima */
+        min-width: 120px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
     }
 }
 
@@ -2386,29 +2509,53 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     .categories-tabs {
         gap: 8px;
         margin-bottom: 25px;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .category-tab {
         font-size: 0.5em;
-        padding: 6px 12px;
+        padding: 8px 12px;
+        min-height: 44px; /* Área de touch mínima */
+        min-width: 80px;
     }
     
     .project-modal {
-        padding: 20px 15px;
+        padding: 50px 10px 20px;
+        /* Asegurar que el modal use toda la pantalla en móviles */
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+    }
+    
+    .project-modal .project-detail {
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    .carousel-slides {
+        min-height: 180px;
+        max-height: 250px;
     }
     
     .fullscreen-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-        top: 15px;
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+        top: 10px;
         right: 60px;
     }
     
     .close-modal {
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
+        width: 44px;
+        height: 44px;
+        font-size: 22px;
         top: 10px;
         right: 10px;
     }
@@ -2418,23 +2565,117 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
     
     .project-info h2 {
-        font-size: 1.2em;
+        font-size: 1em;
+        word-break: break-word;
+        line-height: 1.3;
+        margin-bottom: 12px;
+    }
+    
+    .project-info p {
+        font-size: 0.85em;
+        line-height: 1.5;
+    }
+    
+    .project-meta {
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+    
+    .project-meta span {
+        font-size: 0.6em;
+        padding: 4px 8px;
+    }
+    
+    .project-tech {
+        gap: 6px;
+        margin-bottom: 15px;
+    }
+    
+    .project-tech span {
+        font-size: 0.7em;
+        padding: 4px 8px;
+    }
+    
+    .project-links {
+        gap: 10px;
+        flex-direction: column;
+    }
+    
+    .project-link {
+        font-size: 0.65em;
+        padding: 10px 16px;
+        min-height: 44px;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .carousel-slides {
+        min-height: 200px;
+        max-height: 300px;
+        padding-bottom: 56.25%;
     }
     
     .carousel-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 1.3em;
+        width: 40px;
+        height: 40px;
+        font-size: 1.5em;
+        min-width: 44px; /* Área de touch mínima */
+        min-height: 44px;
     }
     
     .carousel-indicator {
-        width: 10px;
-        height: 10px;
+        width: 12px;
+        height: 12px;
+        min-width: 12px;
+        min-height: 12px;
     }
     
     .carousel-indicators {
-        padding: 6px 10px;
+        padding: 8px 12px;
+        gap: 8px;
+    }
+    
+    .project-item-title {
+        font-size: 0.75em;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+    
+    .project-item-meta {
+        font-size: 0.65em;
         gap: 6px;
+        flex-wrap: wrap;
+    }
+    
+    .project-item-meta span {
+        padding: 2px 5px;
+        word-break: break-word;
+    }
+    
+    /* Asegurar que el modal no se corte en móviles */
+    .project-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+    
+    /* Asegurar que los textos largos se ajusten */
+    .project-info * {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Mejorar legibilidad de títulos largos */
+    .section-inner h2,
+    .project-card h3 {
+        word-break: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
     }
 }
 
@@ -2661,18 +2902,24 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     .play-btn-overlay {
         font-size: 10px;
         width: 36px; /* ajustar ancho para tamaño de fuente más pequeño */
+        min-height: 44px; /* Área de touch mínima */
     }
     
     .hud {
         bottom: 3%;
         right: 50%;
         transform: translateX(50%);
+        min-width: 160px;
     }
 
     #menu li {
         font-size: 9px; /* Aumentado de 8px para mejor legibilidad */
         margin: 10px 0; /* Aumentado de 6px */
-        padding: 6px 10px; /* Mantener área de click, aumentado de 4px 0 */
+        padding: 10px 12px; /* Área de touch más grande para móviles */
+        min-height: 44px; /* Área de touch mínima recomendada por Apple/Google */
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     #menu li:hover,
@@ -2772,6 +3019,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         height: 100vh;
         width: 100%;
         box-sizing: border-box;
+        /* Prevenir zoom accidental en iOS */
+        touch-action: pan-y;
     }
     
     .about-section {
@@ -2786,6 +3035,17 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         max-width: 100%;
         padding: 20px 15px;
         margin: 0;
+        box-sizing: border-box;
+    }
+    
+    .cover-letter-text {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .cover-letter-text p {
+        word-break: break-word;
+        overflow-wrap: break-word;
     }
 
     .section-inner,
@@ -2808,9 +3068,14 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
     .back-btn {
         font-size: 8px;
-        padding: 5px 8px;
+        padding: 10px 12px;
         top: 10px;
         left: 10px;
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .project-card {
@@ -2832,7 +3097,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     #menu li {
         font-size: 8px; /* Aumentado de 7px para mejor legibilidad */
         margin: 8px 0; /* Aumentado de 5px */
-        padding: 5px 8px; /* Mantener área de click, aumentado de 3px 6px */
+        padding: 10px 10px; /* Mantener área de touch adecuada */
+        min-height: 44px; /* Área de touch mínima */
     }
     
     #menu li.active {
@@ -2859,7 +3125,9 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
     .back-btn {
         font-size: 7px;
-        padding: 4px 6px;
+        padding: 10px 10px;
+        min-width: 44px;
+        min-height: 44px;
     }
 
     .section-content {
@@ -2870,6 +3138,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         height: 100vh;
         width: 100%;
         box-sizing: border-box;
+        touch-action: pan-y;
     }
     
     .about-section {
@@ -2932,15 +3201,28 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         font-size: 9px;
         margin: 6px 0;
         transform-origin: right center;
+        min-height: 44px;
+        padding: 8px 12px;
     }
 
     .section-content {
         padding: 15px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .section-inner,
     .project-card {
         max-width: 85%;
+    }
+    
+    .project-modal {
+        padding: 40px 15px 15px;
+    }
+    
+    .carousel-slides {
+        min-height: 200px;
+        max-height: 300px;
     }
 }
 
