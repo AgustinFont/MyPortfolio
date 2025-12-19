@@ -30,31 +30,56 @@ camera.position.set(0, 0, zoomLevel);
 camera.lookAt(0, 0, 0);
 
 // --- Renderizador ---
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:32',message:'Initializing renderer',data:{hasSceneContainer:!!document.getElementById("scene-container")},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-// #endregion
-const renderer = new THREE.WebGLRenderer({ 
-    antialias: true, 
-    alpha: true,
-    powerPreference: "high-performance"
-});
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
-renderer.setClearColor(0x0a0a15, 1);
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:41',message:'Before appending renderer',data:{sceneContainerExists:!!document.getElementById("scene-container")},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-// #endregion
-const sceneContainer = document.getElementById("scene-container");
-if (sceneContainer) {
-    sceneContainer.appendChild(renderer.domElement);
+let renderer = null;
+
+function initRenderer() {
     // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:45',message:'Renderer appended successfully',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:33',message:'Initializing renderer',data:{hasSceneContainer:!!document.getElementById("scene-container")},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
     // #endregion
+    
+    if (renderer) return; // Ya inicializado
+    
+    renderer = new THREE.WebGLRenderer({ 
+        antialias: true, 
+        alpha: true,
+        powerPreference: "high-performance"
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
+    renderer.setClearColor(0x0a0a15, 1);
+    
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:47',message:'Before appending renderer',data:{sceneContainerExists:!!document.getElementById("scene-container")},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
+    
+    const sceneContainer = document.getElementById("scene-container");
+    if (sceneContainer) {
+        sceneContainer.appendChild(renderer.domElement);
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:52',message:'Renderer appended successfully',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+        // #endregion
+    } else {
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:55',message:'ERROR: scene-container not found',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+        // #endregion
+        console.error("scene-container not found!");
+    }
+}
+
+// Inicializar renderer cuando el DOM esté listo
+function initScene() {
+    initRenderer();
+    // Iniciar loop de animación solo después de que el renderer esté listo
+    if (renderer) {
+        animate();
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScene);
 } else {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/cf00a79a-92f1-4da5-b19c-9efe640e59a5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'scene.js:48',message:'ERROR: scene-container not found',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-    // #endregion
-    console.error("scene-container not found!");
+    // DOM ya está listo
+    initScene();
 }
 
 // --- Luces ---
@@ -805,6 +830,10 @@ window.addEventListener('touchcancel', () => {
     // --- Loop principal ---
 function animate() {
     requestAnimationFrame(animate);
+    
+    // No renderizar si el renderer no está inicializado
+    if (!renderer) return;
+    
     // #region agent log
     if (typeof window.animateCallCount === 'undefined') window.animateCallCount = 0;
     window.animateCallCount++;
@@ -1123,9 +1152,11 @@ function animate() {
         characterModel.rotation.y += (targetY - characterModel.rotation.y) * 0.25;
     }
 
-    renderer.render(scene, camera);
+    if (renderer) {
+        renderer.render(scene, camera);
+    }
 }
-animate();
+// animate() se llama desde initScene() después de que el renderer esté inicializado
 
 // --- Resize handler (optimizado para móviles) ---
 let resizeTimeout;
