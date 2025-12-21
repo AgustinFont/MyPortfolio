@@ -294,3 +294,38 @@ document.addEventListener('DOMContentLoaded', () => {
     // Exportar funciones globalmente
     window.goToSection = goToSection;
 });
+
+// --- Utilidades de contacto ---
+window.downloadCV = function () {
+    const cvUrl = "assets/CV_Agustin_Gonzalez_Font.pdf";
+    const link = document.createElement("a");
+    link.href = cvUrl;
+    link.download = "CV_Agustin_Gonzalez_Font.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
+
+window.sharePortfolio = function () {
+    const shareData = {
+        title: "Portfolio - Agustin Gonzalez Font",
+        text: "Te comparto mi portfolio",
+        url: window.location.href,
+    };
+
+    if (navigator.share) {
+        navigator.share(shareData).catch(() => {});
+        return;
+    }
+
+    const url = window.location.href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+            alert("Link copiado al portapapeles");
+        }).catch(() => {
+            alert("No se pudo compartir automáticamente. Copia este link: " + url);
+        });
+    } else {
+        alert("Comparte este link: " + url);
+    }
+};
