@@ -502,8 +502,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     font-size: 16px; /* Aumentado de 14px para mejor legibilidad */
     color: #00ffff;
     cursor: pointer;
-    margin: 16px 0; /* Aumentado de 12px para mejor separación visual */
-    padding: 10px 16px; /* Aumentado de 4px 8px para área de click más grande (Fitts Law) */
+    margin: 14px 0; /* separación uniforme */
+    padding: 6px 10px; /* el highlight abraza el texto */
     transition:
         color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
         text-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -532,28 +532,25 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 #menu li.active {
     color: #ffffff;
     opacity: 1;
-    transform: scale(1.15); /* Reducido de 1.2 para ser más sutil y profesional */
+    transform: scale(1.12); /* sutil */
     animation: glowPulse 2s infinite ease-in-out; /* Animación más lenta y suave */
-    background: rgba(0, 255, 255, 0.08); /* Fondo sutil para mejor contraste */
-    padding-left: 20px; /* Indentación visual para indicar selección */
+    background: rgba(0, 255, 255, 0.08); /* Fondo sutil del tamaño del texto */
 }
 
 /* Hover del mouse - glow titilante y agrandamiento */
 #menu li:hover {
     color: #ffffff !important;
     opacity: 1 !important;
-    transform: scale(1.12) translateX(-4px) !important; /* Movimiento sutil hacia la izquierda + escala */
+    transform: scale(1.1) translateX(-2px) !important; /* Movimiento sutil hacia la izquierda + escala */
     animation: hoverGlow 1.5s infinite ease-in-out !important; /* Animación más lenta */
-    background: rgba(0, 255, 255, 0.12); /* Fondo más visible en hover */
-    padding-left: 18px; /* Indentación en hover */
+    background: rgba(0, 255, 255, 0.12); /* Fondo ajustado al texto */
 }
 
 /* Cuando está activo Y con hover, combinar efectos */
 #menu li.active:hover {
-    transform: scale(1.18) translateX(-6px) !important; /* Combinación más refinada */
+    transform: scale(1.14) translateX(-3px) !important; /* Combinación refinada */
     animation: activeHoverGlow 1.3s infinite ease-in-out !important;
-    background: rgba(0, 255, 255, 0.15); /* Fondo más intenso cuando está activo + hover */
-    padding-left: 22px; /* Mayor indentación */
+    background: rgba(0, 255, 255, 0.15); /* Fondo más intenso ajustado al texto */
 }
 
 /* Animación de glow pulsante para activo (teclado) */
@@ -1248,7 +1245,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     background: rgba(0, 255, 255, 0.05);
     border: 2px solid var(--color-primary);
     border-radius: 8px;
-    padding: 20px;
+    padding: 16px;
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -1661,21 +1658,22 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
     .contact-message p {
         font-size: 0.65em;
+        margin-bottom: 6px;
     }
 
     .contact-cards {
         flex-direction: column;
         align-items: center;
-        gap: 14px;
+        gap: 12px;
         width: 100%;
         padding: 0 10px;
     }
 
     .contact-card {
-        width: 92%;
+        width: 90%;
         min-width: 0;
         max-width: 520px;
-        padding: 16px;
+        padding: 14px;
     }
 
     .card-icon {
@@ -1729,8 +1727,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
 
     .contact-card {
-        padding: 15px;
-        gap: 12px;
+        padding: 12px;
+        gap: 10px;
     }
 
     .card-icon {
@@ -1774,8 +1772,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
     
     .skills-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
         justify-items: stretch;
     }
     
@@ -1783,22 +1781,22 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         max-width: none;
         min-width: 0;
         width: 100%;
-        padding: 12px;
+        padding: 10px;
     }
     
     .skill-name {
-        font-size: 0.68em;
+        font-size: 0.62em;
         white-space: nowrap;
     }
     
     .skill-icon {
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
     }
     
     .skill-icon img {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
     }
     
     .contact-buttons {
@@ -2959,7 +2957,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     
     .skills-abilities-container {
         grid-template-columns: 1fr;
-        gap: 18px;
+        gap: 16px;
         justify-items: stretch;
         padding: 0 12px;
     }
@@ -2977,8 +2975,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
     
     .abilities-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
         justify-items: stretch;
     }
     
@@ -2987,7 +2985,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         width: 100%;
         min-width: 0;
         max-width: none;
-        padding: 11px;
+        padding: 10px;
     }
     
     .abilities-section {
