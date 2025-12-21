@@ -502,8 +502,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     font-size: 16px; /* Aumentado de 14px para mejor legibilidad */
     color: #00ffff;
     cursor: pointer;
-    margin: 14px 0; /* separación uniforme */
-    padding: 6px 10px; /* el highlight abraza el texto */
+    margin: 12px 0; /* más compacto */
+    padding: 3px 8px; /* highlight muy cercano al texto */
     transition:
         color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
         text-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -516,7 +516,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     -webkit-tap-highlight-color: transparent;
     position: relative;
     letter-spacing: 0.5px; /* Mejorar legibilidad del texto pixelado */
-    line-height: 1.6; /* Mejor espaciado vertical del texto */
+    line-height: 1.4; /* menor alto de línea para que el fondo no se expanda */
     border-radius: 2px; /* Sutil redondeo para modernidad */
 }
 
@@ -532,7 +532,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 #menu li.active {
     color: #ffffff;
     opacity: 1;
-    transform: scale(1.12); /* sutil */
+    transform: scale(1.05); /* más sutil */
     animation: glowPulse 2s infinite ease-in-out; /* Animación más lenta y suave */
     background: rgba(0, 255, 255, 0.08); /* Fondo sutil del tamaño del texto */
 }
@@ -541,16 +541,16 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 #menu li:hover {
     color: #ffffff !important;
     opacity: 1 !important;
-    transform: scale(1.1) translateX(-2px) !important; /* Movimiento sutil hacia la izquierda + escala */
+    transform: scale(1.04) translateX(-1px) !important; /* movimiento mínimo */
     animation: hoverGlow 1.5s infinite ease-in-out !important; /* Animación más lenta */
-    background: rgba(0, 255, 255, 0.12); /* Fondo ajustado al texto */
+    background: rgba(0, 255, 255, 0.1); /* Fondo ajustado al texto */
 }
 
 /* Cuando está activo Y con hover, combinar efectos */
 #menu li.active:hover {
-    transform: scale(1.14) translateX(-3px) !important; /* Combinación refinada */
+    transform: scale(1.07) translateX(-2px) !important; /* Combinación refinada */
     animation: activeHoverGlow 1.3s infinite ease-in-out !important;
-    background: rgba(0, 255, 255, 0.15); /* Fondo más intenso ajustado al texto */
+    background: rgba(0, 255, 255, 0.12); /* Fondo más intenso ajustado al texto */
 }
 
 /* Animación de glow pulsante para activo (teclado) */
