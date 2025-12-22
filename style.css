@@ -669,23 +669,25 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .about-section {
     display: grid;
-    grid-template-columns: minmax(300px, 1fr) minmax(520px, 1.4fr) minmax(300px, 1fr);
-    grid-template-rows: 1fr;
-    gap: 20px;
-    width: min(1200px, 95vw);
+    grid-template-columns: 340px minmax(520px, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: 20px;
+    row-gap: 12px;
+    width: min(1150px, 95vw);
     margin: 0 auto;
-    padding: 18px 10px 14px;
+    padding: 14px 10px 14px;
     box-sizing: border-box;
-    align-items: stretch;
+    align-items: start;
 }
 
 .about-header {
-    grid-column: 1 / 4;
+    grid-column: 1 / 3;
+    grid-row: 1;
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr;
     align-items: center;
     justify-items: center;
-    gap: 12px;
+    gap: 10px;
     width: 100%;
     padding-top: 8px;
 }
@@ -730,9 +732,9 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .cover-letter-container {
     grid-column: 2 / 3;
-    grid-row: 1;
+    grid-row: 2;
     width: 100%;
-    max-width: 760px;
+    max-width: none;
     background: rgba(0, 255, 255, 0.04);
     border: 2px solid rgba(0, 255, 255, 0.35);
     border-radius: 10px;
@@ -775,15 +777,21 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 }
 
 /* Skills/abilities columnas laterales sin scroll */
-.skills-section {
+.left-stack {
     grid-column: 1 / 2;
-    grid-row: 1;
+    grid-row: 2;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    height: 100%;
+}
+
+.skills-section,
+.abilities-section {
     width: 100%;
     max-width: 340px;
     min-width: 300px;
     margin: 0 auto;
-    justify-self: start;
-    align-self: stretch;
     position: relative;
     z-index: 2;
     padding: 10px 10px 12px;
@@ -797,24 +805,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 }
 
 .abilities-section {
-    grid-column: 3 / 4;
-    grid-row: 1;
-    width: 100%;
-    max-width: 340px;
-    min-width: 300px;
-    margin: 0 auto;
-    justify-self: end;
-    align-self: stretch;
-    position: relative;
-    z-index: 2;
-    padding: 10px 10px 12px;
-    border: 1px solid rgba(255, 0, 255, 0.15);
-    border-radius: 10px;
+    border-color: rgba(255, 0, 255, 0.15);
     background: rgba(255, 0, 255, 0.02);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    box-sizing: border-box;
 }
 
 .skills-section h3,
@@ -878,14 +870,15 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 @media (max-width: 1400px) {
     .about-section {
-        width: min(1180px, 96vw);
-        grid-template-columns: minmax(380px, 1fr) minmax(560px, 1.3fr);
-        grid-template-rows: auto auto auto;
-        gap: 22px;
+        width: min(1100px, 96vw);
+        grid-template-columns: 320px minmax(500px, 1fr);
+        grid-template-rows: auto 1fr;
+        column-gap: 18px;
+        row-gap: 12px;
     }
     .cover-letter-container {
         padding: 16px;
-        max-width: 700px;
+        max-width: none;
     }
     #about-content .skills-grid {
         grid-template-columns: repeat(3, minmax(90px, 1fr));
@@ -902,10 +895,11 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 @media (max-width: 1200px) {
     .about-section {
-        width: min(1080px, 96vw);
-        grid-template-columns: minmax(340px, 1fr) minmax(520px, 1.25fr);
-        grid-template-rows: auto auto auto;
-        gap: 18px;
+        width: min(980px, 96vw);
+        grid-template-columns: 300px minmax(460px, 1fr);
+        grid-template-rows: auto 1fr;
+        column-gap: 16px;
+        row-gap: 12px;
     }
     .cover-letter-container {
         padding: 16px;
