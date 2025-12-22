@@ -664,21 +664,21 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16px 10px;
+    padding: 14px 10px;
 }
 
 .about-section {
     display: grid;
-    grid-template-columns: 200px 520px 200px;
+    grid-template-columns: 170px 500px 170px;
     grid-template-rows: auto 1fr;
-    gap: 12px;
+    gap: 14px;
     width: 100%;
-    max-width: 980px;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 12px 6px;
+    padding: 10px 6px;
     box-sizing: border-box;
     align-items: start;
-    min-height: calc(100vh - 130px);
+    min-height: calc(100vh - 120px);
     overflow: hidden;
 }
 
@@ -736,10 +736,10 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     background: rgba(0, 255, 255, 0.05);
     border: 2px solid rgba(0, 255, 255, 0.3);
     border-radius: 8px;
-    padding: 14px;
+    padding: 12px;
     box-sizing: border-box;
     margin: 0 auto;
-    max-height: calc(100vh - 190px);
+    max-height: calc(100vh - 170px);
     overflow: auto; /* evita superposición si el texto es largo */
 }
 
@@ -797,39 +797,39 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .skills-grid,
 .abilities-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    grid-template-columns: 1fr;
+    gap: 6px;
     width: 100%;
-    max-height: calc(100vh - 220px);
+    max-height: 70vh;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0;
+    padding: 0 2px;
     justify-items: stretch;
 }
 
 .skill-badge,
 .ability-badge {
-    padding: 6px;
+    padding: 4px 6px;
     min-width: 0;
     max-width: none;
     width: 100%;
 }
 
 .skill-icon {
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
 }
 
 .skill-icon img,
 .skill-icon svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
 }
 
 .skill-name,
 .ability-name {
-    font-size: 0.58em;
-    line-height: 1.15;
+    font-size: 0.55em;
+    line-height: 1.12;
     white-space: normal;
 }
 
