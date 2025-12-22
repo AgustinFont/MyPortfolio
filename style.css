@@ -669,8 +669,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .about-section {
     display: grid;
-    grid-template-columns: minmax(360px, 1fr) minmax(520px, 1.2fr) minmax(360px, 1fr);
-    grid-template-rows: auto 1fr;
+    grid-template-columns: minmax(420px, 1fr) minmax(640px, 1.4fr);
+    grid-template-rows: auto auto auto;
     gap: 26px;
     width: min(1380px, 96vw);
     margin: 0 auto;
@@ -730,7 +730,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .cover-letter-container {
     grid-column: 2 / 3;
-    grid-row: 2;
+    grid-row: 2 / span 2;
     width: 100%;
     max-width: 760px;
     background: rgba(0, 255, 255, 0.04);
@@ -791,8 +791,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 }
 
 .abilities-section {
-    grid-column: 3 / 4;
-    grid-row: 2;
+    grid-column: 1 / 2;
+    grid-row: 3;
     width: 100%;
     max-width: 420px;
     min-width: 340px;
@@ -869,8 +869,9 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 @media (max-width: 1400px) {
     .about-section {
         width: min(1180px, 96vw);
-        grid-template-columns: minmax(300px, 1fr) minmax(480px, 1.25fr) minmax(300px, 1fr);
-        gap: 20px;
+        grid-template-columns: minmax(380px, 1fr) minmax(560px, 1.3fr);
+        grid-template-rows: auto auto auto;
+        gap: 22px;
     }
     .cover-letter-container {
         padding: 16px;
@@ -892,7 +893,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 @media (max-width: 1200px) {
     .about-section {
         width: min(1080px, 96vw);
-        grid-template-columns: minmax(260px, 1fr) minmax(440px, 1.2fr) minmax(260px, 1fr);
+        grid-template-columns: minmax(340px, 1fr) minmax(520px, 1.25fr);
+        grid-template-rows: auto auto auto;
         gap: 18px;
     }
     .cover-letter-container {
