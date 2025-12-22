@@ -669,10 +669,10 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .about-section {
     display: grid;
-    grid-template-columns: minmax(160px, 1fr) minmax(420px, 2fr) minmax(160px, 1fr);
+    grid-template-columns: minmax(200px, 0.9fr) minmax(520px, 1.6fr) minmax(200px, 0.9fr);
     grid-template-rows: auto 1fr;
-    gap: 16px;
-    width: min(1100px, 96vw);
+    gap: 18px;
+    width: min(1180px, 96vw);
     margin: 0 auto;
     padding: 20px 10px 12px;
     box-sizing: border-box;
@@ -776,9 +776,12 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     grid-row: 2;
     width: 100%;
     max-width: 220px;
+    min-width: 190px;
     margin: 0;
     justify-self: start;
     align-self: start;
+    position: relative;
+    z-index: 2;
 }
 
 .abilities-section {
@@ -800,8 +803,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .skills-grid,
 .abilities-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
+    grid-template-columns: repeat(2, minmax(72px, 1fr));
+    gap: 8px 10px;
     width: 100%;
     max-height: none;
     overflow: visible;
@@ -811,15 +814,15 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .skill-badge,
 .ability-badge {
-    padding: 6px 8px;
+    padding: 6px 6px;
     min-width: 0;
     max-width: 100%;
     width: 100%;
 }
 
 .skill-icon {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
 }
 
 .skill-icon img,
@@ -830,7 +833,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .skill-name,
 .ability-name {
-    font-size: 0.54em;
+    font-size: 0.52em;
     line-height: 1.12;
     white-space: normal;
 }
