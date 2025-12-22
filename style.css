@@ -669,12 +669,12 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .about-section {
     display: grid;
-    grid-template-columns: minmax(320px, 1.05fr) minmax(520px, 1.3fr) minmax(320px, 1.05fr);
+    grid-template-columns: minmax(320px, 1fr) minmax(540px, 1.25fr) minmax(320px, 1fr);
     grid-template-rows: auto 1fr;
     gap: 24px;
-    width: min(1320px, 96vw);
+    width: min(1280px, 96vw);
     margin: 0 auto;
-    padding: 20px 10px 12px;
+    padding: 24px 12px 16px;
     box-sizing: border-box;
     align-items: start;
 }
@@ -732,10 +732,11 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     grid-column: 2 / 3;
     grid-row: 2;
     width: 100%;
-    background: rgba(0, 255, 255, 0.05);
-    border: 2px solid rgba(0, 255, 255, 0.3);
-    border-radius: 8px;
-    padding: 14px;
+    max-width: 700px;
+    background: rgba(0, 255, 255, 0.04);
+    border: 2px solid rgba(0, 255, 255, 0.35);
+    border-radius: 10px;
+    padding: 18px;
     box-sizing: border-box;
     margin: 0 auto;
     height: auto;
@@ -747,9 +748,9 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .cover-letter-container h3 {
     font-family: "Press Start 2P", monospace;
-    font-size: 0.95em;
+    font-size: 1em;
     color: var(--color-accent);
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     text-shadow: 
         0 0 10px rgba(255, 0, 255, 0.6),
         0 0 20px rgba(255, 0, 255, 0.4);
@@ -757,13 +758,14 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .cover-letter-text {
     text-align: left;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 .cover-letter-text p {
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     color: #ffffff;
     word-break: break-word;
+    font-size: 0.96em;
 }
 
 .cover-letter-text p:last-child {
@@ -775,8 +777,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     grid-column: 1 / 2;
     grid-row: 2;
     width: 100%;
-    max-width: 340px;
-    min-width: 280px;
+    max-width: 360px;
+    min-width: 300px;
     margin: 0;
     justify-self: start;
     align-self: start;
@@ -788,8 +790,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     grid-column: 3 / 4;
     grid-row: 2;
     width: 100%;
-    max-width: 320px;
-    min-width: 260px;
+    max-width: 360px;
+    min-width: 300px;
     margin: 0;
     justify-self: end;
     align-self: start;
@@ -815,41 +817,44 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 #about-content .skills-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(64px, 1fr));
-    gap: 8px 10px;
+    grid-template-columns: repeat(3, minmax(80px, 1fr));
+    gap: 10px 12px;
 }
 
 #about-content .abilities-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(90px, 1fr));
-    gap: 10px 12px;
+    grid-template-columns: repeat(2, minmax(110px, 1fr));
+    gap: 12px 14px;
     width: 100%;
 }
 
 #about-content .skill-badge,
 #about-content .ability-badge {
-    padding: 5px 5px;
+    padding: 7px 8px;
     min-width: 0;
     max-width: 100%;
     width: 100%;
+    border-radius: 6px;
+    border: 2px solid rgba(0, 255, 255, 0.35);
+    background: rgba(0, 255, 255, 0.04);
 }
 
 #about-content .skill-icon,
 #about-content .ability-icon {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
 }
 
 #about-content .skill-icon img,
 #about-content .skill-icon svg {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
 }
 
 #about-content .skill-name,
 #about-content .ability-name {
-    font-size: 0.48em;
-    line-height: 1.1;
+    font-size: 0.5em;
+    line-height: 1.2;
     white-space: normal;
 }
 
@@ -873,16 +878,18 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 @media (max-width: 1200px) {
     .about-section {
-        width: min(950px, 96vw);
-        grid-template-columns: minmax(200px, 1fr) minmax(420px, 1.4fr) minmax(200px, 1fr);
-        gap: 12px;
+        width: min(1040px, 96vw);
+        grid-template-columns: minmax(260px, 1fr) minmax(420px, 1.2fr) minmax(260px, 1fr);
+        gap: 18px;
     }
     .cover-letter-container {
-        padding: 12px;
+        padding: 16px;
+        max-width: 640px;
     }
     .skills-section,
     .abilities-section {
-        max-width: 260px;
+        max-width: 300px;
+        min-width: 240px;
     }
     .skill-name,
     .ability-name {
@@ -897,8 +904,9 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     .about-section {
         display: flex;
         flex-direction: column;
+        align-items: center;
         max-width: 100%;
-        padding: 0 8px;
+        padding: 0 10px;
         gap: 18px;
     }
     .about-header {
@@ -929,6 +937,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         grid-column: auto;
         grid-row: auto;
         width: 100%;
+        max-width: 540px;
     }
     .skills-grid,
     .abilities-grid {
