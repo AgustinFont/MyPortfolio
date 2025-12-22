@@ -1,5 +1,6 @@
 // === hud.js - Sistema de navegación completo (teclado + mouse) ===
 document.addEventListener('DOMContentLoaded', () => {
+    const menu = document.getElementById("menu");
     const menuItems = document.querySelectorAll("#menu li");
     const hud = document.querySelector(".hud");
     const playToggle = document.getElementById("play-toggle");
@@ -9,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let playMode = false;
     let selectedIndex = 0;
     let inSection = false;
+    let hoverClearTimer = null;
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     // === Actualiza el menú visualmente ===
@@ -147,15 +149,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Navegación con teclado
         if (e.key === "ArrowDown") {
             e.preventDefault();
-            selectedIndex = (selectedIndex + 1) % menuItems.length;
+            selectedIndex = selectedIndex < 0 ? 0 : (selectedIndex + 1) % menuItems.length;
             updateMenu();
         } else if (e.key === "ArrowUp") {
             e.preventDefault();
-            selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
+            selectedIndex = selectedIndex < 0 ? menuItems.length - 1 : (selectedIndex - 1 + menuItems.length) % menuItems.length;
             updateMenu();
         } else if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            goToSection(menuItems[selectedIndex].dataset.section);
+            const idx = selectedIndex < 0 ? 0 : selectedIndex;
+            selectedIndex = idx;
+            updateMenu();
+            goToSection(menuItems[idx].dataset.section);
         }
     });
 
@@ -166,6 +171,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Cuando el mouse entra sobre un item
             item.addEventListener("mouseenter", () => {
                 if (inSection || playMode) return;
+                if (hoverClearTimer) {
+                    clearTimeout(hoverClearTimer);
+                    hoverClearTimer = null;
+                }
                 // Actualizar selectedIndex inmediatamente
                 selectedIndex = i;
                 updateMenu();
@@ -180,6 +189,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 goToSection(item.dataset.section);
             });
         });
+
+        // Quitar highlight al salir del área del menú tras un breve delay
+        if (menu) {
+            menu.addEventListener("mouseleave", () => {
+                if (inSection || playMode) return;
+                if (hoverClearTimer) clearTimeout(hoverClearTimer);
+                hoverClearTimer = setTimeout(() => {
+                    selectedIndex = -1;
+                    updateMenu();
+                }, 120); // delay breve para evitar parpadeo
+            });
+            menu.addEventListener("mouseenter", () => {
+                if (hoverClearTimer) {
+                    clearTimeout(hoverClearTimer);
+                    hoverClearTimer = null;
+                }
+            });
+        }
     }
 
     // === NAVEGACIÓN TÁCTIL (MÓVILES) ===

@@ -367,8 +367,8 @@ gsap.to(camera.position, {
 function rotateToSection(sectionId) {
   hideAllObjects();
 
-  // Determinar objeto visible y Ã¡ngulo objetivo
-  const showCharacter = sectionId !== "about" && sectionId !== "contact";
+  // Determinar objeto visible y Ã¡ngulo objetivo (solo en Projects)
+  const showCharacter = sectionId === "projects";
   switch (sectionId) {
     case "about":
       targetAngle = 0;
