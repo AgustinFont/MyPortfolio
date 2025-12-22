@@ -775,8 +775,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     grid-column: 1 / 2;
     grid-row: 2;
     width: 100%;
-    max-width: 320px;
-    min-width: 260px;
+    max-width: 300px;
+    min-width: 240px;
     margin: 0;
     justify-self: start;
     align-self: start;
@@ -801,8 +801,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     text-align: left;
 }
 
-.skills-grid,
-.abilities-grid {
+#about-content .skills-grid,
+#about-content .abilities-grid {
     width: 100%;
     max-height: none;
     overflow: visible;
@@ -810,42 +810,43 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     justify-items: stretch;
 }
 
-.skills-grid {
+#about-content .skills-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(70px, 1fr));
-    gap: 10px 12px;
+    grid-template-columns: repeat(3, minmax(64px, 1fr));
+    gap: 8px 10px;
 }
 
-.abilities-grid {
+#about-content .abilities-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(90px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(88px, 1fr));
+    gap: 10px;
     width: 100%;
 }
 
-.skill-badge,
-.ability-badge {
-    padding: 6px 6px;
+#about-content .skill-badge,
+#about-content .ability-badge {
+    padding: 5px 5px;
     min-width: 0;
     max-width: 100%;
     width: 100%;
 }
 
-.skill-icon {
-    width: 18px;
-    height: 18px;
+#about-content .skill-icon,
+#about-content .ability-icon {
+    width: 16px;
+    height: 16px;
 }
 
-.skill-icon img,
-.skill-icon svg {
-    width: 13px;
-    height: 13px;
+#about-content .skill-icon img,
+#about-content .skill-icon svg {
+    width: 12px;
+    height: 12px;
 }
 
-.skill-name,
-.ability-name {
-    font-size: 0.5em;
-    line-height: 1.12;
+#about-content .skill-name,
+#about-content .ability-name {
+    font-size: 0.48em;
+    line-height: 1.1;
     white-space: normal;
 }
 
