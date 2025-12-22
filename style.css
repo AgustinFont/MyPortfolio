@@ -694,9 +694,9 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .profile-photo-container {
     grid-column: 1 / 2;
-    grid-row: 1 / 3;
-    width: 180px;
-    height: 180px;
+    grid-row: 1;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
     border: 3px solid #00ffff;
     box-shadow: 
@@ -718,8 +718,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         0 0 10px rgba(255, 111, 0, 0.6),
         0 0 20px rgba(255, 111, 0, 0.4);
     margin: 0 0 4px 0;
-    grid-column: 1 / 4;
-    grid-row: 1;
+    grid-column: 1 / 2;
+    grid-row: 2;
     text-align: center;
 }
 
@@ -748,6 +748,28 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     z-index: 1;
     display: flex;
     flex-direction: column;
+}
+
+.skills-abilities-container.left-stack {
+    grid-column: 1 / 2;
+    grid-row: 2;
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 10px;
+}
+
+.skills-section,
+.abilities-section {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 10px;
+    background: rgba(0, 255, 255, 0.02);
+    box-sizing: border-box;
+}
+
+.abilities-section {
+    border-color: rgba(255, 0, 255, 0.2);
 }
 
 .cover-letter-container h3 {
