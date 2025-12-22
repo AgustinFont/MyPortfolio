@@ -826,6 +826,13 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     box-sizing: border-box;
 }
 
+/* Skills sin recuadro */
+.skills-section {
+    border: none;
+    background: transparent;
+    padding: 8px 0 10px;
+}
+
 .abilities-section {
     border-color: rgba(255, 0, 255, 0.15);
     background: rgba(255, 0, 255, 0.02);
