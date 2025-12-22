@@ -498,12 +498,14 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 /* === ITEMS DEL MENÚ === */
 #menu li {
+    display: inline-block; /* evitar que el fondo ocupe todo el ancho */
+    align-self: flex-end; /* mantener alineación a la derecha sin estirar */
     font-family: "Press Start 2P", monospace;
     font-size: 16px; /* Aumentado de 14px para mejor legibilidad */
     color: #00ffff;
     cursor: pointer;
     margin: 12px 0; /* más compacto */
-    padding: 3px 8px; /* highlight muy cercano al texto */
+    padding: 3px 6px; /* ajustar horizontal para que el highlight abrace el texto */
     transition:
         color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
         text-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -532,7 +534,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 #menu li.active {
     color: #ffffff;
     opacity: 1;
-    transform: scale(1.05); /* más sutil */
+    transform: scale(1); /* mismo tamaño base que los demás */
     animation: glowPulse 2s infinite ease-in-out; /* Animación más lenta y suave */
     background: rgba(0, 255, 255, 0.08); /* Fondo sutil del tamaño del texto */
 }
@@ -541,14 +543,14 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 #menu li:hover {
     color: #ffffff !important;
     opacity: 1 !important;
-    transform: scale(1.04) translateX(-1px) !important; /* movimiento mínimo */
+    transform: scale(1.06) translateX(-1px) !important; /* movimiento mínimo */
     animation: hoverGlow 1.5s infinite ease-in-out !important; /* Animación más lenta */
     background: rgba(0, 255, 255, 0.1); /* Fondo ajustado al texto */
 }
 
 /* Cuando está activo Y con hover, combinar efectos */
 #menu li.active:hover {
-    transform: scale(1.07) translateX(-2px) !important; /* Combinación refinada */
+    transform: scale(1.08) translateX(-2px) !important; /* Combinación refinada */
     animation: activeHoverGlow 1.3s infinite ease-in-out !important;
     background: rgba(0, 255, 255, 0.12); /* Fondo más intenso ajustado al texto */
 }
