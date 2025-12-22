@@ -669,25 +669,22 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .about-section {
     display: grid;
-    grid-template-columns: 170px 500px 170px;
+    grid-template-columns: minmax(160px, 1fr) minmax(420px, 2fr) minmax(160px, 1fr);
     grid-template-rows: auto 1fr;
-    gap: 14px;
-    width: 100%;
-    max-width: 900px;
+    gap: 16px;
+    width: min(1100px, 96vw);
     margin: 0 auto;
-    padding: 10px 6px;
+    padding: 12px 10px;
     box-sizing: border-box;
     align-items: start;
-    min-height: calc(100vh - 120px);
-    overflow: hidden;
 }
 
 .about-header {
     grid-column: 1 / 4;
     display: grid;
-    grid-template-columns: 140px 1fr 140px;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     width: 100%;
 }
 
@@ -736,11 +733,12 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     background: rgba(0, 255, 255, 0.05);
     border: 2px solid rgba(0, 255, 255, 0.3);
     border-radius: 8px;
-    padding: 12px;
+    padding: 14px;
     box-sizing: border-box;
     margin: 0 auto;
-    max-height: calc(100vh - 170px);
-    overflow: auto; /* evita superposición si el texto es largo */
+    height: auto;
+    max-height: none;
+    overflow: visible;
 }
 
 .cover-letter-container h3 {
@@ -761,6 +759,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 .cover-letter-text p {
     margin-bottom: 12px;
     color: #ffffff;
+    word-break: break-word;
 }
 
 .cover-letter-text p:last-child {
@@ -797,40 +796,72 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .skills-grid,
 .abilities-grid {
-    grid-template-columns: 1fr;
-    gap: 6px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
     width: 100%;
-    max-height: 70vh;
-    overflow-y: auto;
-    overflow-x: hidden;
+    max-height: none;
+    overflow: visible;
     padding: 0 2px;
     justify-items: stretch;
 }
 
 .skill-badge,
 .ability-badge {
-    padding: 4px 6px;
+    padding: 8px 10px;
     min-width: 0;
     max-width: none;
     width: 100%;
 }
 
 .skill-icon {
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
 }
 
 .skill-icon img,
 .skill-icon svg {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
 }
 
 .skill-name,
 .ability-name {
-    font-size: 0.55em;
+    font-size: 0.58em;
     line-height: 1.12;
     white-space: normal;
+}
+
+@media (max-width: 1400px) {
+    .about-section {
+        width: min(1000px, 96vw);
+        grid-template-columns: minmax(150px, 1fr) minmax(380px, 2fr) minmax(150px, 1fr);
+        gap: 14px;
+    }
+    .cover-letter-container {
+        padding: 14px;
+    }
+    .skills-grid,
+    .abilities-grid {
+        gap: 8px;
+    }
+    .profile-name {
+        font-size: clamp(1em, 1.4vw, 1.1em);
+    }
+}
+
+@media (max-width: 1200px) {
+    .about-section {
+        width: min(950px, 96vw);
+        grid-template-columns: minmax(140px, 1fr) minmax(340px, 1.7fr) minmax(140px, 1fr);
+        gap: 12px;
+    }
+    .cover-letter-container {
+        padding: 12px;
+    }
+    .skill-name,
+    .ability-name {
+        font-size: clamp(0.6em, 0.25vw + 0.55em, 0.68em);
+    }
 }
 
 @media (max-width: 1024px) {
