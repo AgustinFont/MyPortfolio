@@ -693,8 +693,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 .profile-photo-container {
     grid-column: 1 / 2;
     grid-row: 1 / 3;
-    width: 140px;
-    height: 140px;
+    width: 180px;
+    height: 180px;
     border-radius: 50%;
     border: 3px solid #00ffff;
     box-shadow: 
@@ -710,7 +710,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .profile-name {
     font-family: "Press Start 2P", monospace;
-    font-size: 1.05em;
+    font-size: 1.1em;
     color: var(--color-secondary);
     text-shadow: 
         0 0 10px rgba(255, 111, 0, 0.6),
@@ -831,8 +831,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 #about-content .abilities-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(120px, 1fr));
-    gap: 12px 14px;
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    gap: 14px 16px;
     width: 100%;
 }
 
@@ -849,19 +849,19 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 #about-content .skill-icon,
 #about-content .ability-icon {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
 }
 
 #about-content .skill-icon img,
 #about-content .skill-icon svg {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
 }
 
 #about-content .skill-name,
 #about-content .ability-name {
-    font-size: 0.58em;
+    font-size: 0.6em;
     line-height: 1.25;
     white-space: normal;
 }
