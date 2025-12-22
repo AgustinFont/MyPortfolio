@@ -664,19 +664,19 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 14px 10px;
+    padding: 22px 10px 14px;
 }
 
 .about-section {
     display: grid;
-    grid-template-columns: 440px minmax(620px, 1fr);
+    grid-template-columns: 480px minmax(620px, 1fr);
     grid-template-rows: auto 1fr;
     grid-template-areas:
         "header header"
         "stack  cover";
-    column-gap: 28px;
+    column-gap: 32px;
     row-gap: 14px;
-    width: min(1300px, 96vw);
+    width: min(1320px, 96vw);
     margin: 0 auto;
     padding: 14px 12px 14px;
     box-sizing: border-box;
