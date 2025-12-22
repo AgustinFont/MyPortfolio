@@ -669,10 +669,10 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .about-section {
     display: grid;
-    grid-template-columns: minmax(320px, 1fr) minmax(540px, 1.25fr) minmax(320px, 1fr);
+    grid-template-columns: minmax(360px, 1fr) minmax(520px, 1.2fr) minmax(360px, 1fr);
     grid-template-rows: auto 1fr;
-    gap: 24px;
-    width: min(1280px, 96vw);
+    gap: 26px;
+    width: min(1380px, 96vw);
     margin: 0 auto;
     padding: 24px 12px 16px;
     box-sizing: border-box;
@@ -732,7 +732,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     grid-column: 2 / 3;
     grid-row: 2;
     width: 100%;
-    max-width: 700px;
+    max-width: 760px;
     background: rgba(0, 255, 255, 0.04);
     border: 2px solid rgba(0, 255, 255, 0.35);
     border-radius: 10px;
@@ -777,26 +777,34 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     grid-column: 1 / 2;
     grid-row: 2;
     width: 100%;
-    max-width: 360px;
-    min-width: 300px;
+    max-width: 420px;
+    min-width: 340px;
     margin: 0;
     justify-self: start;
     align-self: start;
     position: relative;
     z-index: 2;
+    padding: 10px 10px 12px;
+    border: 1px solid rgba(0, 255, 255, 0.15);
+    border-radius: 10px;
+    background: rgba(0, 255, 255, 0.02);
 }
 
 .abilities-section {
     grid-column: 3 / 4;
     grid-row: 2;
     width: 100%;
-    max-width: 360px;
-    min-width: 300px;
+    max-width: 420px;
+    min-width: 340px;
     margin: 0;
     justify-self: end;
     align-self: start;
     position: relative;
     z-index: 2;
+    padding: 10px 10px 12px;
+    border: 1px solid rgba(255, 0, 255, 0.15);
+    border-radius: 10px;
+    background: rgba(255, 0, 255, 0.02);
 }
 
 .skills-section h3,
@@ -817,59 +825,64 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 #about-content .skills-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(80px, 1fr));
-    gap: 10px 12px;
+    grid-template-columns: repeat(3, minmax(94px, 1fr));
+    gap: 12px 14px;
 }
 
 #about-content .abilities-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(110px, 1fr));
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
     gap: 12px 14px;
     width: 100%;
 }
 
 #about-content .skill-badge,
 #about-content .ability-badge {
-    padding: 7px 8px;
+    padding: 10px 10px;
     min-width: 0;
     max-width: 100%;
     width: 100%;
     border-radius: 6px;
     border: 2px solid rgba(0, 255, 255, 0.35);
-    background: rgba(0, 255, 255, 0.04);
+    background: rgba(0, 255, 255, 0.05);
 }
 
 #about-content .skill-icon,
 #about-content .ability-icon {
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
 }
 
 #about-content .skill-icon img,
 #about-content .skill-icon svg {
-    width: 14px;
-    height: 14px;
+    width: 18px;
+    height: 18px;
 }
 
 #about-content .skill-name,
 #about-content .ability-name {
-    font-size: 0.5em;
-    line-height: 1.2;
+    font-size: 0.58em;
+    line-height: 1.25;
     white-space: normal;
 }
 
 @media (max-width: 1400px) {
     .about-section {
-        width: min(1000px, 96vw);
-        grid-template-columns: minmax(150px, 1fr) minmax(380px, 2fr) minmax(150px, 1fr);
-        gap: 14px;
+        width: min(1180px, 96vw);
+        grid-template-columns: minmax(300px, 1fr) minmax(480px, 1.25fr) minmax(300px, 1fr);
+        gap: 20px;
     }
     .cover-letter-container {
-        padding: 14px;
+        padding: 16px;
+        max-width: 700px;
     }
-    .skills-grid,
-    .abilities-grid {
-        gap: 8px;
+    #about-content .skills-grid {
+        grid-template-columns: repeat(3, minmax(90px, 1fr));
+        gap: 12px 12px;
+    }
+    #about-content .abilities-grid {
+        grid-template-columns: repeat(2, minmax(110px, 1fr));
+        gap: 12px;
     }
     .profile-name {
         font-size: clamp(1em, 1.4vw, 1.1em);
@@ -878,8 +891,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 @media (max-width: 1200px) {
     .about-section {
-        width: min(1040px, 96vw);
-        grid-template-columns: minmax(260px, 1fr) minmax(420px, 1.2fr) minmax(260px, 1fr);
+        width: min(1080px, 96vw);
+        grid-template-columns: minmax(260px, 1fr) minmax(440px, 1.2fr) minmax(260px, 1fr);
         gap: 18px;
     }
     .cover-letter-container {
