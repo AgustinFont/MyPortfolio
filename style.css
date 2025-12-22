@@ -664,12 +664,12 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 22px 10px 14px;
+    padding: 26px 10px 14px;
 }
 
 .about-section {
     display: grid;
-    grid-template-columns: 480px minmax(620px, 1fr);
+    grid-template-columns: 420px minmax(640px, 1fr);
     grid-template-rows: auto 1fr;
     grid-template-areas:
         "header header"
@@ -804,23 +804,23 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     grid-column: 1 / 2;
     grid-row: 2;
     display: grid;
-    grid-template-rows: 1fr 1fr;
-    gap: 10px;
+    grid-template-rows: auto auto;
+    gap: 12px;
     height: 100%;
 }
 
 .skills-section,
 .abilities-section {
     width: 100%;
-    max-width: 340px;
-    min-width: 300px;
-    margin: 0 auto;
+    max-width: 380px;
+    min-width: 320px;
+    margin: 0;
     position: relative;
     z-index: 2;
-    padding: 10px 10px 12px;
-    border: 1px solid rgba(0, 255, 255, 0.15);
-    border-radius: 10px;
-    background: rgba(0, 255, 255, 0.02);
+    padding: 14px 14px 16px;
+    border: 1px solid rgba(0, 255, 255, 0.25);
+    border-radius: 12px;
+    background: rgba(0, 255, 255, 0.03);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -844,14 +844,14 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     width: 100%;
     max-height: none;
     overflow: visible;
-    padding: 0 2px;
+    padding: 2px 2px 0;
     justify-items: stretch;
 }
 
 #about-content .skills-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(90px, 1fr));
-    gap: 12px 12px;
+    grid-template-columns: repeat(3, minmax(110px, 1fr));
+    gap: 14px;
 }
 
 #about-content .abilities-grid {
@@ -863,7 +863,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 #about-content .skill-badge,
 #about-content .ability-badge {
-    padding: 10px 10px;
+    padding: 12px 12px;
     min-width: 0;
     max-width: 100%;
     width: 100%;
@@ -893,24 +893,22 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 @media (max-width: 1400px) {
     .about-section {
-        width: min(1000px, 96vw);
-        grid-template-columns: minmax(150px, 1fr) minmax(380px, 2fr) minmax(150px, 1fr);
-        gap: 14px;
+        width: min(1100px, 96vw);
+        grid-template-columns: 360px minmax(540px, 1fr);
+        column-gap: 24px;
+        row-gap: 12px;
     }
     .cover-letter-container {
-        padding: 14px;
-    }
-    .skills-grid,
-    .abilities-grid {
-        gap: 8px;
+        padding: 16px;
     }
 }
 
 @media (max-width: 1200px) {
     .about-section {
-        width: min(950px, 96vw);
-        grid-template-columns: minmax(200px, 1fr) minmax(420px, 1.4fr) minmax(200px, 1fr);
-        gap: 12px;
+        width: min(980px, 96vw);
+        grid-template-columns: 320px minmax(480px, 1fr);
+        column-gap: 20px;
+        row-gap: 12px;
     }
     .cover-letter-container {
         padding: 16px;
