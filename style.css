@@ -674,7 +674,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     gap: 16px;
     width: min(1100px, 96vw);
     margin: 0 auto;
-    padding: 12px 10px;
+    padding: 20px 10px 12px;
     box-sizing: border-box;
     align-items: start;
 }
@@ -684,8 +684,10 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
+    justify-items: center;
     gap: 12px;
     width: 100%;
+    padding-top: 6px;
 }
 
 .profile-photo-container {
@@ -739,6 +741,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     height: auto;
     max-height: none;
     overflow: visible;
+    position: relative;
+    z-index: 1;
 }
 
 .cover-letter-container h3 {
@@ -767,24 +771,24 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 }
 
 /* Skills/abilities columnas laterales sin scroll */
-.skills-abilities-container {
-    display: contents;
-}
-
 .skills-section {
     grid-column: 1 / 2;
     grid-row: 2;
     width: 100%;
-    max-width: none;
+    max-width: 220px;
     margin: 0;
+    justify-self: start;
+    align-self: start;
 }
 
 .abilities-section {
     grid-column: 3 / 4;
     grid-row: 2;
     width: 100%;
-    max-width: none;
+    max-width: 220px;
     margin: 0;
+    justify-self: end;
+    align-self: start;
 }
 
 .skills-section h3,
@@ -796,8 +800,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .skills-grid,
 .abilities-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 10px;
+    grid-template-columns: 1fr;
+    gap: 8px;
     width: 100%;
     max-height: none;
     overflow: visible;
@@ -807,26 +811,26 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .skill-badge,
 .ability-badge {
-    padding: 8px 10px;
+    padding: 6px 8px;
     min-width: 0;
-    max-width: none;
+    max-width: 100%;
     width: 100%;
 }
 
 .skill-icon {
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
 }
 
 .skill-icon img,
 .skill-icon svg {
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
 }
 
 .skill-name,
 .ability-name {
-    font-size: 0.58em;
+    font-size: 0.54em;
     line-height: 1.12;
     white-space: normal;
 }
@@ -857,6 +861,10 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
     .cover-letter-container {
         padding: 12px;
+    }
+    .skills-section,
+    .abilities-section {
+        max-width: 200px;
     }
     .skill-name,
     .ability-name {
