@@ -494,6 +494,9 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     text-align: right;
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
+    perspective: 900px; /* dar profundidad al menú */
+    transform-style: preserve-3d;
 }
 
 /* === ITEMS DEL MENÚ === */
@@ -512,6 +515,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
         opacity 0.25s ease;
     transform-origin: right center;
+    transform: rotateY(-10deg) rotateX(4deg) scale(1);
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
@@ -525,7 +529,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 /* Estado inactivo (por defecto) */
 #menu li.inactive {
     opacity: 0.65; /* Ligeramente más visible que antes (0.6) */
-    transform: scale(1);
+    transform: rotateY(-10deg) rotateX(4deg) scale(1);
     color: #00ffff;
     text-shadow: 0 0 4px rgba(0, 255, 255, 0.3); /* Glow sutil para mejor visibilidad */
 }
@@ -534,7 +538,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 #menu li.active {
     color: #ffffff;
     opacity: 1;
-    transform: scale(1); /* mismo tamaño base que los demás */
+    transform: rotateY(-6deg) rotateX(2deg) scale(1); /* ligero enderezado al estar seleccionado */
     animation: glowPulse 2s infinite ease-in-out; /* Animación más lenta y suave */
     background: rgba(0, 255, 255, 0.08); /* Fondo sutil del tamaño del texto */
 }
@@ -543,14 +547,14 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 #menu li:hover {
     color: #ffffff !important;
     opacity: 1 !important;
-    transform: scale(1.06) translateX(-1px) !important; /* movimiento mínimo */
+    transform: rotateY(-2deg) rotateX(0deg) scale(1.06) translateX(-1px) !important; /* inclinación hacia el centro */
     animation: hoverGlow 1.5s infinite ease-in-out !important; /* Animación más lenta */
     background: rgba(0, 255, 255, 0.1); /* Fondo ajustado al texto */
 }
 
 /* Cuando está activo Y con hover, combinar efectos */
 #menu li.active:hover {
-    transform: scale(1.08) translateX(-2px) !important; /* Combinación refinada */
+    transform: rotateY(0deg) rotateX(0deg) scale(1.08) translateX(-2px) !important; /* endereza y resalta más */
     animation: activeHoverGlow 1.3s infinite ease-in-out !important;
     background: rgba(0, 255, 255, 0.12); /* Fondo más intenso ajustado al texto */
 }
@@ -3426,4 +3430,111 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         font-size: 8px;
         padding: 4px 8px;
     }
+}
+
+/* === ABOUT ME: LAYOUT SIN SCROLL EN DESKTOP, SKILLS/ABILITIES COMPACTAS === */
+#about-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 36px 18px;
+}
+
+.about-section {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 18px;
+    width: 100%;
+    max-width: 1180px;
+    height: calc(100vh - 120px);
+    box-sizing: border-box;
+}
+
+.about-header {
+    grid-column: 1 / 3;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    align-items: center;
+    gap: 14px;
+}
+
+.profile-photo-container {
+    width: 170px;
+    height: 170px;
+    margin: 0 auto;
+}
+
+.profile-name {
+    font-size: 1.05em;
+    margin: 0 0 6px 0;
+}
+
+.cover-letter-container {
+    grid-column: 1 / 3;
+    margin: 0;
+    padding: 16px;
+    max-height: 260px; /* asegura espacio para skills/abilities */
+    overflow: auto;    /* scroll interno solo si el texto es largo */
+}
+
+.skills-abilities-container {
+    grid-column: 1 / 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items: stretch;
+    min-height: 0;
+    max-height: calc(100vh - 120px - 260px - 40px); /* altura restante */
+}
+
+.skills-section h3,
+.abilities-section h3 {
+    margin-bottom: 10px;
+    font-size: 0.9em;
+}
+
+.skills-grid,
+.abilities-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    max-height: 100%;
+    overflow: auto;
+    padding: 2px;
+    box-sizing: border-box;
+}
+
+.skill-badge,
+.ability-badge {
+    padding: 8px 10px;
+    min-width: 0;
+    max-width: none;
+}
+
+.skill-icon {
+    width: 38px;
+    height: 38px;
+}
+
+.skill-icon img,
+.skill-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.skill-name,
+.ability-name {
+    font-size: 0.64em;
+    line-height: 1.25;
+    white-space: normal;
+}
+
+@media (max-width: 1024px) {
+    #about-content { padding: 20px 14px; }
+    .about-section { display: flex; flex-direction: column; height: auto; }
+    .about-header { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    .cover-letter-container { max-height: none; overflow: visible; }
+    .skills-abilities-container { grid-template-columns: 1fr; max-height: none; }
+    .skills-grid,
+    .abilities-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); overflow: visible; }
 }
