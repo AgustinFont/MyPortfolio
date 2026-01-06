@@ -665,18 +665,19 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 120px 10px 24px;
+    padding: 20px 10px 24px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .about-section {
     display: flex;
     flex-direction: column;
-    gap: 28px;
-    width: 92vw;
+    gap: 24px;
+    width: 95vw;
     max-width: 1200px;
-    position: relative;
     margin: 0 auto;
-    padding: 0 20px 32px;
+    padding: 0 0 32px;
     box-sizing: border-box;
     align-items: center;
     justify-content: flex-start;
@@ -732,8 +733,9 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 }
 
 .cover-letter-container {
+    position: relative;
     width: 100%;
-    max-width: none;
+    max-width: 1200px;
     background: rgba(0, 255, 255, 0.04);
     border: 2px solid rgba(0, 255, 255, 0.35);
     border-radius: 10px;
@@ -743,8 +745,6 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     height: auto;
     max-height: none;
     overflow: visible;
-    position: relative;
-    z-index: 1;
     display: flex;
     flex-direction: column;
     align-self: center;
@@ -930,8 +930,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 /* Contenedor flotante de botones */
 .about-scroll-buttons {
     position: absolute;
-    top: 140px;
-    right: -78px;
+    top: 18px;
+    right: -90px;
     display: flex;
     flex-direction: column;
     gap: 10px;
