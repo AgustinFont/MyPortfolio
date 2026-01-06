@@ -95,3 +95,12 @@ window.scrollToAboutSection = function(sectionId) {
     const target = document.getElementById(sectionId);
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
+
+// Ajuste dinámico de desplazamiento vertical para About
+window.setAboutOffset = function(px) {
+    const val = typeof px === 'number' ? `${px}px` : px;
+    document.documentElement.style.setProperty('--about-offset', val);
+};
+window.getAboutOffset = function() {
+    return getComputedStyle(document.documentElement).getPropertyValue('--about-offset');
+};

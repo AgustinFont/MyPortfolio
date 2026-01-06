@@ -6,6 +6,7 @@
     --color-bg: #0a0a15;
     --color-text: #ffffff;
     --color-text-dim: #88ffff;
+    --about-offset: 20px;
 }
 
 /* === RESET === */
@@ -665,7 +666,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 20px 10px 24px;
+    padding: var(--about-offset) 10px 24px;
     overflow-x: hidden;
     overflow-y: auto;
 }
