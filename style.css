@@ -663,9 +663,9 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 /* === ABOUT SECTION === */
 #about-content {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 80px 10px 24px;
+    padding: 120px 10px 24px;
 }
 
 .about-section {
@@ -676,7 +676,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     max-width: 1200px;
     position: relative;
     margin: 0 auto;
-    padding: 20px 20px 32px;
+    padding: 0 20px 32px;
     box-sizing: border-box;
     align-items: center;
     justify-content: flex-start;
@@ -689,7 +689,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     align-items: center;
     justify-items: center;
     gap: 8px;
-    padding-top: 6px;
+    padding-top: 0;
     text-align: center;
 }
 
