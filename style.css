@@ -6,7 +6,7 @@
     --color-bg: #0a0a15;
     --color-text: #ffffff;
     --color-text-dim: #88ffff;
-    --about-offset: 20px;
+    --about-offset: 720px;
 }
 
 /* === RESET === */
@@ -932,7 +932,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 .about-scroll-buttons {
     position: absolute;
     top: 18px;
-    right: -90px;
+    right: -60px;
     display: flex;
     flex-direction: column;
     gap: 10px;
