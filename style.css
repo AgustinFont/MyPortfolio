@@ -674,6 +674,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     gap: 32px;
     width: 95vw;
     max-width: 1200px;
+    position: relative;
     margin: 0 auto;
     padding: 14px 24px 32px;
     box-sizing: border-box;
@@ -688,7 +689,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     align-items: center;
     justify-items: center;
     gap: 10px;
-    padding-top: 8px;
+    padding-top: 12px;
     text-align: center;
 }
 
@@ -860,6 +861,12 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     box-sizing: border-box;
 }
 
+/* Abilities en acento violeta */
+#about-content .abilities-grid .ability-badge {
+    border: 2px solid rgba(255, 0, 255, 0.45);
+    background: rgba(255, 0, 255, 0.08);
+}
+
 #about-content .skill-icon,
 #about-content .ability-icon {
     width: 24px;
@@ -918,6 +925,19 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 .scroll-to-section-btn:hover::after,
 .scroll-to-section-btn:focus-visible::after {
     transform: translateY(2px);
+}
+
+/* Contenedor flotante de botones */
+.about-scroll-buttons {
+    position: sticky;
+    top: 24vh;
+    right: 0;
+    align-self: flex-end;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-right: -4px;
+    z-index: 3;
 }
 
 @media (max-width: 1400px) {
