@@ -68,7 +68,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Scroll suave a secciones de About
+    const scrollButtons = document.querySelectorAll('.scroll-to-section-btn');
+    const scrollToSection = (sectionId) => {
+        const target = document.getElementById(sectionId);
+        if (!target) return;
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    scrollButtons.forEach(btn => {
+        const targetId = btn.getAttribute('data-target');
+        btn.addEventListener('click', () => scrollToSection(targetId));
+        btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                scrollToSection(targetId);
+            }
+        });
+    });
 });
 
 // Exportar función globalmente
 window.navigateToCategory = navigateToCategory;
+window.scrollToAboutSection = function(sectionId) {
+    const target = document.getElementById(sectionId);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
