@@ -669,18 +669,20 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .about-section {
     display: grid;
-    grid-template-columns: 420px minmax(640px, 1fr);
+    grid-template-columns: minmax(260px, 0.3fr) minmax(320px, 0.4fr) minmax(260px, 0.3fr);
     grid-template-rows: auto 1fr;
     grid-template-areas:
-        "header header"
-        "stack  cover";
-    column-gap: 32px;
-    row-gap: 14px;
-    width: min(1320px, 96vw);
+        "header header header"
+        "skills cover abilities";
+    column-gap: 28px;
+    row-gap: 18px;
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
-    padding: 14px 12px 14px;
+    padding: 14px 24px 18px;
     box-sizing: border-box;
-    align-items: start;
+    align-items: center;
+    justify-items: stretch;
 }
 
 .about-header {
@@ -733,8 +735,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 }
 
 .cover-letter-container {
-    grid-column: 2 / 3;
-    grid-row: 2;
+    grid-area: cover;
     width: 100%;
     max-width: none;
     background: rgba(0, 255, 255, 0.04);
@@ -750,6 +751,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     z-index: 1;
     display: flex;
     flex-direction: column;
+    align-self: center;
 }
 
 .skills-abilities-container.left-stack {
@@ -800,42 +802,47 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 }
 
 /* Skills/abilities columnas laterales sin scroll */
-.left-stack {
-    grid-column: 1 / 2;
-    grid-row: 2;
-    display: grid;
-    grid-template-rows: auto auto;
-    gap: 16px;
+/* Columnas laterales alineadas al centro vertical */
+.skills-section {
+    grid-area: skills;
+    align-self: center;
 }
 
-.skills-section,
-.abilities-section {
+/* Skills sin recuadro */
+.skills-section {
     width: 100%;
-    max-width: 420px;
-    min-width: 320px;
+    max-width: 100%;
+    min-width: 0;
     margin: 0;
     position: relative;
     z-index: 2;
-    padding: 16px 16px 14px;
-    border: 1px solid rgba(0, 255, 255, 0.25);
+    padding: 8px 0 10px;
+    border: none;
     border-radius: 12px;
-    background: rgba(0, 255, 255, 0.03);
+    background: transparent;
     display: flex;
     flex-direction: column;
     height: auto;
     box-sizing: border-box;
 }
 
-/* Skills sin recuadro */
-.skills-section {
-    border: none;
-    background: transparent;
-    padding: 8px 0 10px;
-}
-
 .abilities-section {
-    border-color: rgba(255, 0, 255, 0.15);
+    grid-area: abilities;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    position: relative;
+    z-index: 2;
+    padding: 16px 16px 14px;
+    border: 1px solid rgba(255, 0, 255, 0.15);
+    border-radius: 12px;
     background: rgba(255, 0, 255, 0.02);
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    box-sizing: border-box;
+    align-self: center;
 }
 
 .skills-section h3,
@@ -899,10 +906,10 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 @media (max-width: 1400px) {
     .about-section {
-        width: min(1100px, 96vw);
-        grid-template-columns: 360px minmax(540px, 1fr);
+        width: 100%;
+        grid-template-columns: minmax(240px, 0.3fr) minmax(360px, 0.4fr) minmax(240px, 0.3fr);
         column-gap: 24px;
-        row-gap: 12px;
+        row-gap: 16px;
     }
     .cover-letter-container {
         padding: 16px;
@@ -911,10 +918,10 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 @media (max-width: 1200px) {
     .about-section {
-        width: min(980px, 96vw);
-        grid-template-columns: 320px minmax(480px, 1fr);
+        width: 100%;
+        grid-template-columns: minmax(220px, 0.3fr) minmax(320px, 0.4fr) minmax(220px, 0.3fr);
         column-gap: 20px;
-        row-gap: 12px;
+        row-gap: 14px;
     }
     .cover-letter-container {
         padding: 16px;
@@ -930,30 +937,18 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
     #about-content {
         padding: 20px 14px;
     }
     .about-section {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        max-width: 100%;
+        grid-template-columns: minmax(220px, 1fr) minmax(300px, 1.1fr) minmax(220px, 1fr);
+        column-gap: 18px;
+        row-gap: 16px;
         padding: 0 10px;
-        gap: 18px;
-    }
-    .cover-letter-container {
-        order: 1;
-        width: 100%;
-        margin: 0 0 12px 0;
-    }
-    .skills-abilities-container.left-stack {
-        order: 2;
-        width: 100%;
     }
     .about-header {
         grid-template-columns: 1fr;
-        grid-column: 1;
         text-align: center;
         justify-items: center;
     }
@@ -962,24 +957,10 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         height: 150px;
     }
     .cover-letter-container {
-        width: 100%;
-        margin: 0;
         padding: 16px;
         height: auto;
         max-height: none;
         overflow: visible;
-    }
-    .skills-abilities-container {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-    }
-    .skills-section,
-    .abilities-section {
-        grid-column: auto;
-        grid-row: auto;
-        width: 100%;
-        max-width: 540px;
     }
     .skills-grid,
     .abilities-grid {
