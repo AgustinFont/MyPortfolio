@@ -47,7 +47,31 @@ function navigateToCategory(categoryId) {
     }, 800);
 }
 
+function getAgeFromBirthdate(year, monthIndex, day) {
+    const today = new Date();
+    let age = today.getFullYear() - year;
+    const hadBirthday =
+        today.getMonth() > monthIndex ||
+        (today.getMonth() === monthIndex && today.getDate() >= day);
+
+    if (!hadBirthday) {
+        age -= 1;
+    }
+
+    return age;
+}
+
+function updateAboutAge() {
+    const ageEl = document.getElementById('js-age');
+    if (!ageEl) return;
+
+    // 14/06/2000 — monthIndex 5 = junio
+    ageEl.textContent = String(getAgeFromBirthdate(2000, 5, 14));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    updateAboutAge();
+
     // Agregar eventos a los links interactivos
     const interactiveLinks = document.querySelectorAll('.interactive-link');
     
