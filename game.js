@@ -201,6 +201,9 @@ class NeonHopGame {
                 if (this.score > this.best) {
                     this.best = this.score;
                     localStorage.setItem("neonHopBest", String(this.best));
+                    if (typeof window.refreshEasterComplete === "function") {
+                        window.refreshEasterComplete();
+                    }
                 }
             }
         });

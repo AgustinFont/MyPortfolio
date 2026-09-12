@@ -37,6 +37,52 @@ function initEasterEggCounter() {
     updateEasterEggCounter();
 }
 
+function isSystemComplete() {
+    return easterEggsFound >= EASTER_EGG_CATALOG.length;
+}
+
+function refreshEasterComplete() {
+    const complete = isSystemComplete();
+    const section = document.querySelector(".easter-section");
+    const panel = document.getElementById("easter-complete-panel");
+    const hint = document.getElementById("easter-hint");
+    const hopBest = document.getElementById("easter-hop-best");
+    const badge = document.getElementById("visit-counter");
+
+    if (section) section.classList.toggle("is-complete", complete);
+    if (hint) {
+        hint.textContent = complete ? "Root access granted." : "Leave no door unopened.";
+    }
+    if (panel) {
+        panel.hidden = !complete;
+        if (complete && hopBest) {
+            const best = Number(localStorage.getItem("neonHopBest") || 0);
+            hopBest.textContent = String(best).padStart(2, "0");
+        }
+    }
+
+    if (complete && badge && !badge.classList.contains("is-root")) {
+        badge.classList.add("is-root");
+        const label = badge.querySelector(".visit-counter-label");
+        const tip = badge.querySelector(".visit-counter-tip");
+        if (label) label.textContent = "ROOT";
+        if (tip) tip.textContent = "All secrets unlocked";
+        badge.setAttribute("aria-label", "Root access: all secrets unlocked");
+        document.body.classList.add("root-access-flash");
+        setTimeout(() => document.body.classList.remove("root-access-flash"), 1400);
+        if (typeof window.triggerSideFireworks === "function") {
+            window.triggerSideFireworks();
+            setTimeout(() => window.triggerSideFireworks(), 280);
+        }
+    } else if (!complete && badge) {
+        badge.classList.remove("is-root");
+        const label = badge.querySelector(".visit-counter-label");
+        const tip = badge.querySelector(".visit-counter-tip");
+        if (label) label.textContent = "ACCESS";
+        if (tip) tip.textContent = "People who opened this portfolio";
+    }
+}
+
 function updateEasterEggCounter() {
     const counterEl = document.getElementById("easter-counter");
     if (counterEl) {
@@ -51,6 +97,7 @@ function updateEasterEggCounter() {
     }
 
     updateEasterEggsList();
+    refreshEasterComplete();
 }
 
 function foundEasterEgg(eggId, eggName, eggDescription) {
@@ -189,3 +236,4 @@ window.addEasterEgg = function (title, description, id) {
 window.foundEasterEgg = foundEasterEgg;
 window.initEasterEggCounter = initEasterEggCounter;
 window.easterEggsFound = () => easterEggsFound;
+window.refreshEasterComplete = refreshEasterComplete;

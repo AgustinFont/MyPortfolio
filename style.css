@@ -351,9 +351,51 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     transform: translateY(0);
 }
 
-.hud.play-mode ~ .visit-counter {
-    opacity: 0 !important;
-    visibility: hidden;
+.visit-counter.is-root {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    box-shadow:
+        0 0 14px rgba(255, 0, 255, 0.35),
+        inset 0 0 8px rgba(255, 0, 255, 0.12);
+}
+
+.visit-counter.is-root .visit-counter-label {
+    color: var(--color-accent);
+}
+
+.visit-counter.is-root .visit-counter-value {
+    color: #ff9bff;
+    text-shadow: 0 0 8px rgba(255, 0, 255, 0.7);
+}
+
+.visit-counter.is-root .visit-counter-led {
+    background: #ff00ff;
+    box-shadow: 0 0 8px #ff00ff;
+}
+
+.visit-counter.is-root .visit-counter-tip {
+    background: var(--color-accent);
+    border-color: #ff9bff;
+    color: #140014;
+}
+
+.visit-counter.is-root .visit-counter-tip::after {
+    border-top-color: var(--color-accent);
+}
+
+body.root-access-flash::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 90;
+    background: radial-gradient(circle at 20% 85%, rgba(255, 0, 255, 0.22), transparent 55%);
+    animation: rootFlashFade 1.4s ease forwards;
+}
+
+@keyframes rootFlashFade {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
 }
 
 @keyframes visitCounterIn {
@@ -1935,14 +1977,88 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
 }
 
-.easter-hint {
+.easter-section.is-complete .easter-counter-container {
+    border-color: var(--color-accent);
+    box-shadow:
+        0 0 18px rgba(255, 0, 255, 0.28),
+        0 0 28px rgba(0, 255, 255, 0.18);
+}
+
+.easter-section.is-complete .counter-value {
+    color: #ff9bff;
+    text-shadow:
+        0 0 10px #ff00ff,
+        0 0 22px #00ffff;
+}
+
+.easter-complete-panel {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 22px 20px;
+    border: 2px solid var(--color-accent);
+    border-radius: 8px;
+    background: rgba(255, 0, 255, 0.06);
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+    animation: eggFound 0.5s ease-out;
+}
+
+.easter-complete-panel[hidden] {
+    display: none;
+}
+
+.easter-complete-kicker {
     font-family: "Press Start 2P", monospace;
     font-size: 0.55em;
-    color: #88ffff;
+    color: var(--color-primary);
+    letter-spacing: 2px;
+}
+
+.easter-complete-title {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.85em;
+    color: var(--color-accent);
     text-align: center;
-    opacity: 0.75;
-    line-height: 1.7;
-    max-width: 520px;
+    line-height: 1.5;
+    text-shadow: 0 0 12px rgba(255, 0, 255, 0.6);
+}
+
+.easter-complete-msg {
+    margin: 0;
+    color: #e8f6ff;
+    font-size: 0.95em;
+}
+
+.neon-hop-scorecard {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    border: 1px solid rgba(0, 255, 255, 0.45);
+    background: rgba(0, 10, 20, 0.45);
+}
+
+.neon-hop-ship {
+    width: 52px;
+    height: 34px;
+    filter: drop-shadow(0 0 8px #00ffff);
+}
+
+.scorecard-label {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.55em;
+    color: var(--color-secondary);
+    margin-bottom: 6px;
+}
+
+.scorecard-best {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.8em;
+    color: var(--color-primary);
 }
 
 .easter-eggs-list {
