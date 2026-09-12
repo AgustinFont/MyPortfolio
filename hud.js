@@ -281,27 +281,35 @@ document.addEventListener('DOMContentLoaded', () => {
     updateMenu();
 
     // === PLAY MODE TOGGLE ===
+    function startPlaygroundGame() {
+        if (!playMode) return;
+        if (window.playgroundGame && typeof window.playgroundGame.destroy === "function") {
+            window.playgroundGame.destroy();
+            window.playgroundGame = null;
+        }
+        if (typeof window.NeonHopGame !== "function") return;
+        window.playgroundGame = new window.NeonHopGame("game-canvas");
+        if (window.playgroundGame && typeof window.playgroundGame.start === "function") {
+            window.playgroundGame.start();
+        }
+    }
+
     function loadPlaygroundGame() {
         if (typeof window.NeonHopGame === "function") {
             return Promise.resolve();
         }
-        if (window.__playgroundGameLoading) {
-            return window.__playgroundGameLoading;
-        }
-        window.__playgroundGameLoading = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             const script = document.createElement("script");
             script.src = "game.js";
             script.onload = resolve;
             script.onerror = reject;
             document.body.appendChild(script);
         });
-        return window.__playgroundGameLoading;
     }
 
     function enterPlayMode() {
         playMode = true;
         hud.classList.add("play-mode");
-        // Ocultar menú (clase play-mode ya lo oculta) y mantener el botón Play/Back
         hud.style.display = "flex";
         if (playgroundTitle) {
             playgroundTitle.style.display = "none";
@@ -315,16 +323,11 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.fromTo(playModeOverlay, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" });
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
-                    loadPlaygroundGame().then(() => {
-                        if (!playMode) return;
-                        if (window.playgroundGame && typeof window.playgroundGame.destroy === "function") {
-                            window.playgroundGame.destroy();
-                        }
-                        if (typeof window.NeonHopGame === "function") {
-                            window.playgroundGame = new window.NeonHopGame("game-canvas");
-                            window.playgroundGame.start();
-                        }
-                    }).catch(() => {});
+                    if (typeof window.NeonHopGame === "function") {
+                        startPlaygroundGame();
+                        return;
+                    }
+                    loadPlaygroundGame().then(startPlaygroundGame).catch(() => {});
                 });
             });
         }

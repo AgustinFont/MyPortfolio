@@ -59,9 +59,14 @@ class NeonHopGame {
     }
 
     resize() {
-        const parent = this.canvas.parentElement || this.canvas;
-        const cssW = Math.max(280, parent.clientWidth);
-        const cssH = Math.max(220, parent.clientHeight);
+        if (!this.canvas || !this.ctx) return;
+        const parent = this.canvas.parentElement || this.overlay || this.canvas;
+        let cssW = parent.clientWidth || 0;
+        let cssH = parent.clientHeight || 0;
+        if (cssW < 200 || cssH < 160) {
+            cssW = Math.min(960, Math.max(320, window.innerWidth - 48));
+            cssH = Math.min(640, Math.max(240, window.innerHeight - 48));
+        }
         this.w = cssW;
         this.h = cssH;
         this.dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -419,6 +424,9 @@ class NeonHopGame {
     }
 
     start() {
+        if (!this.ctx) return;
+        this.resize();
+        this.render();
         if (this.running) return;
         this.running = true;
         this.lastTs = 0;

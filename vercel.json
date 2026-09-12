@@ -56,7 +56,7 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!assets/|images/|models/|.*\\.(?:js|css|png|jpg|jpeg|webp|gif|svg|glb|pdf|ico|map)).*)",
       "destination": "/index.html"
     }
   ]

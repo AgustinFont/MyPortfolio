@@ -439,7 +439,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     justify-content: center;
     padding: 20px;
     background: rgba(10, 10, 21, 0.95);
-    z-index: 24;
+    z-index: 80;
 }
 
 .coming-soon-wrapper {
@@ -511,7 +511,7 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     position: absolute;
     top: 20px;
     left: 20px;
-    z-index: 25;
+    z-index: 81;
 }
 
 @media (max-width: 768px) {
