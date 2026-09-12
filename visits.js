@@ -19,7 +19,7 @@
         const badge = document.getElementById("visit-counter");
         if (badge) {
             badge.classList.add("is-ready");
-            badge.setAttribute("aria-label", `Page loads: ${formatted}`);
+            badge.setAttribute("aria-label", `People who opened this portfolio: ${formatted}`);
         }
     }
 

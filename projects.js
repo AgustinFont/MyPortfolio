@@ -174,6 +174,10 @@ function openProjectModal(project) {
         return;
     }
 
+    if (typeof window.addEasterEgg === "function") {
+        window.addEasterEgg("Deep Dive", "Opened a project in detail", "egg-deep-dive");
+    }
+
     // Llenar datos del modal
     const titleEl = document.getElementById('project-title');
     const genreEl = document.getElementById('project-genre');

@@ -54,10 +54,11 @@
         </ul>
     </div>
 
-    <div id="visit-counter" class="visit-counter" aria-label="Page load counter" aria-live="polite">
+    <div id="visit-counter" class="visit-counter" tabindex="0" aria-label="People who opened this portfolio" aria-live="polite">
         <span class="visit-counter-led" aria-hidden="true"></span>
         <span class="visit-counter-label">ACCESS</span>
         <span class="visit-counter-value" data-visit-count>------</span>
+        <span class="visit-counter-tip">People who opened this portfolio</span>
     </div>
 
     <!-- === 3D SCENE === -->
@@ -387,9 +388,10 @@
             <div class="easter-counter-container">
                 <div class="easter-counter-display">
                     <span class="counter-label">EASTER EGGS FOUND:</span>
-                    <span class="counter-value" id="easter-counter">0</span>
+                    <span class="counter-value" id="easter-counter">0/5</span>
                 </div>
             </div>
+            <p class="easter-hint">Leave no door unopened.</p>
             <div class="easter-eggs-list" id="easter-eggs-list">
                 <!-- Los easter eggs encontrados se mostrarán aquí -->
             </div>

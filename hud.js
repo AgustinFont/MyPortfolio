@@ -22,6 +22,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const menuSections = ["about", "projects", "looking", "contact", "easter"];
+    const visitedSections = new Set();
+
+    function markSectionVisited(sectionId) {
+        if (!menuSections.includes(sectionId)) return;
+        visitedSections.add(sectionId);
+        if (visitedSections.size === menuSections.length && typeof window.addEasterEgg === "function") {
+            window.addEasterEgg("CV Explorer", "Visited every main section", "egg-cv-explorer");
+        }
+    }
+
     // === Mostrar sección seleccionada ===
     function goToSection(sectionId) {
         if (playMode) return; // en modo juego no navega secciones
@@ -78,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof window.rotateToSection === "function") {
             window.rotateToSection(sectionId);
         }
+        markSectionVisited(sectionId);
     }
 
     // === Volver al menú principal ===
@@ -336,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!window.__playModeUnlocked) {
             window.__playModeUnlocked = true;
             if (typeof window.addEasterEgg === "function") {
-                window.addEasterEgg("Ready to play", "Unlock play mode");
+                window.addEasterEgg("Ready to Play", "Opened the playground", "egg-ready-to-play");
             }
             // Si hay un sistema de notificaciones, podríamos disparar aquí (placeholder)
         }
@@ -380,6 +392,9 @@ window.downloadCV = function () {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    if (typeof window.addEasterEgg === "function") {
+        window.addEasterEgg("Paper Trail", "Downloaded the CV", "egg-paper-trail");
+    }
 };
 
 window.sharePortfolio = function () {

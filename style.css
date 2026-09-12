@@ -277,7 +277,6 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     align-items: center;
     gap: 10px;
     padding: 8px 12px;
-    pointer-events: none;
     font-family: "Press Start 2P", monospace;
     font-size: 9px;
     letter-spacing: 1px;
@@ -287,6 +286,8 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     box-shadow:
         0 0 12px rgba(0, 255, 255, 0.18),
         inset 0 0 8px rgba(0, 255, 255, 0.08);
+    pointer-events: auto;
+    cursor: help;
     opacity: 0;
     animation: visitCounterIn 0.6s ease 4s forwards;
 }
@@ -312,6 +313,42 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 
 .visit-counter.is-ready .visit-counter-value {
     animation: visitCountTick 0.45s ease-out;
+}
+
+.visit-counter-tip {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 10px);
+    width: max-content;
+    max-width: 220px;
+    padding: 8px 10px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    font-family: "Press Start 2P", monospace;
+    font-size: 7px;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
+    color: #041018;
+    background: var(--color-primary);
+    border: 1px solid rgba(0, 255, 255, 0.9);
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.35);
+}
+
+.visit-counter-tip::after {
+    content: "";
+    position: absolute;
+    left: 16px;
+    top: 100%;
+    border: 6px solid transparent;
+    border-top-color: var(--color-primary);
+}
+
+.visit-counter:hover .visit-counter-tip,
+.visit-counter:focus-visible .visit-counter-tip {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .hud.play-mode ~ .visit-counter {
@@ -1899,11 +1936,13 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
 }
 
 .easter-hint {
-    font-size: 0.9em;
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.55em;
     color: #88ffff;
     text-align: center;
-    opacity: 0.8;
-    font-style: italic;
+    opacity: 0.75;
+    line-height: 1.7;
+    max-width: 520px;
 }
 
 .easter-eggs-list {
@@ -1918,10 +1957,33 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     background: rgba(0, 255, 255, 0.05);
     border: 1px solid rgba(0, 255, 255, 0.3);
     border-radius: 4px;
-    padding: 15px;
+    padding: 15px 18px;
     color: #ffffff;
-    font-size: 0.9em;
     animation: eggFound 0.5s ease-out;
+}
+
+.easter-egg-item.is-locked {
+    opacity: 0.55;
+    border-style: dashed;
+    animation: none;
+}
+
+.egg-item-title {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.72em;
+    color: var(--color-secondary);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.easter-egg-item.is-locked .egg-item-title {
+    color: #88ffff;
+}
+
+.egg-item-desc {
+    font-size: 0.92em;
+    color: #cfefff;
+    line-height: 1.45;
 }
 
 @keyframes eggFound {
@@ -3261,6 +3323,22 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         top: 14px;
         font-size: 8px;
         padding: 7px 10px;
+    }
+
+    .visit-counter-tip {
+        left: auto;
+        right: 0;
+        bottom: auto;
+        top: calc(100% + 10px);
+    }
+
+    .visit-counter-tip::after {
+        left: auto;
+        right: 16px;
+        top: auto;
+        bottom: 100%;
+        border-top-color: transparent;
+        border-bottom-color: var(--color-primary);
     }
 
     #menu {
