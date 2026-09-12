@@ -18,6 +18,7 @@
                 <div class="terminal-line">> SYSTEM INITIALIZING...</div>
                 <div class="terminal-line">> LOADING ASSETS...</div>
                 <div class="terminal-line">> CONNECTING TO SERVER...</div>
+                <div class="terminal-line">> ACCESS #<span data-visit-count>------</span> GRANTED</div>
                 <div class="terminal-line">> READY</div>
             </div>
             <div class="scanline-overlay"></div>
@@ -48,6 +49,12 @@
             <li data-section="contact">CONTACT</li>
             <li data-section="easter">EASTER EGGS</li>
         </ul>
+    </div>
+
+    <div id="visit-counter" class="visit-counter" aria-label="Page load counter" aria-live="polite">
+        <span class="visit-counter-led" aria-hidden="true"></span>
+        <span class="visit-counter-label">ACCESS</span>
+        <span class="visit-counter-value" data-visit-count>------</span>
     </div>
 
     <!-- === 3D SCENE === -->
@@ -410,6 +417,7 @@
     <script src="https://unpkg.com/gsap@3.12.5/ScrollTrigger.min.js"></script>
     <!-- <audio id="intro-beep" src="assets/intro-beep.mp3" preload="auto"></audio> -->
     <script src="effects.js"></script>
+    <script src="visits.js"></script>
 
     <!-- TUS SCRIPTS -->
     <script src="projects-data.js"></script>

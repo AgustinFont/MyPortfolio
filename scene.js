@@ -853,7 +853,7 @@ function initLandingAnimation() {
         landingScreen.style.display = "none";
       }, 1000);
     }, 500);
-  }, 3000); // DuraciÃ³n total de la animaciÃ³n: ~3.5 segundos
+  }, 3800);
 }
 
 // --- Fade inicial (solo si no hay landing screen) ---

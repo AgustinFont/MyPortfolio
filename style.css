@@ -267,6 +267,79 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
     }
 }
 
+/* === PAGE LOAD COUNTER === */
+.visit-counter {
+    position: fixed;
+    left: 18px;
+    bottom: 18px;
+    z-index: 20;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    pointer-events: none;
+    font-family: "Press Start 2P", monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--color-primary);
+    background: rgba(10, 10, 21, 0.72);
+    border: 1px solid rgba(0, 255, 255, 0.45);
+    box-shadow:
+        0 0 12px rgba(0, 255, 255, 0.18),
+        inset 0 0 8px rgba(0, 255, 255, 0.08);
+    opacity: 0;
+    animation: visitCounterIn 0.6s ease 4s forwards;
+}
+
+.visit-counter-led {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #39ff14;
+    box-shadow: 0 0 8px #39ff14;
+    animation: visitLedPulse 1.6s ease-in-out infinite;
+}
+
+.visit-counter-label {
+    color: var(--color-secondary);
+}
+
+.visit-counter-value {
+    min-width: 6ch;
+    color: var(--color-primary);
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+}
+
+.visit-counter.is-ready .visit-counter-value {
+    animation: visitCountTick 0.45s ease-out;
+}
+
+.hud.play-mode ~ .visit-counter {
+    opacity: 0 !important;
+    visibility: hidden;
+}
+
+@keyframes visitCounterIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes visitLedPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+}
+
+@keyframes visitCountTick {
+    0% { transform: scale(1.18); color: #ffffff; }
+    100% { transform: scale(1); }
+}
+
 /* === HUD === */
 .hud {
     position: absolute;
@@ -3187,6 +3260,15 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         align-items: center;
     }
 
+    .visit-counter {
+        left: auto;
+        right: 12px;
+        bottom: auto;
+        top: 14px;
+        font-size: 8px;
+        padding: 7px 10px;
+    }
+
     #menu {
         text-align: center;
     }
@@ -3316,6 +3398,14 @@ a, button, .category-tab, .project-item, .play-btn-overlay, .interactive-link, #
         right: 50%;
         transform: translateX(50%);
         min-width: 160px;
+    }
+
+    .visit-counter {
+        top: 10px;
+        right: 10px;
+        font-size: 7px;
+        padding: 6px 8px;
+        gap: 7px;
     }
 
     #menu li {
