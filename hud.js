@@ -386,15 +386,18 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- Utilidades de contacto ---
 window.downloadCV = function () {
     const cvUrl = "assets/CV_Agustin_Gonzalez_Font.pdf";
-    const link = document.createElement("a");
-    link.href = cvUrl;
-    link.download = "CV_Agustin_Gonzalez_Font.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
     if (typeof window.addEasterEgg === "function") {
         window.addEasterEgg("Paper Trail", "Downloaded the CV", "egg-paper-trail");
     }
+    const popup = window.open(cvUrl, "_blank", "noopener,noreferrer");
+    if (popup) {
+        try {
+            popup.blur();
+        } catch {
+            // ignore
+        }
+    }
+    window.focus();
 };
 
 window.sharePortfolio = function () {

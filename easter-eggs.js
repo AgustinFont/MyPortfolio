@@ -71,39 +71,73 @@ function foundEasterEgg(eggId, eggName, eggDescription) {
 }
 
 function showEasterEggNotification(eggName) {
-    const notification = document.createElement("div");
-    notification.className = "easter-notification";
-    notification.textContent = `EASTER EGG FOUND: ${eggName}`;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: rgba(0, 255, 255, 0.9);
-        color: #000;
-        padding: 15px 25px;
-        border: 2px solid #00ffff;
-        border-radius: 4px;
-        font-family: "Press Start 2P", monospace;
-        font-size: 0.7em;
-        z-index: 1000;
-        box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-        animation: slideIn 0.3s ease-out;
-    `;
+    const reveal = () => {
+        const notification = document.createElement("div");
+        notification.className = "easter-notification";
+        notification.textContent = `EASTER EGG FOUND: ${eggName}`;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 255, 255, 0.9);
+            color: #000;
+            padding: 15px 25px;
+            border: 2px solid #00ffff;
+            border-radius: 4px;
+            font-family: "Press Start 2P", monospace;
+            font-size: 0.7em;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            animation: slideIn 0.3s ease-out;
+        `;
 
-    document.body.appendChild(notification);
+        document.body.appendChild(notification);
 
-    setTimeout(() => {
-        if (window.gsap) {
-            gsap.to(notification, {
-                opacity: 0,
-                y: -20,
-                duration: 0.3,
-                onComplete: () => notification.remove()
-            });
-        } else {
-            notification.remove();
+        setTimeout(() => {
+            if (window.gsap) {
+                gsap.to(notification, {
+                    opacity: 0,
+                    y: -20,
+                    duration: 0.3,
+                    onComplete: () => notification.remove()
+                });
+            } else {
+                notification.remove();
+            }
+        }, 4500);
+    };
+
+    if (document.hidden) {
+        const wait = () => {
+            if (!document.hidden) {
+                document.removeEventListener("visibilitychange", wait);
+                reveal();
+            }
+        };
+        document.addEventListener("visibilitychange", wait);
+        return;
+    }
+
+    requestAnimationFrame(() => {
+        if (document.hidden) {
+            showEasterEggNotification(eggName);
+            return;
         }
-    }, 3000);
+        reveal();
+    });
+}
+
+function openWithoutLeaving(url) {
+    if (!url) return;
+    const popup = window.open(url, "_blank", "noopener,noreferrer");
+    if (popup) {
+        try {
+            popup.blur();
+        } catch {
+            // Some browsers block access to the new tab.
+        }
+    }
+    window.focus();
 }
 
 function updateEasterEggsList() {
@@ -136,12 +170,14 @@ document.addEventListener("DOMContentLoaded", () => {
     initEasterEggCounter();
 
     document.querySelectorAll(".linkedin-card, .email-card, .whatsapp-card").forEach((card) => {
-        card.addEventListener("click", () => {
+        card.addEventListener("click", (e) => {
+            e.preventDefault();
             foundEasterEgg(
                 "egg-signal-sent",
                 "Signal Sent",
                 "Reached out via LinkedIn, email or WhatsApp"
             );
+            openWithoutLeaving(card.href);
         });
     });
 });
