@@ -29,7 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
         inSection = true;
 
         const content = document.getElementById(sectionId + "-content");
-        if (!hud || !content) return;
+        if (!hud || !content) {
+            inSection = false;
+            return;
+        }
+
+        if (typeof window.setSceneActive === "function") {
+            window.setSceneActive(false);
+        }
+        if (sectionId === "about" && typeof window.hydrateAboutMedia === "function") {
+            window.hydrateAboutMedia();
+        }
 
         if (playgroundTitle) {
             playgroundTitle.style.display = "none";
@@ -76,13 +86,18 @@ document.addEventListener('DOMContentLoaded', () => {
             // salir de modo juego
             playMode = false;
             hud.classList.remove("play-mode");
+            if (window.playgroundGame && typeof window.playgroundGame.destroy === "function") {
+                window.playgroundGame.destroy();
+                window.playgroundGame = null;
+            }
             if (playModeOverlay) {
+                gsap.killTweensOf(playModeOverlay);
                 gsap.to(playModeOverlay, {
                     opacity: 0,
                     duration: 0.4,
                     onComplete: () => {
+                        if (playMode) return;
                         playModeOverlay.style.display = "none";
-                        playModeOverlay.innerHTML = "";
                         playModeOverlay.style.opacity = 1;
                     }
                 });
@@ -91,6 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.fromTo(hud, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" });
             if (playgroundTitle) {
                 playgroundTitle.style.display = "flex";
+            }
+            if (typeof window.setSceneActive === "function") {
+                window.setSceneActive(true);
             }
             return;
         }
@@ -119,6 +137,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (typeof window.refreshScrollTriggers === "function") {
                 window.refreshScrollTriggers();
+            }
+            if (typeof window.setSceneActive === "function") {
+                window.setSceneActive(true);
             }
         }, 400);
     };
@@ -260,6 +281,23 @@ document.addEventListener('DOMContentLoaded', () => {
     updateMenu();
 
     // === PLAY MODE TOGGLE ===
+    function loadPlaygroundGame() {
+        if (typeof window.NeonHopGame === "function") {
+            return Promise.resolve();
+        }
+        if (window.__playgroundGameLoading) {
+            return window.__playgroundGameLoading;
+        }
+        window.__playgroundGameLoading = new Promise((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = "game.js";
+            script.onload = resolve;
+            script.onerror = reject;
+            document.body.appendChild(script);
+        });
+        return window.__playgroundGameLoading;
+    }
+
     function enterPlayMode() {
         playMode = true;
         hud.classList.add("play-mode");
@@ -268,19 +306,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (playgroundTitle) {
             playgroundTitle.style.display = "none";
         }
+        if (typeof window.setSceneActive === "function") {
+            window.setSceneActive(false);
+        }
         if (playModeOverlay) {
+            gsap.killTweensOf(playModeOverlay);
             playModeOverlay.style.display = "flex";
-            playModeOverlay.innerHTML = `
-                <div class="coming-soon-wrapper">
-                  <div class="coming-soon-title">Interactive window coming soon</div>
-                  <button id="play-mode-back-inline" class="play-mode-back-btn">Back</button>
-                </div>
-            `;
-            const backInline = document.getElementById("play-mode-back-inline");
-            if (backInline) {
-                backInline.addEventListener("click", () => window.backToMenu());
-            }
             gsap.fromTo(playModeOverlay, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" });
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    loadPlaygroundGame().then(() => {
+                        if (!playMode) return;
+                        if (window.playgroundGame && typeof window.playgroundGame.destroy === "function") {
+                            window.playgroundGame.destroy();
+                        }
+                        if (typeof window.NeonHopGame === "function") {
+                            window.playgroundGame = new window.NeonHopGame("game-canvas");
+                            window.playgroundGame.start();
+                        }
+                    }).catch(() => {});
+                });
+            });
         }
 
         // Notificación y egg (solo primera vez)

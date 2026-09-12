@@ -69,6 +69,15 @@ function updateAboutAge() {
     ageEl.textContent = String(getAgeFromBirthdate(2000, 5, 14));
 }
 
+window.hydrateAboutMedia = function () {
+    document.querySelectorAll('#about-content img[data-src]').forEach((img) => {
+        if (!img.getAttribute('src')) {
+            img.src = img.dataset.src;
+        }
+        img.removeAttribute('data-src');
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     updateAboutAge();
 

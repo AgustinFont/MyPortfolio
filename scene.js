@@ -14,7 +14,9 @@ let isDraggingModel = false;
 let dragStartX = 0;
 let dragStartRotationY = 0;
 let dragTargetRotationY = 0;
-let baseModelRotationY = 0; // rotaciÃ³n base para volver suave
+let baseModelRotationY = 0;
+let sceneActive = true;
+let gridFrame = 0;
 
 // Ajustar FOV segÃºn el dispositivo
 const isMobile = window.innerWidth < 768;
@@ -47,12 +49,12 @@ function initRenderer() {
   if (renderer) return; // Ya inicializado
 
   renderer = new THREE.WebGLRenderer({
-    antialias: true,
+    antialias: !isMobile,
     alpha: true,
     powerPreference: "high-performance",
   });
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.25));
   renderer.setClearColor(0x0a0a15, 1);
 
   const sceneContainer = document.getElementById("scene-container");
@@ -120,7 +122,7 @@ function loadModels() {
         characterMixer = new THREE.AnimationMixer(characterModel);
         characterAnimationAction = characterMixer.clipAction(gltf.animations[0]);
         characterAnimationAction.play();
-        console.log("AnimaciÃ³n idle encontrada y reproduciendo");
+        // idle clip ready
       }
 
       // Posicionar y orientar para la secciÃ³n Projects
@@ -147,27 +149,28 @@ function loadModels() {
 
       modelsGroup.add(characterModel);
 
+      const projectsOpen = document.getElementById("projects-content");
+      if (projectsOpen && (projectsOpen.style.display === "flex" || projectsOpen.style.display === "block")) {
+        characterModel.visible = true;
+        modelsGroup.visible = true;
+      }
+
       // Exponer para ajustes desde consola (debug)
       window.characterModel = characterModel;
       window.modelsGroup = modelsGroup;
-      console.log("Character cargado");
     },
-    (progress) => {
-      if (progress.total > 0) {
-        console.log(
-          "Cargando character:",
-          ((progress.loaded / progress.total) * 100).toFixed(0) + "%"
-        );
-      }
-    },
+    undefined,
     (error) => {
       console.error("Error cargando character:", error);
     }
   );
 }
 
-// Cargar modelos apenas estÃ© disponible el loader
-loadModels();
+if ("requestIdleCallback" in window) {
+  requestIdleCallback(() => loadModels(), { timeout: 5000 });
+} else {
+  setTimeout(loadModels, 4500);
+}
 
 // Helper para ocultar el modelo
 function hideAllObjects() {
@@ -177,7 +180,7 @@ function hideAllObjects() {
 
 // --- Grid + entorno visual (interactivo) ---
 const gridSize = 28;
-const gridSegments = 28; // mayor tamaño, densidad similar
+const gridSegments = isMobile ? 14 : 20;
 const baseGridColor = new THREE.Color(0x224466);
 const highlightGridColor = new THREE.Color(0x66ccff);
 const accentGridColor = new THREE.Color(0xff8a5c); // tono naranja/rosa para el pico
@@ -294,11 +297,13 @@ function spawnFireworkAt(origin, power = 1) {
   });
   scene.add(points);
 
-  // Segundo estallido más pequeño
-  setTimeout(() => {
-    const secondary = origin.clone().add(new THREE.Vector3(randRange(-0.4, 0.4), randRange(0.2, 0.6), randRange(-0.4, 0.4)));
-    spawnFireworkAt(secondary, power * 0.6);
-  }, 180);
+  if (!isMobile && power > 0.8) {
+    setTimeout(() => {
+      if (!sceneActive) return;
+      const secondary = origin.clone().add(new THREE.Vector3(randRange(-0.4, 0.4), randRange(0.2, 0.6), randRange(-0.4, 0.4)));
+      spawnFireworkAt(secondary, power * 0.55);
+    }, 180);
+  }
 }
 
 function spawnFirework(timeNow) {
@@ -307,11 +312,12 @@ function spawnFirework(timeNow) {
 }
 
 function updateAmbient(delta, timeNow) {
+  if (isMobile || !sceneActive) return;
   scheduleAmbient(timeNow);
 
   if (timeNow >= ambientSchedule.nextFirework) {
     spawnFirework(timeNow);
-    ambientSchedule.nextFirework = timeNow + randRange(9, 14);
+    ambientSchedule.nextFirework = timeNow + randRange(10, 16);
   }
 
   for (let i = ambientEntities.length - 1; i >= 0; i--) {
@@ -319,6 +325,8 @@ function updateAmbient(delta, timeNow) {
     const age = timeNow - e.born;
     if (age > e.life) {
       scene.remove(e.obj);
+      e.obj.geometry?.dispose();
+      e.obj.material?.dispose();
       ambientEntities.splice(i, 1);
       continue;
     }
@@ -341,7 +349,7 @@ function updateAmbient(delta, timeNow) {
 
 // --- PartÃ­culas flotantes (optimizado para mÃ³viles) ---
 const particlesGeo = new THREE.BufferGeometry();
-const particleCount = isMobile ? 100 : 200; // Menos partÃ­culas en mÃ³viles
+const particleCount = isMobile ? 40 : 90;
 const positions = new Float32Array(particleCount * 3);
 for (let i = 0; i < particleCount * 3; i++) positions[i] = (Math.random() - 0.5) * 20;
 particlesGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -596,15 +604,12 @@ window.addEventListener("mouseleave", () => {
 function animate() {
   requestAnimationFrame(animate);
 
-  // No renderizar si el renderer no estÃ¡ inicializado
-  if (!renderer) return;
+  if (!renderer || !sceneActive || document.hidden) return;
 
-  // Calcular delta basado en tiempo real para normalizar velocidad de animaciÃ³n
   const delta = clock.getDelta();
   const timeNow = performance.now() * 0.001;
 
-  // Actualizar animaciÃ³n del character
-  if (characterMixer) {
+  if (characterMixer && characterModel && characterModel.visible) {
     characterMixer.update(delta);
   }
 
@@ -623,7 +628,10 @@ function animate() {
   updateAmbient(delta, timeNow);
 
   // Deformación y color de la grid (onda + ruido para irregularidad)
-  if (gridMesh) {
+  if (!isMobile && gridMesh) {
+    gridFrame++;
+    const updateGrid = hasPointer || gridFrame % 3 === 0;
+    if (updateGrid) {
     const positions = gridGeometry.attributes.position.array;
     const colors = gridGeometry.attributes.color.array;
 
@@ -695,6 +703,7 @@ function animate() {
 
     gridGeometry.attributes.position.needsUpdate = true;
     gridGeometry.attributes.color.needsUpdate = true;
+    }
   }
 
   // Aplicar rotaciÃ³n temporal mientras se arrastra el modelo
@@ -724,7 +733,7 @@ function handleResize() {
     renderer.setSize(width, height);
 
     // Ajustar pixel ratio para mejor rendimiento en mÃ³viles
-    const pixelRatio = Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1.5 : 2);
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, window.innerWidth < 768 ? 1 : 1.25);
     renderer.setPixelRatio(pixelRatio);
   }, 100);
 }
@@ -738,6 +747,15 @@ window.addEventListener("orientationchange", () => {
 window.rotateToSection = rotateToSection;
 window.backToMenu = backToMenu;
 window.startDemoTour = startDemoTour;
+window.setSceneActive = function setSceneActive(active) {
+  if (active && !sceneActive) {
+    clock.getDelta();
+  }
+  sceneActive = !!active;
+};
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) clock.getDelta();
+});
 window.triggerSideFireworks = function triggerSideFireworks() {
   if (!camera) return;
   const dir = new THREE.Vector3();

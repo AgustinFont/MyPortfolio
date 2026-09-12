@@ -92,7 +92,7 @@ function renderProjectsGrid() {
         const thumbnailSrc = project.thumbnail || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23003333' width='300' height='200'/%3E%3Ctext fill='%2300ffff' font-family='monospace' font-size='16' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3E${encodeURIComponent(project.title)}%3C/text%3E%3C/svg%3E`;
         
         projectItem.innerHTML = `
-            <img src="${thumbnailSrc}" alt="${project.title}" class="project-thumbnail" 
+            <img src="${thumbnailSrc}" alt="${project.title}" class="project-thumbnail" loading="lazy" decoding="async" 
                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'200\\'%3E%3Crect fill=\\'%23003333\\' width=\\'300\\' height=\\'200\\'/%3E%3Ctext fill=\\'%2300ffff\\' font-family=\\'monospace\\' font-size=\\'16\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dominant-baseline=\\'middle\\'%3E${encodeURIComponent(project.title)}%3C/text%3E%3C/svg%3E'">
             <div class="project-item-info">
                 <h3 class="project-item-title">${project.title}</h3>
@@ -258,28 +258,24 @@ function openProjectModal(project) {
             
             if (item.type === 'video') {
                 const video = document.createElement('video');
-                video.src = item.src;
+                video.dataset.src = item.src;
                 video.muted = true;
                 video.loop = true;
                 video.controls = true;
+                video.preload = 'none';
                 video.className = 'carousel-media';
                 
-                // Agregar manejo de errores
                 video.addEventListener('error', (e) => {
-                    console.error('Error cargando video:', item.src, e);
-                    console.error('Video error details:', video.error);
-                    // Mostrar mensaje de error al usuario
                     const errorMsg = document.createElement('div');
                     errorMsg.className = 'video-error';
                     errorMsg.style.cssText = 'color: #ff0000; padding: 20px; text-align: center;';
-                    errorMsg.textContent = `Error al cargar el video: ${item.src}`;
+                    errorMsg.textContent = `Error al cargar el video`;
                     slide.appendChild(errorMsg);
                 });
                 
-                video.addEventListener('loadeddata', () => {
-                    console.log('Video cargado exitosamente:', item.src);
-                });
-                
+                if (index === 0) {
+                    video.src = item.src;
+                }
                 slide.appendChild(video);
             } else if (item.type === 'youtube') {
                 const iframe = document.createElement('iframe');
@@ -289,17 +285,21 @@ function openProjectModal(project) {
                         ? item.src.split('v=')[1]
                         : item.src;
                 const embedUrl = `https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1&autoplay=0`;
-                iframe.src = embedUrl; // cargar siempre el player
+                iframe.dataset.src = embedUrl;
                 iframe.title = `${project.title} - YouTube`;
                 iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
                 iframe.allowFullscreen = true;
                 iframe.className = 'carousel-media';
+                if (index === 0) iframe.src = embedUrl;
                 slide.appendChild(iframe);
             } else {
                 const img = document.createElement('img');
-                img.src = item.src;
+                img.dataset.src = item.src;
                 img.alt = `${project.title} - Image ${index + 1}`;
                 img.className = 'carousel-media';
+                img.decoding = 'async';
+                img.loading = 'lazy';
+                if (index === 0) img.src = item.src;
                 slide.appendChild(img);
             }
             
@@ -316,13 +316,34 @@ function openProjectModal(project) {
         });
         
         // Función para cambiar de slide
+        function hydrateSlide(slide) {
+            if (!slide) return;
+            const img = slide.querySelector('img');
+            if (img && img.dataset.src && !img.getAttribute('src')) {
+                img.src = img.dataset.src;
+            }
+            const video = slide.querySelector('video');
+            if (video && video.dataset.src && !video.getAttribute('src')) {
+                video.src = video.dataset.src;
+                video.load();
+            }
+            const iframe = slide.querySelector('iframe');
+            if (iframe && iframe.dataset.src && !iframe.getAttribute('src')) {
+                iframe.src = iframe.dataset.src;
+            }
+        }
+
         function goToSlide(index) {
             if (index < 0 || index >= project.media.items.length) return;
             
             currentSlide = index;
+            const slides = carouselSlides.querySelectorAll('.carousel-slide');
+            hydrateSlide(slides[index]);
+            hydrateSlide(slides[index + 1]);
+            hydrateSlide(slides[index - 1]);
             
             // Actualizar slides y medios
-            carouselSlides.querySelectorAll('.carousel-slide').forEach((slide, i) => {
+            slides.forEach((slide, i) => {
                 const isActive = i === index;
                 slide.classList.toggle('active', isActive);
 

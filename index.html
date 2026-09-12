@@ -5,6 +5,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes" />
     <title>Agus's Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="stylesheet" href="style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
@@ -66,7 +69,7 @@
         <div class="section-inner about-section">
             <div class="about-header">
                 <div class="profile-photo-container">
-                    <img src="images/profile.jpg" alt="Agustin Gonzalez Font" class="profile-photo" 
+                    <img data-src="images/profile.jpg" alt="Agustin Gonzalez Font" class="profile-photo" loading="lazy" decoding="async" 
                          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27250%27 height=%27250%27%3E%3Crect fill=%27%23003333%27 width=%27250%27 height=%27250%27/%3E%3Ctext fill=%27%2300ffff%27 font-family=%27monospace%27 font-size=%2716%27 x=%2750%25%27 y=%2750%25%27 text-anchor=%27middle%27 dominant-baseline=%27middle%27%3EPHOTO%3C/text%3E%3C/svg%3E'">
                 </div>
                 <h1 class="profile-name">Agustin Gonzalez Font</h1>
@@ -92,7 +95,7 @@
                 <div class="skills-grid" id="skills-grid">
                     <div class="skill-badge" data-tooltip="Game Engine">
                         <div class="skill-icon">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/unity/unity-original.svg" alt="Unity" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <img loading="lazy" decoding="async" data-src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/unity/unity-original.svg" alt="Unity" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span style="display:none;">U</span>
                         </div>
                         <span class="skill-name">Unity</span>
@@ -114,56 +117,56 @@
                     </div>
                     <div class="skill-badge" data-tooltip="Game Engine">
                         <div class="skill-icon">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/unrealengine/unrealengine-original.svg" alt="Unreal Engine" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <img loading="lazy" decoding="async" data-src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/unrealengine/unrealengine-original.svg" alt="Unreal Engine" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span style="display:none;">UE</span>
                         </div>
                         <span class="skill-name">Unreal Engine</span>
                     </div>
                     <div class="skill-badge" data-tooltip="Image Editing">
                         <div class="skill-icon">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/photoshop/photoshop-plain.svg" alt="Photoshop" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <img loading="lazy" decoding="async" data-src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/photoshop/photoshop-plain.svg" alt="Photoshop" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span style="display:none;">PS</span>
                         </div>
                         <span class="skill-name">Photoshop</span>
                     </div>
                     <div class="skill-badge" data-tooltip="Vector Graphics">
                         <div class="skill-icon">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg" alt="Illustrator" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <img loading="lazy" decoding="async" data-src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg" alt="Illustrator" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span style="display:none;">AI</span>
                         </div>
                         <span class="skill-name">Illustrator</span>
                     </div>
                     <div class="skill-badge" data-tooltip="Motion Graphics">
                         <div class="skill-icon">
-                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/adobeaftereffects.svg" alt="After Effects" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <img loading="lazy" decoding="async" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/adobeaftereffects.svg" alt="After Effects" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span style="display:none;">AE</span>
                         </div>
                         <span class="skill-name">After Effects</span>
                     </div>
                     <div class="skill-badge" data-tooltip="Version Control">
                         <div class="skill-icon">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <img loading="lazy" decoding="async" data-src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span style="display:none;">GH</span>
                         </div>
                         <span class="skill-name">GitHub</span>
                     </div>
                     <div class="skill-badge" data-tooltip="3D Modeling">
                         <div class="skill-icon">
-                            <img src="https://www.autodesk.com/content/dam/autodesk/www/products/3ds-max/product-icon/3ds-max-icon-128.png" alt="3ds Max" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <img loading="lazy" decoding="async" data-src="https://www.autodesk.com/content/dam/autodesk/www/products/3ds-max/product-icon/3ds-max-icon-128.png" alt="3ds Max" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span style="display:none;">3DS</span>
                         </div>
                         <span class="skill-name">3D Modeling</span>
                     </div>
                     <div class="skill-badge" data-tooltip="Texture Painting">
                         <div class="skill-icon">
-                            <img src="https://www.adobe.com/content/dam/shared/images/product-icons/svg/substance-painter.svg" alt="Substance Painter" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <img loading="lazy" decoding="async" data-src="https://www.adobe.com/content/dam/shared/images/product-icons/svg/substance-painter.svg" alt="Substance Painter" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span style="display:none;">SP</span>
                         </div>
                         <span class="skill-name">Substance Painter</span>
                     </div>
                     <div class="skill-badge" data-tooltip="Material Design">
                         <div class="skill-icon">
-                            <img src="https://www.adobe.com/content/dam/shared/images/product-icons/svg/substance-designer.svg" alt="Substance Designer" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <img loading="lazy" decoding="async" data-src="https://www.adobe.com/content/dam/shared/images/product-icons/svg/substance-designer.svg" alt="Substance Designer" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span style="display:none;">SD</span>
                         </div>
                         <span class="skill-name">Substance Designer</span>
@@ -405,28 +408,16 @@
         }
     }
     </script>
-    <script type="module">
-        import * as THREE from 'three';
-        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-        // Exponer global para el código existente
-        window.THREE = THREE;
-        window.GLTFLoader = GLTFLoader;
-        console.log('Three y GLTFLoader cargados correctamente');
-    </script>
-    <script src="gsap.min.js"></script>
-    <script src="https://unpkg.com/gsap@3.12.5/ScrollTrigger.min.js"></script>
-    <!-- <audio id="intro-beep" src="assets/intro-beep.mp3" preload="auto"></audio> -->
-    <script src="effects.js"></script>
-    <script src="visits.js"></script>
-
-    <!-- TUS SCRIPTS -->
-    <script src="projects-data.js"></script>
+    <script defer src="gsap.min.js"></script>
+    <script defer src="https://unpkg.com/gsap@3.12.5/ScrollTrigger.min.js"></script>
+    <script defer src="effects.js"></script>
+    <script defer src="visits.js"></script>
+    <script defer src="projects-data.js"></script>
     <script type="module" src="scene.js"></script>
-    <script src="hud.js"></script>
-    <script src="projects.js"></script>
-    <script src="easter-eggs.js"></script>
-    <script src="about-interactive.js"></script>
-    <script src="game.js"></script>
+    <script defer src="hud.js"></script>
+    <script defer src="projects.js"></script>
+    <script defer src="easter-eggs.js"></script>
+    <script defer src="about-interactive.js"></script>
 
 </body>
 
