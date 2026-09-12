@@ -68,12 +68,14 @@ function refreshEasterComplete() {
         if (label) label.textContent = "ROOT";
         if (tip) tip.textContent = "All secrets unlocked";
         badge.setAttribute("aria-label", "Root access: all secrets unlocked");
-        document.body.classList.add("root-access-flash");
-        setTimeout(() => document.body.classList.remove("root-access-flash"), 1400);
-        if (typeof window.triggerSideFireworks === "function") {
-            window.triggerSideFireworks();
-            setTimeout(() => window.triggerSideFireworks(), 280);
-        }
+        waitUntilPortfolioFront(() => {
+            document.body.classList.add("root-access-flash");
+            setTimeout(() => document.body.classList.remove("root-access-flash"), 1400);
+            if (typeof window.triggerSideFireworks === "function") {
+                window.triggerSideFireworks();
+                setTimeout(() => window.triggerSideFireworks(), 280);
+            }
+        });
     } else if (!complete && badge) {
         badge.classList.remove("is-root");
         const label = badge.querySelector(".visit-counter-label");
@@ -111,67 +113,109 @@ function foundEasterEgg(eggId, eggName, eggDescription) {
     easterEggsFound++;
     updateEasterEggCounter();
     showEasterEggNotification(eggName);
+}
+
+const TOAST_GRACE_MS = 320;
+const TOAST_RETURN_MS = 500;
+const TOAST_VISIBLE_MS = 9000;
+
+function isPortfolioVisible() {
+    return document.visibilityState === "visible";
+}
+
+function waitUntilPortfolioFront(callback) {
+    let settled = false;
+
+    const finish = () => {
+        if (settled) return;
+        settled = true;
+        document.removeEventListener("visibilitychange", onChange);
+        window.removeEventListener("focus", onChange);
+        callback();
+    };
+
+    const onChange = () => {
+        if (!isPortfolioVisible()) return;
+        window.setTimeout(() => {
+            if (isPortfolioVisible()) finish();
+        }, TOAST_RETURN_MS);
+    };
+
+    window.setTimeout(() => {
+        if (isPortfolioVisible()) {
+            finish();
+            return;
+        }
+        document.addEventListener("visibilitychange", onChange);
+        window.addEventListener("focus", onChange);
+    }, TOAST_GRACE_MS);
+}
+
+function showEasterEggNotification(eggName) {
+    waitUntilPortfolioFront(() => presentEasterToast(eggName));
+}
+
+function presentEasterToast(eggName) {
+    const notification = document.createElement("div");
+    notification.className = "easter-notification";
+    notification.textContent = `EASTER EGG FOUND: ${eggName}`;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 255, 255, 0.9);
+        color: #000;
+        padding: 15px 25px;
+        border: 2px solid #00ffff;
+        border-radius: 4px;
+        font-family: "Press Start 2P", monospace;
+        font-size: 0.7em;
+        z-index: 1000;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        animation: slideIn 0.3s ease-out;
+    `;
+
+    document.body.appendChild(notification);
 
     if (typeof window.triggerSideFireworks === "function") {
         window.triggerSideFireworks();
     }
-}
 
-function showEasterEggNotification(eggName) {
-    const reveal = () => {
-        const notification = document.createElement("div");
-        notification.className = "easter-notification";
-        notification.textContent = `EASTER EGG FOUND: ${eggName}`;
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 255, 255, 0.9);
-            color: #000;
-            padding: 15px 25px;
-            border: 2px solid #00ffff;
-            border-radius: 4px;
-            font-family: "Press Start 2P", monospace;
-            font-size: 0.7em;
-            z-index: 1000;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-            animation: slideIn 0.3s ease-out;
-        `;
+    let visibleFor = 0;
+    let last = performance.now();
+    let rafId = 0;
+    let done = false;
 
-        document.body.appendChild(notification);
-
-        setTimeout(() => {
-            if (window.gsap) {
-                gsap.to(notification, {
-                    opacity: 0,
-                    y: -20,
-                    duration: 0.3,
-                    onComplete: () => notification.remove()
-                });
-            } else {
-                notification.remove();
-            }
-        }, 4500);
+    const dismiss = () => {
+        if (done) return;
+        done = true;
+        cancelAnimationFrame(rafId);
+        if (window.gsap) {
+            gsap.to(notification, {
+                opacity: 0,
+                y: -20,
+                duration: 0.3,
+                onComplete: () => notification.remove()
+            });
+        } else {
+            notification.remove();
+        }
     };
 
-    if (document.hidden) {
-        const wait = () => {
-            if (!document.hidden) {
-                document.removeEventListener("visibilitychange", wait);
-                reveal();
-            }
-        };
-        document.addEventListener("visibilitychange", wait);
-        return;
-    }
-
-    requestAnimationFrame(() => {
-        if (document.hidden) {
-            showEasterEggNotification(eggName);
+    const tick = (now) => {
+        const delta = Math.min(now - last, 48);
+        last = now;
+        if (isPortfolioVisible()) {
+            visibleFor += delta;
+        }
+        if (visibleFor >= TOAST_VISIBLE_MS) {
+            dismiss();
             return;
         }
-        reveal();
-    });
+        rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
 }
 
 function openWithoutLeaving(url) {
