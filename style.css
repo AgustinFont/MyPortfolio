@@ -877,13 +877,12 @@ body.in-section .hud {
 
 .character-sheet {
     display: grid;
-    grid-template-columns: minmax(260px, 0.88fr) minmax(0, 1.22fr);
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.2fr);
+    grid-template-rows: minmax(0, 1fr) auto;
     grid-template-areas:
-        "stage identity"
-        "stage stats"
+        "stage loadout"
         "lore  perks";
-    gap: 10px 28px;
+    gap: 12px 32px;
     width: min(1280px, calc(100% - 4px));
     max-width: min(1280px, calc(100% - 4px));
     max-height: calc(100dvh - 68px);
@@ -891,10 +890,20 @@ body.in-section .hud {
 }
 
 .character-sheet .avatar-stage { grid-area: stage; min-height: 0; }
-.character-sheet .character-identity { grid-area: identity; align-self: start; min-width: 0; }
-.character-sheet .skills-section { grid-area: stats; min-height: 0; }
+.character-sheet .character-loadout { grid-area: loadout; min-width: 0; }
+.character-sheet .character-identity { align-self: start; min-width: 0; }
+.character-sheet .skills-section { min-height: 0; }
 .character-sheet .character-lore { grid-area: lore; }
 .character-sheet .abilities-section { grid-area: perks; min-height: 0; }
+
+.character-loadout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 22px;
+    min-width: 0;
+    align-self: start;
+}
 
 .avatar-stage {
     width: 100%;
@@ -1070,7 +1079,7 @@ body.in-section .hud {
     font-family: "Press Start 2P", monospace;
     font-size: clamp(0.58em, 1.45vw, 0.82em);
     color: #ffffff;
-    margin: 0 0 4px;
+    margin: 0;
     line-height: 1.4;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.45);
 }
@@ -1230,7 +1239,7 @@ body.in-section .hud {
 .character-sheet .skills-section {
     height: auto;
     align-self: start;
-    padding-top: 20px;
+    padding-top: 0;
 }
 
 .character-sheet .abilities-section {
@@ -1379,7 +1388,7 @@ body.in-section .hud {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px 14px;
-    margin: 12px 0 0;
+    margin: 10px 0 0;
     width: 100%;
     border: none;
     background: transparent;
@@ -1932,8 +1941,7 @@ body.in-section .hud {
     .character-sheet {
         grid-template-columns: minmax(240px, 0.9fr) minmax(0, 1.2fr);
         grid-template-areas:
-            "stage identity"
-            "stage stats"
+            "stage loadout"
             "lore  perks";
         gap: 12px 20px;
     }
@@ -2055,6 +2063,9 @@ body.in-section .hud {
 }
 
 @media (max-width: 768px) {
+    .character-loadout {
+        display: contents;
+    }
     .character-sheet {
         grid-template-columns: 1fr;
         grid-template-areas:
@@ -2065,6 +2076,8 @@ body.in-section .hud {
             "perks";
         gap: 18px;
     }
+    .character-sheet .character-identity { grid-area: identity; }
+    .character-sheet .skills-section { grid-area: stats; }
     .avatar-stage-frame {
         max-width: 360px;
         min-height: 320px;
