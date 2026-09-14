@@ -91,6 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
             window.rotateToSection(sectionId);
         }
         markSectionVisited(sectionId);
+        if (sectionId === "easter" && typeof window.clearEasterMenuAlert === "function") {
+            window.clearEasterMenuAlert();
+        }
     }
 
     // === Volver al menú principal ===

@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
-    <link rel="stylesheet" href="style.css?v=r23" />
+    <link rel="stylesheet" href="style.css?v=r28" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
@@ -54,7 +54,17 @@
             <li data-section="projects">PROJECTS</li>
             <li data-section="looking">WHAT I'M LOOKING FOR</li>
             <li data-section="contact">CONTACT</li>
-            <li data-section="easter">EASTER EGGS</li>
+            <li data-section="easter">
+                <span class="menu-egg-label">EASTER EGGS</span>
+                <span class="menu-egg-count" id="menu-egg-count" aria-live="polite">0/5</span>
+                <span class="hud-diamond hud-diamond-alert" id="menu-egg-alert" aria-hidden="true">
+                    <span class="hud-diamond-spin">
+                        <svg viewBox="0 0 16 16" focusable="false">
+                            <polygon points="8,1 15,8 8,15 1,8"/>
+                        </svg>
+                    </span>
+                </span>
+            </li>
         </ul>
     </div>
 
@@ -93,30 +103,28 @@
                 <h2 class="character-class"><span>GAME DEVELOPER /</span> <span>GAME DESIGNER</span></h2>
                 <dl class="character-stats">
                     <div class="character-stat">
+                        <span class="hud-diamond" aria-hidden="true"><span class="hud-diamond-spin"><svg viewBox="0 0 16 16" focusable="false"><polygon points="8,1 15,8 8,15 1,8"/></svg></span></span>
                         <dt>STACK</dt>
                         <dd>Unity / C#</dd>
                     </div>
                     <div class="character-stat">
+                        <span class="hud-diamond" aria-hidden="true"><span class="hud-diamond-spin"><svg viewBox="0 0 16 16" focusable="false"><polygon points="8,1 15,8 8,15 1,8"/></svg></span></span>
                         <dt>EXPERIENCE</dt>
                         <dd>4+ yrs</dd>
                     </div>
                     <div class="character-stat">
+                        <span class="hud-diamond" aria-hidden="true"><span class="hud-diamond-spin"><svg viewBox="0 0 16 16" focusable="false"><polygon points="8,1 15,8 8,15 1,8"/></svg></span></span>
                         <dt>SPECIALTY</dt>
                         <dd>3D &amp; XR Development</dd>
                     </div>
                     <div class="character-stat">
+                        <span class="hud-diamond" aria-hidden="true"><span class="hud-diamond-spin"><svg viewBox="0 0 16 16" focusable="false"><polygon points="8,1 15,8 8,15 1,8"/></svg></span></span>
                         <dt>STATUS</dt>
                         <dd class="status-available"><span class="status-pip" aria-hidden="true"></span> Available</dd>
                     </div>
                 </dl>
             </div>
 
-            <div class="character-lore">
-                <h3>UNIT FILE</h3>
-                <p>I develop interactive 3D and XR applications in Unity/C#, ranging from gameplay systems (combat, exploration, level design) to commercial VR builds tested on Meta Quest 2. Comfortable owning a project end-to-end, from prototype to stable build.</p>
-            </div>
-
-            <div class="character-bottom">
             <div class="skills-section" id="skills-section">
                 <h3>STATS</h3>
                 <div class="core-stats" id="core-stats">
@@ -186,6 +194,11 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="character-lore">
+                <h3>UNIT FILE</h3>
+                <p>I develop interactive 3D and XR applications in Unity/C#, ranging from gameplay systems (combat, exploration, level design) to commercial VR builds tested on Meta Quest 2. Comfortable owning a project end-to-end, from prototype to stable build.</p>
             </div>
             
             <div class="abilities-section" id="abilities-section">
@@ -285,7 +298,6 @@
                         </ul>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>
@@ -501,9 +513,9 @@
     <script defer src="visits.js"></script>
     <script defer src="projects-data.js"></script>
     <script type="module" src="scene.js?v=r5"></script>
-    <script defer src="hud.js?v=r2"></script>
+    <script defer src="hud.js?v=r3"></script>
     <script defer src="projects.js"></script>
-    <script defer src="easter-eggs.js?v=r2"></script>
+    <script defer src="easter-eggs.js?v=r3"></script>
     <script defer src="about-interactive.js?v=r5"></script>
     <script defer src="game.js?v=r3"></script>
 

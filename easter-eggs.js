@@ -86,9 +86,10 @@ function refreshEasterComplete() {
 }
 
 function updateEasterEggCounter() {
+    const countText = `${easterEggsFound}/${EASTER_EGG_CATALOG.length}`;
     const counterEl = document.getElementById("easter-counter");
     if (counterEl) {
-        counterEl.textContent = `${easterEggsFound}/${EASTER_EGG_CATALOG.length}`;
+        counterEl.textContent = countText;
         if (window.gsap) {
             gsap.fromTo(
                 counterEl,
@@ -98,8 +99,36 @@ function updateEasterEggCounter() {
         }
     }
 
+    updateMenuEggHud();
     updateEasterEggsList();
     refreshEasterComplete();
+}
+
+let eggMenuAlert = false;
+
+function updateMenuEggHud() {
+    const countEl = document.getElementById("menu-egg-count");
+    const item = document.querySelector('#menu li[data-section="easter"]');
+    const countText = `${easterEggsFound}/${EASTER_EGG_CATALOG.length}`;
+
+    if (countEl) countEl.textContent = countText;
+    if (item) {
+        item.classList.toggle("has-egg-alert", eggMenuAlert);
+        item.setAttribute("aria-label", eggMenuAlert
+            ? `EASTER EGGS ${countText}, new discovery`
+            : `EASTER EGGS ${countText}`);
+    }
+}
+
+function raiseEasterMenuAlert() {
+    eggMenuAlert = true;
+    updateMenuEggHud();
+}
+
+function clearEasterMenuAlert() {
+    if (!eggMenuAlert) return;
+    eggMenuAlert = false;
+    updateMenuEggHud();
 }
 
 function foundEasterEgg(eggId, eggName, eggDescription) {
@@ -112,6 +141,7 @@ function foundEasterEgg(eggId, eggName, eggDescription) {
     });
     easterEggsFound++;
     updateEasterEggCounter();
+    raiseEasterMenuAlert();
     showEasterEggNotification(eggName);
 }
 
@@ -266,3 +296,4 @@ window.foundEasterEgg = foundEasterEgg;
 window.initEasterEggCounter = initEasterEggCounter;
 window.easterEggsFound = () => easterEggsFound;
 window.refreshEasterComplete = refreshEasterComplete;
+window.clearEasterMenuAlert = clearEasterMenuAlert;
