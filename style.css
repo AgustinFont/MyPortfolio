@@ -1088,7 +1088,7 @@ body.in-section .hud {
 .core-stats {
     display: grid;
     grid-template-rows: repeat(5, auto);
-    gap: 4px;
+    gap: 8px;
     width: 100%;
     height: auto;
     padding: 0;
@@ -1170,7 +1170,9 @@ body.in-section .hud {
     --n: 24;
     --gap: 3px;
     position: relative;
-    height: 6px;
+    width: 62%;
+    max-width: 360px;
+    height: 8px;
     border: 0;
     background: transparent;
     box-shadow: none;
@@ -1228,6 +1230,7 @@ body.in-section .hud {
 .character-sheet .skills-section {
     height: auto;
     align-self: start;
+    padding-top: 20px;
 }
 
 .character-sheet .abilities-section {
@@ -1376,7 +1379,7 @@ body.in-section .hud {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px 14px;
-    margin: 18px 0 0;
+    margin: 28px 0 0;
     width: 100%;
     border: none;
     background: transparent;
@@ -1599,9 +1602,9 @@ body.in-section .hud {
 .character-sheet .skills-section h3,
 .character-sheet .abilities-section h3 {
     text-align: left;
-    margin: 0 0 6px;
+    margin: 0 0 8px;
     font-size: 0.72em;
-    min-height: 1.15em;
+    min-height: 0;
     line-height: 1.25;
 }
 
@@ -1970,8 +1973,9 @@ body.in-section .hud {
         font-size: 0.42em;
     }
     .stat-track {
-        height: 6px;
+        height: 8px;
         --gap: 3px;
+        width: 70%;
     }
     .character-sheet .skills-section h3,
     .character-sheet .abilities-section h3 {
