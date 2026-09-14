@@ -192,8 +192,8 @@ const projectsData = {
             description: "2D platformer with fluid movement mechanics. Inspired by classic games but with a modern touch. Levels designed to maximize fun.",
             tech: ["Unity", "C#", "Aseprite"],
             links: {
-                play: "https://itch.io/...",
-                source: "https://github.com/...",
+                play: null,
+                source: null,
                 steam: null
             },
             role: "Game Designer, Artist"

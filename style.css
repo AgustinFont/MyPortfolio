@@ -864,13 +864,13 @@ body.in-play .visit-counter {
 
 .character-sheet {
     display: grid;
-    grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+    grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
     grid-template-areas:
         "stage identity"
         "stage lore"
         "loadout loadout"
         "traits traits";
-    gap: 22px 28px;
+    gap: 22px 18px;
     width: min(1100px, 96vw);
     max-width: 1100px;
     align-items: start;
@@ -1009,14 +1009,14 @@ body.in-play .visit-counter {
     100% { top: 100%; }
 }
 
-.avatar-stage-caption {
-    margin: 10px 0 0;
+.section-inner p.avatar-stage-caption {
+    margin: 8px 0 0;
     font-family: "Press Start 2P", monospace;
-    font-size: 0.48em;
-    letter-spacing: 1px;
-    color: var(--color-text-dim);
+    font-size: 8px;
+    letter-spacing: 0.6px;
+    color: rgba(180, 210, 230, 0.5);
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 .character-identity {
@@ -1040,12 +1040,27 @@ body.in-play .visit-counter {
 }
 
 .character-class {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.55em;
+    row-gap: 0.3em;
     font-family: "Press Start 2P", monospace;
-    font-size: clamp(0.52em, 1.5vw, 0.7em);
+    font-size: clamp(0.38em, 1.05vw, 0.56em);
     color: #ffffff;
     margin: 0 0 18px;
-    line-height: 1.55;
+    line-height: 1.35;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.45);
+}
+
+.character-class span {
+    white-space: nowrap;
+}
+
+@media (min-width: 901px) {
+    .character-class {
+        flex-wrap: nowrap;
+        white-space: nowrap;
+    }
 }
 
 .core-stats {
@@ -1053,68 +1068,229 @@ body.in-play .visit-counter {
     flex-direction: column;
     gap: 12px;
     width: 100%;
+    padding: 16px;
+    border: 2px solid rgba(0, 255, 255, 0.45);
+    background:
+        linear-gradient(180deg, rgba(0, 255, 255, 0.06), rgba(8, 10, 22, 0.78));
+    box-shadow:
+        0 0 18px rgba(0, 255, 255, 0.12),
+        inset 0 0 18px rgba(0, 255, 255, 0.05);
 }
 
 .stat-row {
     display: grid;
-    grid-template-columns: minmax(92px, 140px) minmax(0, 1fr) auto;
+    grid-template-columns: 52px minmax(0, 1fr);
     align-items: center;
     gap: 12px;
 }
 
+.stat-icon {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #00ffff;
+    background:
+        linear-gradient(180deg, rgba(0, 255, 255, 0.12), rgba(5, 8, 20, 0.95));
+    box-shadow:
+        0 0 12px rgba(0, 255, 255, 0.28),
+        inset 0 0 0 3px #050814,
+        inset 0 0 10px rgba(0, 255, 255, 0.12);
+    image-rendering: pixelated;
+}
+
+.stat-icon::before,
+.stat-icon::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    pointer-events: none;
+}
+
+.stat-icon::before {
+    top: -2px;
+    left: -2px;
+    border-top: 2px solid var(--color-secondary);
+    border-left: 2px solid var(--color-secondary);
+}
+
+.stat-icon::after {
+    bottom: -2px;
+    right: -2px;
+    border-bottom: 2px solid var(--color-secondary);
+    border-right: 2px solid var(--color-secondary);
+}
+
+.stat-icon img,
+.stat-icon svg {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.stat-icon img {
+    filter: brightness(0) saturate(100%) invert(67%) sepia(100%) saturate(1000%) hue-rotate(150deg);
+}
+
+.stat-icon span {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.48em;
+    color: #00ffff;
+}
+
+.stat-icon.csharp-icon .csharp-text {
+    font-size: 0.48em;
+    color: #00ffff;
+    text-shadow: 0 0 6px rgba(0, 255, 255, 0.7);
+}
+
+.stat-body {
+    min-width: 0;
+}
+
+.stat-head {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 7px;
+}
+
 .stat-label {
     font-family: "Press Start 2P", monospace;
-    font-size: 0.52em;
-    color: var(--color-primary);
-    letter-spacing: 0.5px;
+    font-size: 0.55em;
+    color: #e8f6ff;
+    letter-spacing: 1px;
     line-height: 1.35;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.35);
 }
 
 .stat-track {
-    height: 10px;
-    border: 1px solid rgba(0, 255, 255, 0.45);
-    background: rgba(0, 20, 30, 0.7);
+    position: relative;
+    height: 22px;
+    border: 3px solid #00ffff;
+    background: #050814;
+    box-shadow:
+        0 0 12px rgba(0, 255, 255, 0.4),
+        inset 0 0 0 2px #0a0a15;
     overflow: hidden;
-    box-shadow: inset 0 0 8px rgba(0, 255, 255, 0.12);
 }
 
 .stat-fill {
+    position: relative;
     display: block;
     height: 100%;
     width: 100%;
-    background: linear-gradient(90deg, #00ffff, #ff6f00);
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.55);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0 38%, transparent 38%),
+        repeating-linear-gradient(
+            90deg,
+            #00ffff 0 8px,
+            #14ecec 8px 9px,
+            #ff6f00 9px 10px
+        );
+    box-shadow: 0 0 14px rgba(0, 255, 255, 0.55);
     transform: scaleX(0);
     transform-origin: left center;
-    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stat-track::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0 12px,
+        rgba(10, 10, 21, 0.55) 12px 14px
+    );
 }
 
 .character-sheet.is-ready .stat-fill {
     transform: scaleX(var(--fill, 0));
 }
 
-.stat-score {
+.stat-row:nth-child(2) .stat-fill { transition-delay: 0.08s; }
+.stat-row:nth-child(3) .stat-fill { transition-delay: 0.16s; }
+.stat-row:nth-child(4) .stat-fill { transition-delay: 0.24s; }
+.stat-row:nth-child(5) .stat-fill { transition-delay: 0.32s; }
+
+.character-sheet .skills-section,
+.character-sheet .abilities-section {
+    padding: 0;
+    border: none;
+    background: transparent;
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    align-self: stretch;
+}
+
+.perks-board {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    padding: 16px 18px;
+    border: 2px solid rgba(255, 0, 255, 0.5);
+    background:
+        linear-gradient(180deg, rgba(255, 0, 255, 0.08), rgba(8, 10, 22, 0.78));
+    box-shadow:
+        0 0 18px rgba(255, 0, 255, 0.12),
+        inset 0 0 18px rgba(255, 0, 255, 0.05);
+}
+
+.perk-lane {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 10px 14px;
+    align-items: center;
+}
+
+.perk-lane-title {
     font-family: "Press Start 2P", monospace;
-    font-size: 0.48em;
-    color: var(--color-secondary);
-    min-width: 4.5ch;
-    text-align: right;
+    font-size: 0.4em;
+    letter-spacing: 1px;
+    color: #ff00ff;
+    text-shadow: 0 0 8px rgba(255, 0, 255, 0.45);
 }
 
-.perks-grid .perk-badge {
-    min-height: 84px;
+.perk-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-.perks-grid .ability-icon,
-.perks-grid .skill-icon {
-    width: 36px;
-    height: 36px;
+.perk-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px 7px 7px;
+    border: 1px solid rgba(255, 0, 255, 0.4);
+    background: rgba(5, 8, 20, 0.72);
+    color: #f3e8ff;
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.4em;
+    line-height: 1.35;
+    letter-spacing: 0.4px;
 }
 
-.perks-grid .skill-icon img,
-.perks-grid .ability-icon svg {
-    width: 22px;
-    height: 22px;
+.perk-mark {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border: 1px solid #ff00ff;
+    background: rgba(255, 0, 255, 0.12);
+    color: #ff6bff;
+    font-size: 0.82em;
+    box-shadow: 0 0 8px rgba(255, 0, 255, 0.25);
 }
 
 .character-stats {
@@ -1141,9 +1317,29 @@ body.in-play .visit-counter {
 .character-stat dd {
     margin: 0;
     font-family: "Press Start 2P", monospace;
-    font-size: 0.58em;
+    font-size: 0.52em;
     color: #e8f6ff;
     line-height: 1.45;
+}
+
+.status-available {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-pip {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    background: #39ff88;
+    box-shadow: 0 0 8px #39ff88;
+    animation: statusPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
 }
 
 .character-lore {
@@ -1503,15 +1699,37 @@ body.in-play .visit-counter {
         text-align: left;
     }
     .stat-row {
-        grid-template-columns: 86px minmax(0, 1fr) auto;
+        grid-template-columns: 44px minmax(0, 1fr);
         gap: 8px;
     }
+    .stat-icon {
+        width: 44px;
+        height: 44px;
+    }
+    .stat-icon img,
+    .stat-icon svg {
+        width: 24px;
+        height: 24px;
+    }
     .stat-label {
-        font-size: 0.45em;
+        font-size: 0.48em;
+    }
+    .stat-track {
+        height: 16px;
+        border-width: 2px;
     }
     .character-sheet .skills-section h3,
     .character-sheet .abilities-section h3 {
         text-align: center;
+    }
+    .perk-lane {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        justify-items: center;
+        text-align: center;
+    }
+    .perk-chips {
+        justify-content: center;
     }
     .about-scroll-buttons {
         position: static;

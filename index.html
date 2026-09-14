@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
-    <link rel="stylesheet" href="style.css?v=r6" />
+    <link rel="stylesheet" href="style.css?v=r12" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
@@ -90,23 +90,23 @@
             <div class="character-identity">
                 <p class="character-kicker">SELECT CHARACTER</p>
                 <h1 class="profile-name">Agustin Gonzalez Font</h1>
-                <h2 class="character-class">GAME DEVELOPER / GAME DESIGNER</h2>
+                <h2 class="character-class"><span>GAME DEVELOPER /</span> <span>GAME DESIGNER</span></h2>
                 <dl class="character-stats">
                     <div class="character-stat">
                         <dt>STACK</dt>
                         <dd>Unity / C#</dd>
                     </div>
                     <div class="character-stat">
-                        <dt>ORIGIN</dt>
-                        <dd>Argentina</dd>
+                        <dt>EXPERIENCE</dt>
+                        <dd>4+ yrs</dd>
                     </div>
                     <div class="character-stat">
-                        <dt>AGE</dt>
-                        <dd><span id="js-age">26</span></dd>
+                        <dt>SPECIALTY</dt>
+                        <dd>3D &amp; XR Development</dd>
                     </div>
                     <div class="character-stat">
-                        <dt>FOCUS</dt>
-                        <dd>Gameplay systems</dd>
+                        <dt>STATUS</dt>
+                        <dd class="status-available"><span class="status-pip" aria-hidden="true"></span> Available</dd>
                     </div>
                 </dl>
             </div>
@@ -119,98 +119,114 @@
             <div class="skills-section" id="skills-section">
                 <h3>STATS</h3>
                 <div class="core-stats" id="core-stats">
-                    <div class="stat-row">
-                        <span class="stat-label">Unity</span>
-                        <div class="stat-track"><span class="stat-fill" style="--fill: 0.95"></span></div>
-                        <span class="stat-score">4/4</span>
+                    <div class="stat-row" style="--fill: 0.95">
+                        <div class="stat-icon">
+                            <img loading="lazy" decoding="async" data-src="assets/unity.svg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <span style="display:none;">U</span>
+                        </div>
+                        <div class="stat-body">
+                            <div class="stat-head">
+                                <span class="stat-label">Unity</span>
+                            </div>
+                            <div class="stat-track" role="meter" aria-label="Unity" aria-valuemin="0" aria-valuemax="100" aria-valuenow="95">
+                                <span class="stat-fill"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">C#</span>
-                        <div class="stat-track"><span class="stat-fill" style="--fill: 0.75"></span></div>
-                        <span class="stat-score">3/4</span>
+                    <div class="stat-row" style="--fill: 0.75">
+                        <div class="stat-icon csharp-icon">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <polygon points="20,3 36,12 36,28 20,37 4,28 4,12" stroke="#00ffff" stroke-width="2" fill="rgba(0,255,255,0.1)"/>
+                            </svg>
+                            <span class="csharp-text">C#</span>
+                        </div>
+                        <div class="stat-body">
+                            <div class="stat-head">
+                                <span class="stat-label">C#</span>
+                            </div>
+                            <div class="stat-track" role="meter" aria-label="C Sharp" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75">
+                                <span class="stat-fill"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Unreal</span>
-                        <div class="stat-track"><span class="stat-fill" style="--fill: 0.33"></span></div>
-                        <span class="stat-score">1/3</span>
+                    <div class="stat-row" style="--fill: 0.33">
+                        <div class="stat-icon">
+                            <img loading="lazy" decoding="async" data-src="assets/unreal.svg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <span style="display:none;">UE</span>
+                        </div>
+                        <div class="stat-body">
+                            <div class="stat-head">
+                                <span class="stat-label">Unreal</span>
+                            </div>
+                            <div class="stat-track" role="meter" aria-label="Unreal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="33">
+                                <span class="stat-fill"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Game Design</span>
-                        <div class="stat-track"><span class="stat-fill" style="--fill: 0.75"></span></div>
-                        <span class="stat-score">3/4</span>
+                    <div class="stat-row" style="--fill: 0.75">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <rect x="6" y="14" width="28" height="16" rx="4" stroke="#ff6f00" stroke-width="2"/>
+                                <circle cx="15" cy="22" r="3" stroke="#ff6f00" stroke-width="2"/>
+                                <path d="M24 19h6M27 16v6" stroke="#ff6f00" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="stat-body">
+                            <div class="stat-head">
+                                <span class="stat-label">Game Design</span>
+                            </div>
+                            <div class="stat-track" role="meter" aria-label="Game Design" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75">
+                                <span class="stat-fill"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">3D Modeling</span>
-                        <div class="stat-track"><span class="stat-fill" style="--fill: 0.7"></span></div>
-                        <span class="stat-score">2.8/4</span>
+                    <div class="stat-row" style="--fill: 0.7">
+                        <div class="stat-icon">
+                            <img loading="lazy" decoding="async" data-src="assets/threedsmax.svg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <span style="display:none;">3DS</span>
+                        </div>
+                        <div class="stat-body">
+                            <div class="stat-head">
+                                <span class="stat-label">3D Modeling</span>
+                            </div>
+                            <div class="stat-track" role="meter" aria-label="3D Modeling" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70">
+                                <span class="stat-fill"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             
             <div class="abilities-section" id="abilities-section">
                 <h3>PERKS</h3>
-                <div class="abilities-grid perks-grid" id="abilities-grid">
-                    <div class="ability-badge perk-badge" data-tooltip="Vector Graphics">
-                        <div class="ability-icon skill-icon">
-                            <img loading="lazy" decoding="async" data-src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg" alt="Illustrator" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <span style="display:none;">Ai</span>
-                        </div>
-                        <span class="ability-name">Illustrator</span>
+                <div class="perks-board" id="abilities-grid">
+                    <div class="perk-lane">
+                        <span class="perk-lane-title">VISUAL</span>
+                        <ul class="perk-chips">
+                            <li class="perk-chip"><span class="perk-mark">Ai</span> Illustrator</li>
+                            <li class="perk-chip"><span class="perk-mark">Ps</span> Photoshop</li>
+                            <li class="perk-chip"><span class="perk-mark">Ae</span> After Effects</li>
+                        </ul>
                     </div>
-                    <div class="ability-badge perk-badge" data-tooltip="Image Editing">
-                        <div class="ability-icon skill-icon">
-                            <img loading="lazy" decoding="async" data-src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/photoshop/photoshop-plain.svg" alt="Photoshop" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <span style="display:none;">Ps</span>
-                        </div>
-                        <span class="ability-name">Photoshop</span>
+                    <div class="perk-lane">
+                        <span class="perk-lane-title">XR</span>
+                        <ul class="perk-chips">
+                            <li class="perk-chip"><span class="perk-mark">VR</span> VR Dev</li>
+                            <li class="perk-chip"><span class="perk-mark">AR</span> AR Dev</li>
+                        </ul>
                     </div>
-                    <div class="ability-badge perk-badge" data-tooltip="Motion Graphics">
-                        <div class="ability-icon skill-icon">
-                            <img loading="lazy" decoding="async" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/adobeaftereffects.svg" alt="After Effects" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <span style="display:none;">Ae</span>
-                        </div>
-                        <span class="ability-name">After Effects</span>
+                    <div class="perk-lane">
+                        <span class="perk-lane-title">3D</span>
+                        <ul class="perk-chips">
+                            <li class="perk-chip"><span class="perk-mark">SP</span> Painter</li>
+                            <li class="perk-chip"><span class="perk-mark">SD</span> Designer</li>
+                        </ul>
                     </div>
-                    <div class="ability-badge perk-badge" data-tooltip="VR Development">
-                        <div class="ability-icon">
-                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path d="M10 15C10 12.7909 11.7909 11 14 11H26C28.2091 11 30 12.7909 30 15V25C30 27.2091 28.2091 29 26 29H14C11.7909 29 10 27.2091 10 25V15Z" fill="#ff00ff" fill-opacity="0.2" stroke="#ff00ff" stroke-width="2"/>
-                                <ellipse cx="16" cy="20" rx="3" ry="3" fill="none" stroke="#ff00ff" stroke-width="2"/>
-                                <ellipse cx="24" cy="20" rx="3" ry="3" fill="none" stroke="#ff00ff" stroke-width="2"/>
-                            </svg>
-                        </div>
-                        <span class="ability-name">VR</span>
-                    </div>
-                    <div class="ability-badge perk-badge" data-tooltip="AR Development">
-                        <div class="ability-icon">
-                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <rect x="5" y="15" width="30" height="20" rx="2" fill="none" stroke="#ff00ff" stroke-width="2"/>
-                                <path d="M10 10L20 5L30 10" stroke="#ff00ff" stroke-width="2" stroke-linecap="round"/>
-                                <circle cx="20" cy="25" r="5" fill="none" stroke="#ff00ff" stroke-width="2"/>
-                            </svg>
-                        </div>
-                        <span class="ability-name">AR</span>
-                    </div>
-                    <div class="ability-badge perk-badge" data-tooltip="Texture Painting">
-                        <div class="ability-icon skill-icon">
-                            <img loading="lazy" decoding="async" data-src="https://www.adobe.com/content/dam/shared/images/product-icons/svg/substance-painter.svg" alt="Substance Painter" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <span style="display:none;">SP</span>
-                        </div>
-                        <span class="ability-name">S. Painter</span>
-                    </div>
-                    <div class="ability-badge perk-badge" data-tooltip="Material Design">
-                        <div class="ability-icon skill-icon">
-                            <img loading="lazy" decoding="async" data-src="https://www.adobe.com/content/dam/shared/images/product-icons/svg/substance-designer.svg" alt="Substance Designer" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <span style="display:none;">SD</span>
-                        </div>
-                        <span class="ability-name">S. Designer</span>
-                    </div>
-                    <div class="ability-badge perk-badge" data-tooltip="Version Control">
-                        <div class="ability-icon skill-icon">
-                            <img loading="lazy" decoding="async" data-src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <span style="display:none;">GH</span>
-                        </div>
-                        <span class="ability-name">GitHub</span>
+                    <div class="perk-lane">
+                        <span class="perk-lane-title">TOOLS</span>
+                        <ul class="perk-chips">
+                            <li class="perk-chip"><span class="perk-mark">GH</span> GitHub</li>
+                        </ul>
                     </div>
                 </div>
             </div>
