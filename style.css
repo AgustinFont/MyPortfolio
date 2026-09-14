@@ -842,12 +842,14 @@ body.in-section .hud {
 /* === ABOUT SECTION === */
 #about-content {
     display: flex;
-    align-items: flex-start;
+    align-items: stretch;
     justify-content: center;
-    padding: 80px 16px 40px;
-    padding-top: max(80px, calc(env(safe-area-inset-top) + 56px));
+    padding: 52px 20px 16px;
+    padding-top: max(52px, calc(env(safe-area-inset-top) + 40px));
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
     overflow-x: hidden;
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .about-section {
@@ -865,42 +867,51 @@ body.in-section .hud {
 
 .about-section.character-sheet {
     display: grid;
-    width: min(1440px, calc(100vw - 32px));
-    max-width: min(1440px, calc(100vw - 32px));
+    width: min(1280px, calc(100% - 4px));
+    max-width: min(1280px, calc(100% - 4px));
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: 100%;
+    padding: 0;
 }
 
 .character-sheet {
     display: grid;
-    grid-template-columns: minmax(360px, 440px) minmax(280px, 340px) minmax(0, 1fr);
+    grid-template-columns: minmax(220px, 0.9fr) minmax(210px, 0.72fr) minmax(240px, 1.2fr);
+    grid-template-rows: minmax(0, 1fr) auto auto;
     grid-template-areas:
         "stage identity stats"
         "lore  lore     lore"
         "perks perks    perks";
-    gap: 18px 22px;
-    width: min(1440px, calc(100vw - 32px));
-    max-width: min(1440px, calc(100vw - 32px));
+    gap: 12px 16px;
+    width: min(1280px, calc(100% - 4px));
+    max-width: min(1280px, calc(100% - 4px));
+    max-height: calc(100dvh - 68px);
     align-items: stretch;
 }
 
-.character-sheet .avatar-stage { grid-area: stage; }
-.character-sheet .character-identity { grid-area: identity; align-self: start; }
-.character-sheet .skills-section { grid-area: stats; }
+.character-sheet .avatar-stage { grid-area: stage; min-height: 0; }
+.character-sheet .character-identity { grid-area: identity; align-self: start; min-width: 0; }
+.character-sheet .skills-section { grid-area: stats; min-height: 0; }
 .character-sheet .character-lore { grid-area: lore; }
-.character-sheet .abilities-section { grid-area: perks; }
+.character-sheet .abilities-section { grid-area: perks; min-height: 0; }
 
 .avatar-stage {
     width: 100%;
     min-width: 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 .avatar-stage-frame {
     position: relative;
     width: 100%;
     flex: 1 1 auto;
-    aspect-ratio: 3 / 4;
-    min-height: 440px;
+    min-height: 0;
+    height: 100%;
+    aspect-ratio: auto;
     border: 2px solid rgba(0, 255, 255, 0.55);
     border-radius: 4px;
     background:
@@ -1058,7 +1069,7 @@ body.in-section .hud {
     font-family: "Press Start 2P", monospace;
     font-size: clamp(0.34em, 0.9vw, 0.48em);
     color: #ffffff;
-    margin: 0 0 4px;
+    margin: 0 0 2px;
     line-height: 1.35;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.45);
 }
@@ -1075,11 +1086,11 @@ body.in-section .hud {
 
 .core-stats {
     display: grid;
-    grid-template-rows: repeat(5, minmax(52px, 1fr));
-    gap: 8px;
+    grid-template-rows: repeat(5, minmax(40px, 1fr));
+    gap: 6px;
     width: 100%;
     height: 100%;
-    padding: 12px 14px;
+    padding: 10px 12px;
     border: 2px solid rgba(0, 255, 255, 0.45);
     background:
         linear-gradient(180deg, rgba(0, 255, 255, 0.06), rgba(8, 10, 22, 0.78));
@@ -1252,7 +1263,7 @@ body.in-section .hud {
     gap: 0;
     width: 100%;
     height: auto;
-    padding: 12px 6px;
+    padding: 8px 4px;
     overflow: visible;
     border: 2px solid rgba(255, 0, 255, 0.5);
     background:
@@ -1266,12 +1277,12 @@ body.in-section .hud {
 .perk-lane {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
-    gap: 8px;
+    gap: 5px;
     align-content: start;
     align-items: stretch;
     min-width: 0;
     min-height: 0;
-    padding: 2px 10px;
+    padding: 2px 8px;
     border-right: 1px solid rgba(255, 0, 255, 0.22);
 }
 
@@ -1293,7 +1304,7 @@ body.in-section .hud {
 .perk-chips {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -1308,8 +1319,8 @@ body.in-section .hud {
     justify-content: flex-start;
     width: 100%;
     min-width: 0;
-    gap: 6px;
-    padding: 6px 8px 6px 5px;
+    gap: 5px;
+    padding: 4px 6px 4px 4px;
     border: 1px solid rgba(255, 0, 255, 0.4);
     background: rgba(5, 8, 20, 0.72);
     color: #f3e8ff;
@@ -1364,8 +1375,8 @@ body.in-section .hud {
 }
 
 .perk-mark {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     display: grid;
     place-items: center;
     flex-shrink: 0;
@@ -1392,7 +1403,7 @@ body.in-section .hud {
     display: flex;
     flex-direction: column;
     gap: 0;
-    margin: 12px 0 0;
+    margin: 20px 0 0;
     width: 100%;
     border: 1px solid rgba(0, 255, 255, 0.4);
     background:
@@ -1407,12 +1418,12 @@ body.in-section .hud {
 .character-stat {
     display: grid;
     grid-template-columns: 12px 86px minmax(0, 1fr);
-    align-items: center;
+    align-items: start;
     gap: 8px;
     border: none;
     border-bottom: 1px solid rgba(0, 255, 255, 0.16);
     background: transparent;
-    padding: 7px 2px;
+    padding: 8px 2px;
 }
 
 .character-stat:last-child {
@@ -1467,11 +1478,16 @@ body.in-section .hud {
     animation: diamondBounce 1.7s ease-in-out infinite;
 }
 
+.character-stats .hud-diamond {
+    margin-top: 6px;
+    align-self: start;
+}
+
 .hud-diamond-spin {
     display: grid;
     place-items: center;
     transform-style: preserve-3d;
-    animation: diamondSpin 2.6s linear infinite;
+    animation: diamondSpin 6.4s linear infinite;
 }
 
 .hud-diamond svg {
@@ -1516,20 +1532,18 @@ body.in-section .hud {
     50% { transform: translateY(-3px); }
 }
 
-@keyframes eggAlertPulse {
+@keyframes eggLetterBlink {
     0%, 100% {
-        color: #ff6b8a;
+        color: #ff335c;
         text-shadow:
-            0 0 8px rgba(255, 45, 85, 0.8),
-            0 0 16px rgba(255, 45, 85, 0.45);
-        background: rgba(255, 45, 85, 0.12);
+            0 0 6px rgba(255, 45, 85, 0.55),
+            0 0 14px rgba(255, 45, 85, 0.28);
     }
     50% {
-        color: #ffffff;
+        color: #ffc1ce;
         text-shadow:
-            0 0 10px rgba(255, 45, 85, 1),
-            0 0 22px rgba(255, 45, 85, 0.7);
-        background: rgba(255, 45, 85, 0.22);
+            0 0 10px rgba(255, 45, 85, 0.9),
+            0 0 20px rgba(255, 45, 85, 0.45);
     }
 }
 
@@ -1547,9 +1561,17 @@ body.in-section .hud {
     color: inherit;
 }
 
-#menu li.has-egg-alert {
-    animation: eggAlertPulse 1.2s ease-in-out infinite !important;
-    color: #ff6b8a;
+#menu li.has-egg-alert,
+#menu li.has-egg-alert:hover,
+#menu li.has-egg-alert.active,
+#menu li.has-egg-alert.active:hover {
+    background: transparent !important;
+    animation: none !important;
+}
+
+#menu li.has-egg-alert .menu-egg-label {
+    color: #ff335c;
+    animation: eggLetterBlink 2.8s ease-in-out infinite;
 }
 
 #menu li.has-egg-alert .menu-egg-count {
@@ -1560,16 +1582,10 @@ body.in-section .hud {
     display: grid;
 }
 
-#menu li.has-egg-alert:hover,
-#menu li.has-egg-alert.active:hover {
-    animation: eggAlertPulse 1.2s ease-in-out infinite !important;
-    color: #ff6b8a !important;
-}
-
 @media (prefers-reduced-motion: reduce) {
     .hud-diamond,
     .hud-diamond-spin,
-    #menu li.has-egg-alert {
+    #menu li.has-egg-alert .menu-egg-label {
         animation: none !important;
     }
 }
@@ -1578,23 +1594,23 @@ body.in-section .hud {
     text-align: left;
     border: 1px solid rgba(255, 0, 255, 0.28);
     background: rgba(255, 0, 255, 0.05);
-    padding: 16px 18px;
+    padding: 10px 14px;
     border-radius: 4px;
 }
 
 .character-lore h3 {
     font-family: "Press Start 2P", monospace;
-    font-size: 0.7em;
+    font-size: 0.62em;
     color: var(--color-accent);
-    margin: 0 0 12px;
+    margin: 0 0 8px;
     text-shadow: 0 0 10px rgba(255, 0, 255, 0.45);
 }
 
 .character-lore p {
-    margin: 0 0 12px;
+    margin: 0 0 8px;
     color: #e8f6ff;
-    font-size: 0.92em;
-    line-height: 1.65;
+    font-size: 0.82em;
+    line-height: 1.5;
 }
 
 .character-lore p:last-child {
@@ -1604,9 +1620,9 @@ body.in-section .hud {
 .character-sheet .skills-section h3,
 .character-sheet .abilities-section h3 {
     text-align: left;
-    margin: 0 0 10px;
-    font-size: 0.85em;
-    min-height: 1.25em;
+    margin: 0 0 6px;
+    font-size: 0.72em;
+    min-height: 1.15em;
     line-height: 1.25;
 }
 
@@ -1868,8 +1884,9 @@ body.in-section .hud {
     }
     .about-section.character-sheet,
     .character-sheet {
-        width: min(1440px, calc(100vw - 32px));
-        max-width: min(1440px, calc(100vw - 32px));
+        width: min(1280px, calc(100vw - 48px));
+        max-width: min(1280px, calc(100vw - 48px));
+        max-height: calc(100dvh - 68px);
     }
     .cover-letter-container {
         padding: 16px;
@@ -1884,8 +1901,9 @@ body.in-section .hud {
     }
     .about-section.character-sheet,
     .character-sheet {
-        width: min(1440px, calc(100vw - 28px));
-        max-width: min(1440px, calc(100vw - 28px));
+        width: min(1280px, calc(100vw - 40px));
+        max-width: min(1280px, calc(100vw - 40px));
+        max-height: calc(100dvh - 68px);
     }
     .cover-letter-container {
         padding: 16px;
@@ -1909,11 +1927,11 @@ body.in-section .hud {
 
 @media (max-width: 900px) {
     #about-content {
-        padding: 64px 14px 28px;
-        padding-top: max(64px, calc(env(safe-area-inset-top) + 52px));
+        padding: 56px 14px 20px;
+        padding-top: max(56px, calc(env(safe-area-inset-top) + 44px));
         overflow-x: hidden;
         justify-content: flex-start;
-        align-items: center;
+        align-items: stretch;
     }
     .about-section {
         width: 100%;
@@ -1924,8 +1942,10 @@ body.in-section .hud {
     }
     .about-section.character-sheet,
     .character-sheet {
-        width: calc(100vw - 24px);
-        max-width: calc(100vw - 24px);
+        width: calc(100vw - 28px);
+        max-width: calc(100vw - 28px);
+        max-height: none;
+        grid-template-rows: auto;
     }
     .character-sheet {
         grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
@@ -1941,7 +1961,7 @@ body.in-section .hud {
     }
     .avatar-stage-frame {
         max-width: none;
-        min-height: 380px;
+        min-height: 0;
         margin: 0;
     }
     .character-identity,
@@ -2321,8 +2341,8 @@ body.in-section .hud {
 
 #about-content .character-sheet,
 #about-content .about-section.character-sheet {
-    width: min(1440px, calc(100vw - 32px));
-    max-width: min(1440px, calc(100vw - 32px));
+    width: min(1280px, calc(100vw - 48px));
+    max-width: min(1280px, calc(100vw - 48px));
 }
 
 #about-content .character-sheet .skills-section,
@@ -5101,8 +5121,9 @@ body.in-section .hud {
 /* Character sheet loadout: last so generic max-width rules cannot recap STATS | PERKS */
 #about-content .character-sheet,
 #about-content .about-section.character-sheet {
-    width: min(1440px, calc(100vw - 32px));
-    max-width: min(1440px, calc(100vw - 32px));
+    width: min(1280px, calc(100vw - 48px));
+    max-width: min(1280px, calc(100vw - 48px));
+    max-height: calc(100dvh - 68px);
 }
 
 #about-content .character-sheet .skills-section,
@@ -5115,7 +5136,7 @@ body.in-section .hud {
 
 @media (min-width: 901px) and (max-width: 1180px) {
     .character-sheet {
-        grid-template-columns: minmax(300px, 380px) minmax(190px, 230px) minmax(0, 1fr);
+        grid-template-columns: minmax(240px, 0.85fr) minmax(210px, 0.7fr) minmax(220px, 1.15fr);
     }
     .perks-board {
         grid-template-columns: repeat(5, minmax(0, 1fr));
