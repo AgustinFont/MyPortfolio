@@ -1275,13 +1275,14 @@ body.in-play .visit-counter {
 
 .perk-chips {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 6px;
     list-style: none;
     margin: 0;
     padding: 0;
     min-width: 0;
     align-items: stretch;
+    justify-content: flex-start;
 }
 
 .perk-chip {
@@ -1289,7 +1290,8 @@ body.in-play .visit-counter {
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;
-    flex: 1 1 0;
+    flex: 0 0 auto;
+    width: auto;
     min-width: 0;
     gap: 6px;
     padding: 6px 8px 6px 5px;
@@ -1301,9 +1303,15 @@ body.in-play .visit-counter {
     line-height: 1.35;
     letter-spacing: 0.3px;
     white-space: nowrap;
-    overflow: hidden;
+    overflow: visible;
     cursor: help;
     box-sizing: border-box;
+}
+
+.perk-label {
+    min-width: 0;
+    overflow: visible;
+    white-space: nowrap;
 }
 
 .perk-chip:hover,
@@ -1735,8 +1743,8 @@ body.in-play .visit-counter {
         max-width: none;
     }
     #about-content .perk-chip {
-        font-size: 0.4em;
-        padding: 5px 6px 5px 4px;
+        font-size: 0.42em;
+        padding: 5px 7px 5px 4px;
         gap: 5px;
         letter-spacing: 0;
     }
@@ -1827,7 +1835,9 @@ body.in-play .visit-counter {
         text-align: left;
     }
     .perk-chips {
-        justify-content: stretch;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
     }
     .about-scroll-buttons {
         position: static;
@@ -1896,11 +1906,13 @@ body.in-play .visit-counter {
         min-height: 0;
     }
     #about-content .perk-chips {
+        display: flex;
         flex-wrap: wrap;
+        justify-content: flex-start;
     }
     #about-content .perk-chip {
-        flex: 0 1 auto;
-        overflow: visible;
+        flex: 0 0 auto;
+        width: auto;
     }
 }
 
@@ -4107,6 +4119,14 @@ body.in-play .visit-counter {
     padding: 8px 12px;
     cursor: pointer;
     transition: all 0.3s ease;
+    z-index: 12;
+}
+
+#about-content .back-btn {
+    font-size: 10px;
+    padding: 5px 9px;
+    top: 14px;
+    left: 14px;
 }
 
 .back-btn:hover {
@@ -4897,5 +4917,35 @@ body.in-play .visit-counter {
         text-align: center;
         font-size: 0.55em;
         padding: 14px 16px;
+    }
+}
+
+/* Character sheet loadout: last so generic max-width rules cannot recap STATS | PERKS */
+#about-content .character-sheet,
+#about-content .about-section.character-sheet {
+    width: min(1440px, calc(100vw - 32px));
+    max-width: min(1440px, calc(100vw - 32px));
+}
+
+#about-content .character-sheet .skills-section,
+#about-content .character-sheet .abilities-section {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    align-self: stretch;
+}
+
+@media (min-width: 769px) {
+    #about-content .character-bottom {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: stretch;
+        gap: 20px 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    #about-content .character-bottom {
+        grid-template-columns: 1fr;
     }
 }
