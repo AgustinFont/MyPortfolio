@@ -1379,7 +1379,7 @@ body.in-section .hud {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px 14px;
-    margin: 28px 0 0;
+    margin: 12px 0 0;
     width: 100%;
     border: none;
     background: transparent;
