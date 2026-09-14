@@ -5,7 +5,7 @@
   "installCommand": null,
   "headers": [
     {
-      "source": "/models/(.*)",
+      "source": "/assets/(.*\\.glb)",
       "headers": [
         {
           "key": "Cache-Control",

@@ -931,6 +931,11 @@ body.in-play .visit-counter {
     border-top: 0;
 }
 
+.avatar-stage-viewport {
+    position: absolute;
+    inset: 0;
+}
+
 .avatar-stage-viewport model-viewer {
     width: 100%;
     height: 100%;
@@ -942,8 +947,12 @@ body.in-play .visit-counter {
     position: absolute;
     inset: 0;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
+}
+
+.avatar-placeholder[hidden] {
+    display: none !important;
 }
 
 .avatar-hologram {
@@ -964,7 +973,6 @@ body.in-play .visit-counter {
     width: 100%;
     padding: 16px 12px 20px;
     text-align: center;
-    background: linear-gradient(transparent, rgba(5, 8, 18, 0.92));
 }
 
 .avatar-placeholder-kicker {
@@ -1033,10 +1041,80 @@ body.in-play .visit-counter {
 
 .character-class {
     font-family: "Press Start 2P", monospace;
-    font-size: 0.72em;
+    font-size: clamp(0.52em, 1.5vw, 0.7em);
     color: #ffffff;
     margin: 0 0 18px;
+    line-height: 1.55;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.45);
+}
+
+.core-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.stat-row {
+    display: grid;
+    grid-template-columns: minmax(92px, 140px) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+}
+
+.stat-label {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.52em;
+    color: var(--color-primary);
+    letter-spacing: 0.5px;
+    line-height: 1.35;
+}
+
+.stat-track {
+    height: 10px;
+    border: 1px solid rgba(0, 255, 255, 0.45);
+    background: rgba(0, 20, 30, 0.7);
+    overflow: hidden;
+    box-shadow: inset 0 0 8px rgba(0, 255, 255, 0.12);
+}
+
+.stat-fill {
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #00ffff, #ff6f00);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.55);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.character-sheet.is-ready .stat-fill {
+    transform: scaleX(var(--fill, 0));
+}
+
+.stat-score {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.48em;
+    color: var(--color-secondary);
+    min-width: 4.5ch;
+    text-align: right;
+}
+
+.perks-grid .perk-badge {
+    min-height: 84px;
+}
+
+.perks-grid .ability-icon,
+.perks-grid .skill-icon {
+    width: 36px;
+    height: 36px;
+}
+
+.perks-grid .skill-icon img,
+.perks-grid .ability-icon svg {
+    width: 22px;
+    height: 22px;
 }
 
 .character-stats {
@@ -1251,9 +1329,14 @@ body.in-play .visit-counter {
     gap: 14px 14px;
 }
 
-#about-content .abilities-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 14px 14px;
+#about-content .perks-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    justify-items: stretch;
+}
+
+#about-content .perks-grid .ability-badge {
+    min-width: 0;
+    max-width: none;
 }
 
 #about-content .skill-badge,
@@ -1418,6 +1501,13 @@ body.in-play .visit-counter {
         max-width: 420px;
         margin: 0 auto;
         text-align: left;
+    }
+    .stat-row {
+        grid-template-columns: 86px minmax(0, 1fr) auto;
+        gap: 8px;
+    }
+    .stat-label {
+        font-size: 0.45em;
     }
     .character-sheet .skills-section h3,
     .character-sheet .abilities-section h3 {

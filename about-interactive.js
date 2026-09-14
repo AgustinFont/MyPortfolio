@@ -76,6 +76,15 @@ window.hydrateAboutMedia = function () {
         }
         img.removeAttribute('data-src');
     });
+
+    const sheet = document.querySelector('.character-sheet');
+    if (sheet) {
+        requestAnimationFrame(() => sheet.classList.add('is-ready'));
+    }
+
+    if (typeof window.mountAboutAvatar === 'function') {
+        window.mountAboutAvatar('assets/CharacterPortfolio.glb');
+    }
 };
 
 window.mountAboutAvatar = function (src) {
@@ -83,21 +92,30 @@ window.mountAboutAvatar = function (src) {
     const placeholder = document.getElementById('about-avatar-placeholder');
     if (!viewport || !src) return;
 
-    if (placeholder) {
-        placeholder.hidden = true;
-    }
-
     let viewer = viewport.querySelector('model-viewer');
     if (!viewer) {
         viewer = document.createElement('model-viewer');
         viewer.setAttribute('camera-controls', '');
         viewer.setAttribute('auto-rotate', '');
-        viewer.setAttribute('shadow-intensity', '0.4');
-        viewer.setAttribute('exposure', '0.85');
+        viewer.setAttribute('shadow-intensity', '0.6');
+        viewer.setAttribute('exposure', '0.9');
+        viewer.setAttribute('interaction-prompt', 'none');
+        viewer.setAttribute('touch-action', 'none');
+        viewer.setAttribute('alt', '3D character avatar');
         viewer.style.width = '100%';
         viewer.style.height = '100%';
         viewer.style.position = 'absolute';
         viewer.style.inset = '0';
+        viewer.addEventListener('load', () => {
+            if (placeholder) placeholder.hidden = true;
+        });
+        viewer.addEventListener('error', () => {
+            if (placeholder) {
+                placeholder.hidden = false;
+                const title = placeholder.querySelector('.avatar-placeholder-title');
+                if (title) title.textContent = 'MODEL FAILED';
+            }
+        });
         viewport.appendChild(viewer);
 
         if (!document.querySelector('script[data-model-viewer]')) {
