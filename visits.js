@@ -1,16 +1,34 @@
 // === visits.js - Contador global de cargas de la página ===
 (function () {
-    const COUNTER_KEY = "agusgonzalezfont-portfolio-logins";
-    const API = "https://countapi.mileshilliard.com/api/v1";
-    const HIT_URL = `${API}/hit/${COUNTER_KEY}`;
-    const GET_URL = `${API}/get/${COUNTER_KEY}`;
     const CACHE_KEY = "agus-portfolio-visit-count";
     const PLACEHOLDER = "------";
+    const TIMEOUT_MS = 4000;
+
+    const BACKENDS = [
+        {
+            hit: "/api/visits",
+            get: "/api/visits?hit=0",
+        },
+        {
+            hit: "https://abacus.jasoncameron.dev/hit/agusgonzalezfont-portfolio/access",
+            get: "https://abacus.jasoncameron.dev/get/agusgonzalezfont-portfolio/access",
+        },
+        {
+            hit: "https://countapi.mileshilliard.com/api/v1/hit/agusgonzalezfont-portfolio-logins",
+            get: "https://countapi.mileshilliard.com/api/v1/get/agusgonzalezfont-portfolio-logins",
+        },
+    ];
 
     function formatCount(value) {
         const num = Number(value);
         if (!Number.isFinite(num) || num < 0) return PLACEHOLDER;
         return String(Math.floor(num)).padStart(6, "0");
+    }
+
+    function parseValue(data) {
+        const raw = data && (data.value ?? data.count);
+        const num = Number(raw);
+        return Number.isFinite(num) && num >= 0 ? Math.floor(num) : null;
     }
 
     function readCached() {
@@ -46,31 +64,51 @@
     }
 
     async function fetchCounter(url) {
-        const response = await fetch(url, { cache: "no-store", mode: "cors" });
-        if (!response.ok) throw new Error(`counter ${response.status}`);
-        const data = await response.json();
-        const value = Number(data && data.value);
-        if (!Number.isFinite(value)) throw new Error("counter missing value");
-        return value;
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+        try {
+            const response = await fetch(url, {
+                cache: "no-store",
+                mode: "cors",
+                signal: controller.signal,
+            });
+            if (!response.ok) throw new Error(`counter ${response.status}`);
+            const data = await response.json();
+            const value = parseValue(data);
+            if (value == null) throw new Error("counter missing value");
+            return value;
+        } finally {
+            clearTimeout(timer);
+        }
     }
 
     async function registerVisit() {
         const cached = readCached();
         if (cached != null) render(cached);
 
-        try {
-            let value;
+        let value = null;
+        for (const backend of BACKENDS) {
             try {
-                value = await fetchCounter(HIT_URL);
+                value = await fetchCounter(backend.hit);
+                break;
             } catch {
-                value = await fetchCounter(GET_URL);
+                try {
+                    value = await fetchCounter(backend.get);
+                    break;
+                } catch {
+                    /* try next backend */
+                }
             }
+        }
+
+        if (value != null) {
             writeCached(value);
             render(value);
-        } catch (err) {
-            console.warn("Visit counter unavailable:", err);
-            if (cached == null) render(PLACEHOLDER);
+            return;
         }
+
+        console.warn("Visit counter unavailable");
+        if (cached == null) render(PLACEHOLDER);
     }
 
     registerVisit();
