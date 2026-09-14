@@ -240,6 +240,10 @@ const envCube = new THREE.Mesh(envGeo, envMat);
 scene.add(envCube);
 
 // --- Hologram orbs on the grid ---
+// Disabled: they cluttered the grid and competed with the HUD.
+// To restore, set ENABLE_HOLOGRAM_ORBS to true.
+const ENABLE_HOLOGRAM_ORBS = false;
+
 function randRange(min, max) {
   return Math.random() * (max - min) + min;
 }
@@ -343,7 +347,7 @@ function updateHologramOrbs(delta, timeNow) {
   }
 }
 
-createHologramOrbs();
+if (ENABLE_HOLOGRAM_ORBS) createHologramOrbs();
 
 // --- PartÃ­culas flotantes (optimizado para mÃ³viles) ---
 const particlesGeo = new THREE.BufferGeometry();
@@ -623,7 +627,7 @@ function animate() {
   camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.02;
   camera.lookAt(0, 0, 0);
 
-  updateHologramOrbs(delta, timeNow);
+  if (ENABLE_HOLOGRAM_ORBS) updateHologramOrbs(delta, timeNow);
 
   // Deformación y color de la grid (onda + ruido para irregularidad)
   if (!isMobile && gridMesh) {
