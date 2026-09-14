@@ -877,13 +877,13 @@ body.in-section .hud {
 
 .character-sheet {
     display: grid;
-    grid-template-columns: minmax(220px, 0.9fr) minmax(210px, 0.72fr) minmax(240px, 1.2fr);
-    grid-template-rows: minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(260px, 0.88fr) minmax(0, 1.22fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
     grid-template-areas:
-        "stage identity stats"
-        "lore  lore     lore"
-        "perks perks    perks";
-    gap: 12px 16px;
+        "stage identity"
+        "stage stats"
+        "lore  perks";
+    gap: 10px 28px;
     width: min(1280px, calc(100% - 4px));
     max-width: min(1280px, calc(100% - 4px));
     max-height: calc(100dvh - 68px);
@@ -909,9 +909,10 @@ body.in-section .hud {
     position: relative;
     width: 100%;
     flex: 1 1 auto;
-    min-height: 0;
+    min-height: 280px;
     height: 100%;
     aspect-ratio: auto;
+    max-height: none;
     border: 2px solid rgba(0, 255, 255, 0.55);
     border-radius: 4px;
     background:
@@ -1086,65 +1087,40 @@ body.in-section .hud {
 
 .core-stats {
     display: grid;
-    grid-template-rows: repeat(5, minmax(40px, 1fr));
-    gap: 6px;
+    grid-template-rows: repeat(5, auto);
+    gap: 10px;
     width: 100%;
-    height: 100%;
-    padding: 10px 12px;
-    border: 2px solid rgba(0, 255, 255, 0.45);
-    background:
-        linear-gradient(180deg, rgba(0, 255, 255, 0.06), rgba(8, 10, 22, 0.78));
-    box-shadow:
-        0 0 18px rgba(0, 255, 255, 0.12),
-        inset 0 0 18px rgba(0, 255, 255, 0.05);
+    height: auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
     box-sizing: border-box;
 }
 
 .stat-row {
     display: grid;
-    grid-template-columns: 38px minmax(0, 1fr);
+    grid-template-columns: 28px minmax(0, 1fr);
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 .stat-icon {
     position: relative;
-    width: 38px;
-    height: 38px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #00ffff;
-    background:
-        linear-gradient(180deg, rgba(0, 255, 255, 0.12), rgba(5, 8, 20, 0.95));
-    box-shadow:
-        0 0 12px rgba(0, 255, 255, 0.28),
-        inset 0 0 0 2px #050814,
-        inset 0 0 10px rgba(0, 255, 255, 0.12);
+    border: none;
+    background: transparent;
+    box-shadow: none;
     image-rendering: pixelated;
 }
 
 .stat-icon::before,
 .stat-icon::after {
-    content: "";
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    pointer-events: none;
-}
-
-.stat-icon::before {
-    top: -2px;
-    left: -2px;
-    border-top: 2px solid var(--color-secondary);
-    border-left: 2px solid var(--color-secondary);
-}
-
-.stat-icon::after {
-    bottom: -2px;
-    right: -2px;
-    border-bottom: 2px solid var(--color-secondary);
-    border-right: 2px solid var(--color-secondary);
+    content: none;
 }
 
 .stat-icon img,
@@ -1249,28 +1225,27 @@ body.in-section .hud {
 }
 
 .character-sheet .skills-section {
-    height: 100%;
+    height: auto;
+    align-self: start;
 }
 
 .character-sheet .abilities-section {
     height: auto;
+    align-self: start;
 }
 
 .perks-board {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     grid-template-rows: none;
-    gap: 0;
+    gap: 12px 14px;
     width: 100%;
     height: auto;
-    padding: 8px 4px;
+    padding: 0;
     overflow: visible;
-    border: 2px solid rgba(255, 0, 255, 0.5);
-    background:
-        linear-gradient(180deg, rgba(255, 0, 255, 0.08), rgba(8, 10, 22, 0.78));
-    box-shadow:
-        0 0 18px rgba(255, 0, 255, 0.12),
-        inset 0 0 18px rgba(255, 0, 255, 0.05);
+    border: none;
+    background: transparent;
+    box-shadow: none;
     box-sizing: border-box;
 }
 
@@ -1282,11 +1257,7 @@ body.in-section .hud {
     align-items: stretch;
     min-width: 0;
     min-height: 0;
-    padding: 2px 8px;
-    border-right: 1px solid rgba(255, 0, 255, 0.22);
-}
-
-.perk-lane:last-child {
+    padding: 0;
     border-right: none;
 }
 
@@ -1320,9 +1291,9 @@ body.in-section .hud {
     width: 100%;
     min-width: 0;
     gap: 5px;
-    padding: 4px 6px 4px 4px;
-    border: 1px solid rgba(255, 0, 255, 0.4);
-    background: rgba(5, 8, 20, 0.72);
+    padding: 2px 0;
+    border: none;
+    background: transparent;
     color: #f3e8ff;
     font-family: "Press Start 2P", monospace;
     font-size: 0.46em;
@@ -1343,8 +1314,9 @@ body.in-section .hud {
 
 .perk-chip:hover,
 .perk-chip:focus-visible {
-    border-color: #ff00ff;
-    box-shadow: 0 0 10px rgba(255, 0, 255, 0.35);
+    border-color: transparent;
+    box-shadow: none;
+    color: #ffffff;
 }
 
 .perk-chip::after {
@@ -1400,30 +1372,28 @@ body.in-section .hud {
 }
 
 .character-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    margin: 20px 0 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px 10px;
+    margin: 16px 0 0;
     width: 100%;
-    border: 1px solid rgba(0, 255, 255, 0.4);
-    background:
-        linear-gradient(180deg, rgba(0, 255, 255, 0.08), rgba(8, 10, 22, 0.78));
-    box-shadow:
-        0 0 14px rgba(0, 255, 255, 0.1),
-        inset 0 0 14px rgba(0, 255, 255, 0.04);
-    padding: 4px 10px;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
     box-sizing: border-box;
 }
 
 .character-stat {
-    display: grid;
-    grid-template-columns: 12px 86px minmax(0, 1fr);
-    align-items: start;
-    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    gap: 6px;
     border: none;
-    border-bottom: 1px solid rgba(0, 255, 255, 0.16);
     background: transparent;
-    padding: 8px 2px;
+    padding: 0;
 }
 
 .character-stat:last-child {
@@ -1432,8 +1402,8 @@ body.in-section .hud {
 
 .character-stat dt {
     font-family: "Press Start 2P", monospace;
-    font-size: 0.36em;
-    letter-spacing: 0.6px;
+    font-size: 0.32em;
+    letter-spacing: 0.5px;
     color: var(--color-secondary);
     margin: 0;
     line-height: 1.35;
@@ -1442,9 +1412,9 @@ body.in-section .hud {
 .character-stat dd {
     margin: 0;
     font-family: "Press Start 2P", monospace;
-    font-size: 0.4em;
+    font-size: 0.36em;
     color: #e8f6ff;
-    line-height: 1.4;
+    line-height: 1.35;
     min-width: 0;
     overflow-wrap: anywhere;
 }
@@ -1452,7 +1422,8 @@ body.in-section .hud {
 .status-available {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: 6px;
 }
 
 .status-pip {
@@ -1479,8 +1450,8 @@ body.in-section .hud {
 }
 
 .character-stats .hud-diamond {
-    margin-top: 6px;
-    align-self: start;
+    margin-top: 0;
+    align-self: center;
 }
 
 .hud-diamond-spin {
@@ -1592,10 +1563,10 @@ body.in-section .hud {
 
 .character-lore {
     text-align: left;
-    border: 1px solid rgba(255, 0, 255, 0.28);
-    background: rgba(255, 0, 255, 0.05);
-    padding: 10px 14px;
-    border-radius: 4px;
+    border: none;
+    background: transparent;
+    padding: 4px 2px 0;
+    border-radius: 0;
 }
 
 .character-lore h3 {
@@ -1948,13 +1919,12 @@ body.in-section .hud {
         grid-template-rows: auto;
     }
     .character-sheet {
-        grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+        grid-template-columns: minmax(240px, 0.9fr) minmax(0, 1.2fr);
         grid-template-areas:
             "stage identity"
             "stage stats"
-            "lore lore"
-            "perks perks";
-        gap: 16px;
+            "lore  perks";
+        gap: 12px 20px;
     }
     #about-content .character-bottom {
         display: contents;
@@ -2005,15 +1975,15 @@ body.in-section .hud {
         justify-items: stretch;
         text-align: left;
         border-right: none;
-        border-bottom: 1px solid rgba(255, 0, 255, 0.22);
-        padding: 8px 4px;
+        border-bottom: none;
+        padding: 0;
     }
     .perk-lane:last-child {
         border-bottom: none;
     }
     .perks-board {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        padding: 10px 12px;
+        padding: 0;
     }
     .perk-chips {
         display: flex;
@@ -2078,8 +2048,8 @@ body.in-section .hud {
         grid-template-areas:
             "identity"
             "stage"
-            "stats"
             "lore"
+            "stats"
             "perks";
         gap: 18px;
     }
@@ -2097,6 +2067,7 @@ body.in-section .hud {
     .character-stats {
         max-width: 360px;
         margin: 12px auto 0;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     #about-content .core-stats,
     #about-content .perks-board {
@@ -2110,7 +2081,7 @@ body.in-section .hud {
     }
     .perk-lane {
         border-right: none;
-        border-bottom: 1px solid rgba(255, 0, 255, 0.22);
+        border-bottom: none;
     }
 }
 
@@ -5136,7 +5107,7 @@ body.in-section .hud {
 
 @media (min-width: 901px) and (max-width: 1180px) {
     .character-sheet {
-        grid-template-columns: minmax(240px, 0.85fr) minmax(210px, 0.7fr) minmax(220px, 1.15fr);
+        grid-template-columns: minmax(240px, 0.9fr) minmax(0, 1.2fr);
     }
     .perks-board {
         grid-template-columns: repeat(5, minmax(0, 1fr));
