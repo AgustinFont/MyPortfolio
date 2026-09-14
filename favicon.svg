@@ -1,7 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="7" fill="#0a0a15"/>
-  <rect x="1.5" y="1.5" width="29" height="29" rx="6" fill="none" stroke="#00ffff" stroke-width="2"/>
-  <polygon points="16,6 27,26 22.2,26 20.4,21.5 11.6,21.5 9.8,26 5,26" fill="#00ffff"/>
-  <polygon points="16,11.5 18.4,18.2 13.6,18.2" fill="#0a0a15"/>
-  <rect x="12.4" y="22.4" width="7.2" height="2.2" fill="#ff6f00"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#0b1a2e"/>
+  <path
+    d="M32 8.5 L55.5 53.5 H8.5 Z"
+    fill="none"
+    stroke="#00f2ea"
+    stroke-width="4.6"
+    stroke-linejoin="round"
+    stroke-linecap="round"/>
+  <path
+    d="M32 18 L44.2 43.6 H19.8 Z"
+    fill="none"
+    stroke="#1a3d55"
+    stroke-width="3.2"
+    stroke-linejoin="round"
+    stroke-linecap="round"/>
+  <path
+    d="M40.8 46.5 L44.6 42.2"
+    fill="none"
+    stroke="#00f2ea"
+    stroke-width="3.2"
+    stroke-linecap="round"/>
+  <circle cx="47.7" cy="47.3" r="2.35" fill="#ff2d78"/>
 </svg>

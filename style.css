@@ -1167,55 +1167,49 @@ body.in-play .visit-counter {
 }
 
 .stat-track {
+    --n: 24;
+    --gap: 4px;
     position: relative;
-    height: 22px;
-    border: 3px solid #00ffff;
-    background: #050814;
-    box-shadow:
-        0 0 12px rgba(0, 255, 255, 0.4),
-        inset 0 0 0 2px #0a0a15;
+    height: 10px;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
     overflow: hidden;
 }
 
-.stat-fill {
-    position: relative;
-    display: block;
-    height: 100%;
-    width: 100%;
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0 38%, transparent 38%),
-        repeating-linear-gradient(
-            90deg,
-            #00ffff 0 8px,
-            #14ecec 8px 9px,
-            #ff6f00 9px 10px
-        );
-    box-shadow: 0 0 14px rgba(0, 255, 255, 0.55);
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
+.stat-track::before,
 .stat-track::after {
     content: "";
     position: absolute;
     inset: 0;
-    pointer-events: none;
-    background: repeating-linear-gradient(
+    background-image: linear-gradient(
         90deg,
-        transparent 0 12px,
-        rgba(10, 10, 21, 0.55) 12px 14px
+        var(--bit) 0 calc(100% - var(--gap)),
+        transparent calc(100% - var(--gap))
     );
+    background-size: calc(100% / var(--n)) 100%;
+    background-repeat: repeat-x;
 }
 
-.character-sheet.is-ready .stat-fill {
-    transform: scaleX(var(--fill, 0));
+.stat-track::before {
+    --bit: rgba(0, 255, 255, 0.16);
 }
 
-.stat-row:nth-child(2) .stat-fill { transition-delay: 0.08s; }
-.stat-row:nth-child(3) .stat-fill { transition-delay: 0.16s; }
-.stat-row:nth-child(4) .stat-fill { transition-delay: 0.24s; }
-.stat-row:nth-child(5) .stat-fill { transition-delay: 0.32s; }
+.stat-track::after {
+    --bit: #00ffff;
+    clip-path: inset(0 100% 0 0);
+    filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.7));
+    transition: clip-path 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.character-sheet.is-ready .stat-track::after {
+    clip-path: inset(0 calc((var(--n) - var(--on, 0)) / var(--n) * 100%) 0 0);
+}
+
+.stat-row:nth-child(2) .stat-track::after { transition-delay: 0.08s; }
+.stat-row:nth-child(3) .stat-track::after { transition-delay: 0.16s; }
+.stat-row:nth-child(4) .stat-track::after { transition-delay: 0.24s; }
+.stat-row:nth-child(5) .stat-track::after { transition-delay: 0.32s; }
 
 .character-sheet .skills-section,
 .character-sheet .abilities-section {
@@ -1234,6 +1228,7 @@ body.in-play .visit-counter {
     gap: 12px;
     width: 100%;
     padding: 16px 18px;
+    overflow: visible;
     border: 2px solid rgba(255, 0, 255, 0.5);
     background:
         linear-gradient(180deg, rgba(255, 0, 255, 0.08), rgba(8, 10, 22, 0.78));
@@ -1244,17 +1239,18 @@ body.in-play .visit-counter {
 
 .perk-lane {
     display: grid;
-    grid-template-columns: 88px minmax(0, 1fr);
+    grid-template-columns: 118px minmax(0, 1fr);
     gap: 10px 14px;
     align-items: center;
 }
 
 .perk-lane-title {
     font-family: "Press Start 2P", monospace;
-    font-size: 0.4em;
+    font-size: 0.38em;
     letter-spacing: 1px;
     color: #ff00ff;
     text-shadow: 0 0 8px rgba(255, 0, 255, 0.45);
+    line-height: 1.55;
 }
 
 .perk-chips {
@@ -1267,6 +1263,7 @@ body.in-play .visit-counter {
 }
 
 .perk-chip {
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -1278,6 +1275,40 @@ body.in-play .visit-counter {
     font-size: 0.4em;
     line-height: 1.35;
     letter-spacing: 0.4px;
+    cursor: help;
+}
+
+.perk-chip:hover,
+.perk-chip:focus-visible {
+    border-color: #ff00ff;
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.35);
+}
+
+.perk-chip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%) translateY(4px);
+    padding: 7px 10px;
+    border: 1px solid #ff00ff;
+    background: rgba(10, 10, 21, 0.96);
+    color: #ffb3ff;
+    font-size: 8px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    line-height: 1.4;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 0 12px rgba(255, 0, 255, 0.35);
+    z-index: 8;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.perk-chip:hover::after,
+.perk-chip:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
 .perk-mark {
@@ -1289,8 +1320,20 @@ body.in-play .visit-counter {
     border: 1px solid #ff00ff;
     background: rgba(255, 0, 255, 0.12);
     color: #ff6bff;
-    font-size: 0.82em;
+    font-size: 0.72em;
     box-shadow: 0 0 8px rgba(255, 0, 255, 0.25);
+}
+
+.perk-mark-code {
+    font-size: 0.68em;
+    letter-spacing: 0;
+}
+
+.perk-mark-logo img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(3500%) hue-rotate(275deg) brightness(1.15);
 }
 
 .character-stats {
@@ -1715,8 +1758,8 @@ body.in-play .visit-counter {
         font-size: 0.48em;
     }
     .stat-track {
-        height: 16px;
-        border-width: 2px;
+        height: 8px;
+        --gap: 3px;
     }
     .character-sheet .skills-section h3,
     .character-sheet .abilities-section h3 {

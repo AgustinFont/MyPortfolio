@@ -5,12 +5,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes,viewport-fit=cover" />
     <title>Agus's Portfolio</title>
-    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.svg?v=tri3" type="image/svg+xml">
     <meta name="theme-color" content="#0a0a15">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
-    <link rel="stylesheet" href="style.css?v=r12" />
+    <link rel="stylesheet" href="style.css?v=r14" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
@@ -119,7 +119,7 @@
             <div class="skills-section" id="skills-section">
                 <h3>STATS</h3>
                 <div class="core-stats" id="core-stats">
-                    <div class="stat-row" style="--fill: 0.95">
+                    <div class="stat-row" style="--on: 23">
                         <div class="stat-icon">
                             <img loading="lazy" decoding="async" data-src="assets/unity.svg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span style="display:none;">U</span>
@@ -128,12 +128,10 @@
                             <div class="stat-head">
                                 <span class="stat-label">Unity</span>
                             </div>
-                            <div class="stat-track" role="meter" aria-label="Unity" aria-valuemin="0" aria-valuemax="100" aria-valuenow="95">
-                                <span class="stat-fill"></span>
-                            </div>
+                            <div class="stat-track" role="meter" aria-label="Unity" aria-valuemin="0" aria-valuemax="100" aria-valuenow="95"></div>
                         </div>
                     </div>
-                    <div class="stat-row" style="--fill: 0.75">
+                    <div class="stat-row" style="--on: 18">
                         <div class="stat-icon csharp-icon">
                             <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                 <polygon points="20,3 36,12 36,28 20,37 4,28 4,12" stroke="#00ffff" stroke-width="2" fill="rgba(0,255,255,0.1)"/>
@@ -144,12 +142,10 @@
                             <div class="stat-head">
                                 <span class="stat-label">C#</span>
                             </div>
-                            <div class="stat-track" role="meter" aria-label="C Sharp" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75">
-                                <span class="stat-fill"></span>
-                            </div>
+                            <div class="stat-track" role="meter" aria-label="C Sharp" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75"></div>
                         </div>
                     </div>
-                    <div class="stat-row" style="--fill: 0.33">
+                    <div class="stat-row" style="--on: 8">
                         <div class="stat-icon">
                             <img loading="lazy" decoding="async" data-src="assets/unreal.svg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span style="display:none;">UE</span>
@@ -158,12 +154,10 @@
                             <div class="stat-head">
                                 <span class="stat-label">Unreal</span>
                             </div>
-                            <div class="stat-track" role="meter" aria-label="Unreal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="33">
-                                <span class="stat-fill"></span>
-                            </div>
+                            <div class="stat-track" role="meter" aria-label="Unreal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="33"></div>
                         </div>
                     </div>
-                    <div class="stat-row" style="--fill: 0.75">
+                    <div class="stat-row" style="--on: 18">
                         <div class="stat-icon">
                             <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                 <rect x="6" y="14" width="28" height="16" rx="4" stroke="#ff6f00" stroke-width="2"/>
@@ -175,12 +169,10 @@
                             <div class="stat-head">
                                 <span class="stat-label">Game Design</span>
                             </div>
-                            <div class="stat-track" role="meter" aria-label="Game Design" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75">
-                                <span class="stat-fill"></span>
-                            </div>
+                            <div class="stat-track" role="meter" aria-label="Game Design" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75"></div>
                         </div>
                     </div>
-                    <div class="stat-row" style="--fill: 0.7">
+                    <div class="stat-row" style="--on: 17">
                         <div class="stat-icon">
                             <img loading="lazy" decoding="async" data-src="assets/threedsmax.svg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span style="display:none;">3DS</span>
@@ -189,9 +181,7 @@
                             <div class="stat-head">
                                 <span class="stat-label">3D Modeling</span>
                             </div>
-                            <div class="stat-track" role="meter" aria-label="3D Modeling" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70">
-                                <span class="stat-fill"></span>
-                            </div>
+                            <div class="stat-track" role="meter" aria-label="3D Modeling" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70"></div>
                         </div>
                     </div>
                 </div>
@@ -201,31 +191,96 @@
                 <h3>PERKS</h3>
                 <div class="perks-board" id="abilities-grid">
                     <div class="perk-lane">
+                        <span class="perk-lane-title">ENGINE / CODE</span>
+                        <ul class="perk-chips">
+                            <li class="perk-chip" data-tooltip="Unity" title="Unity">
+                                <span class="perk-mark perk-mark-logo"><img src="assets/unity.svg" alt=""></span>
+                                Unity
+                            </li>
+                            <li class="perk-chip" data-tooltip="C#" title="C#">
+                                <span class="perk-mark perk-mark-code">C#</span>
+                                C#
+                            </li>
+                            <li class="perk-chip" data-tooltip="Visual Studio" title="Visual Studio">
+                                <span class="perk-mark perk-mark-logo"><img src="assets/visualstudio.svg" alt=""></span>
+                                Visual Studio
+                            </li>
+                            <li class="perk-chip" data-tooltip="Photon (multiplayer)" title="Photon (multiplayer)">
+                                <span class="perk-mark">PH</span>
+                                Photon
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="perk-lane">
                         <span class="perk-lane-title">VISUAL</span>
                         <ul class="perk-chips">
-                            <li class="perk-chip"><span class="perk-mark">Ai</span> Illustrator</li>
-                            <li class="perk-chip"><span class="perk-mark">Ps</span> Photoshop</li>
-                            <li class="perk-chip"><span class="perk-mark">Ae</span> After Effects</li>
+                            <li class="perk-chip" data-tooltip="Adobe Illustrator" title="Adobe Illustrator">
+                                <span class="perk-mark">Ai</span>
+                                Illustrator
+                            </li>
+                            <li class="perk-chip" data-tooltip="Adobe Photoshop" title="Adobe Photoshop">
+                                <span class="perk-mark">Ps</span>
+                                Photoshop
+                            </li>
+                            <li class="perk-chip" data-tooltip="Adobe After Effects" title="Adobe After Effects">
+                                <span class="perk-mark">Ae</span>
+                                After Effects
+                            </li>
+                            <li class="perk-chip" data-tooltip="Amplify Shader" title="Amplify Shader">
+                                <span class="perk-mark">AS</span>
+                                Amplify
+                            </li>
                         </ul>
                     </div>
                     <div class="perk-lane">
                         <span class="perk-lane-title">XR</span>
                         <ul class="perk-chips">
-                            <li class="perk-chip"><span class="perk-mark">VR</span> VR Dev</li>
-                            <li class="perk-chip"><span class="perk-mark">AR</span> AR Dev</li>
+                            <li class="perk-chip" data-tooltip="VR Development" title="VR Development">
+                                <span class="perk-mark">VR</span>
+                                VR Dev
+                            </li>
+                            <li class="perk-chip" data-tooltip="AR Development" title="AR Development">
+                                <span class="perk-mark">AR</span>
+                                AR Dev
+                            </li>
+                            <li class="perk-chip" data-tooltip="Meta Quest 2" title="Meta Quest 2">
+                                <span class="perk-mark">MQ</span>
+                                Quest 2
+                            </li>
                         </ul>
                     </div>
                     <div class="perk-lane">
                         <span class="perk-lane-title">3D</span>
                         <ul class="perk-chips">
-                            <li class="perk-chip"><span class="perk-mark">SP</span> Painter</li>
-                            <li class="perk-chip"><span class="perk-mark">SD</span> Designer</li>
+                            <li class="perk-chip" data-tooltip="Substance Painter" title="Substance Painter">
+                                <span class="perk-mark">SP</span>
+                                Painter
+                            </li>
+                            <li class="perk-chip" data-tooltip="Substance Designer" title="Substance Designer">
+                                <span class="perk-mark">SD</span>
+                                Designer
+                            </li>
+                            <li class="perk-chip" data-tooltip="Quixel Megascans" title="Quixel Megascans">
+                                <span class="perk-mark">QS</span>
+                                Quixel
+                            </li>
+                            <li class="perk-chip" data-tooltip="Marmoset Toolbag" title="Marmoset Toolbag">
+                                <span class="perk-mark">MT</span>
+                                Marmoset
+                            </li>
                         </ul>
                     </div>
                     <div class="perk-lane">
                         <span class="perk-lane-title">TOOLS</span>
                         <ul class="perk-chips">
-                            <li class="perk-chip"><span class="perk-mark">GH</span> GitHub</li>
+                            <li class="perk-chip" data-tooltip="GitHub" title="GitHub">
+                                <span class="perk-mark perk-mark-logo"><img src="assets/github.svg" alt=""></span>
+                                GitHub
+                            </li>
+                            <li class="perk-chip" data-tooltip="Trello" title="Trello">
+                                <span class="perk-mark perk-mark-logo"><img src="assets/trello.svg" alt=""></span>
+                                Trello
+                            </li>
                         </ul>
                     </div>
                 </div>
