@@ -78,6 +78,40 @@ window.hydrateAboutMedia = function () {
     });
 };
 
+window.mountAboutAvatar = function (src) {
+    const viewport = document.getElementById('about-avatar-viewport');
+    const placeholder = document.getElementById('about-avatar-placeholder');
+    if (!viewport || !src) return;
+
+    if (placeholder) {
+        placeholder.hidden = true;
+    }
+
+    let viewer = viewport.querySelector('model-viewer');
+    if (!viewer) {
+        viewer = document.createElement('model-viewer');
+        viewer.setAttribute('camera-controls', '');
+        viewer.setAttribute('auto-rotate', '');
+        viewer.setAttribute('shadow-intensity', '0.4');
+        viewer.setAttribute('exposure', '0.85');
+        viewer.style.width = '100%';
+        viewer.style.height = '100%';
+        viewer.style.position = 'absolute';
+        viewer.style.inset = '0';
+        viewport.appendChild(viewer);
+
+        if (!document.querySelector('script[data-model-viewer]')) {
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.src = 'https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js';
+            script.dataset.modelViewer = 'true';
+            document.head.appendChild(script);
+        }
+    }
+
+    viewer.setAttribute('src', src);
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     updateAboutAge();
 

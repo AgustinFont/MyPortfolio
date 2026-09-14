@@ -159,21 +159,6 @@ function presentEasterToast(eggName) {
     const notification = document.createElement("div");
     notification.className = "easter-notification";
     notification.textContent = `EASTER EGG FOUND: ${eggName}`;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: rgba(0, 255, 255, 0.9);
-        color: #000;
-        padding: 15px 25px;
-        border: 2px solid #00ffff;
-        border-radius: 4px;
-        font-family: "Press Start 2P", monospace;
-        font-size: 0.7em;
-        z-index: 1000;
-        box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-        animation: slideIn 0.3s ease-out;
-    `;
 
     document.body.appendChild(notification);
 

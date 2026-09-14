@@ -39,7 +39,7 @@
             };
 
             reveal(
-                ['.profile-photo-container', '.cover-letter-container', '.skills-section', '.abilities-section'],
+                ['.avatar-stage', '.character-identity', '.character-lore', '.skills-section', '.abilities-section'],
                 { y: 26, duration: 0.8 }
             );
             reveal(['.section-title', '.projects-container'], { y: 20, duration: 0.7 });

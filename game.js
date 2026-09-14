@@ -42,12 +42,18 @@ class NeonHopGame {
         this.overlay?.addEventListener("pointerdown", this.onPointer);
         window.addEventListener("keydown", this.onKey);
         window.addEventListener("resize", this.onResize);
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener("resize", this.onResize);
+        }
     }
 
     unbind() {
         this.overlay?.removeEventListener("pointerdown", this.onPointer);
         window.removeEventListener("keydown", this.onKey);
         window.removeEventListener("resize", this.onResize);
+        if (window.visualViewport) {
+            window.visualViewport.removeEventListener("resize", this.onResize);
+        }
     }
 
     onResize() {
@@ -56,19 +62,27 @@ class NeonHopGame {
         if (prevH > 0) {
             this.bird.y = (this.bird.y / prevH) * this.h;
         }
+        const floor = this.h - this.groundH - this.bird.r - 4;
+        const ceiling = this.bird.r + 12;
+        this.bird.y = Math.min(floor, Math.max(ceiling, this.bird.y));
     }
 
     resize() {
         if (!this.canvas || !this.ctx) return;
         const parent = this.canvas.parentElement || this.overlay || this.canvas;
+        const viewport = window.visualViewport;
+        const viewW = viewport ? viewport.width : window.innerWidth;
+        const viewH = viewport ? viewport.height : window.innerHeight;
         let cssW = parent.clientWidth || 0;
         let cssH = parent.clientHeight || 0;
         if (cssW < 200 || cssH < 160) {
-            cssW = Math.min(960, Math.max(320, window.innerWidth - 48));
-            cssH = Math.min(640, Math.max(240, window.innerHeight - 48));
+            cssW = Math.max(280, viewW);
+            cssH = Math.max(200, viewH);
         }
         this.w = cssW;
         this.h = cssH;
+        this.groundH = this.h < 420 ? 42 : 56;
+        this.bird.r = this.w < 420 ? 13 : 16;
         this.dpr = Math.min(window.devicePixelRatio || 1, 2);
         this.canvas.width = Math.floor(cssW * this.dpr);
         this.canvas.height = Math.floor(cssH * this.dpr);
@@ -141,8 +155,8 @@ class NeonHopGame {
     }
 
     spawnPipe() {
-        const gap = Math.max(148, 198 - this.score * 2);
-        const margin = 70;
+        const gap = Math.max(this.h < 420 ? 128 : 148, 198 - this.score * 2);
+        const margin = this.h < 420 ? 48 : 70;
         const minCenter = margin + gap / 2;
         const maxCenter = this.h - this.groundH - margin - gap / 2;
         const gapY = minCenter + Math.random() * Math.max(20, maxCenter - minCenter);
@@ -188,7 +202,8 @@ class NeonHopGame {
         this.bird.y += this.bird.vy * dt;
 
         this.spawnWait -= dt;
-        if (this.spawnWait <= 0 && (this.pipes.length === 0 || this.pipes[this.pipes.length - 1].x < this.w - 300)) {
+        const spacing = Math.max(170, Math.min(300, this.w * 0.64));
+        if (this.spawnWait <= 0 && (this.pipes.length === 0 || this.pipes[this.pipes.length - 1].x < this.w - spacing)) {
             this.spawnPipe();
         }
 
@@ -381,45 +396,46 @@ class NeonHopGame {
     }
 
     drawHud(ctx) {
+        const ui = Math.max(0.62, Math.min(1, this.w / 560));
         ctx.textAlign = "center";
         ctx.fillStyle = "#e8f6ff";
         ctx.shadowColor = "#00ffff";
         ctx.shadowBlur = 10;
 
         if (this.state === "playing") {
-            ctx.font = "28px 'Press Start 2P', monospace";
-            ctx.fillText(String(this.score), this.w / 2, 56);
+            ctx.font = `${Math.round(28 * ui)}px 'Press Start 2P', monospace`;
+            ctx.fillText(String(this.score), this.w / 2, Math.round(48 * ui) + 12);
         }
 
-        ctx.font = "10px 'Press Start 2P', monospace";
+        ctx.font = `${Math.round(10 * ui)}px 'Press Start 2P', monospace`;
         ctx.fillStyle = "#ff6f00";
         ctx.shadowColor = "#ff6f00";
-        ctx.fillText(`BEST ${this.best}`, this.w / 2, this.state === "playing" ? 86 : 36);
+        ctx.fillText(`BEST ${this.best}`, this.w / 2, this.state === "playing" ? Math.round(82 * ui) : Math.round(32 * ui) + 8);
 
         if (this.state === "ready") {
-            ctx.font = "26px 'Press Start 2P', monospace";
+            ctx.font = `${Math.round(22 * ui)}px 'Press Start 2P', monospace`;
             ctx.fillStyle = "#00ffff";
             ctx.shadowColor = "#00ffff";
             ctx.fillText("NEON HOP", this.w / 2, this.h * 0.28);
-            ctx.font = "11px 'Press Start 2P', monospace";
+            ctx.font = `${Math.round(10 * ui)}px 'Press Start 2P', monospace`;
             ctx.fillStyle = "#e8f6ff";
-            ctx.fillText("CLICK / TAP / SPACE", this.w / 2, this.h * 0.62);
-            ctx.font = "9px 'Press Start 2P', monospace";
+            ctx.fillText(this.w < 420 ? "TAP TO HOP" : "CLICK / TAP / SPACE", this.w / 2, this.h * 0.62);
+            ctx.font = `${Math.round(8 * ui)}px 'Press Start 2P', monospace`;
             ctx.fillStyle = "#88ffff";
             ctx.shadowBlur = 0;
             ctx.fillText("FLAP THROUGH THE GATES", this.w / 2, this.h * 0.68);
         }
 
         if (this.state === "dead") {
-            ctx.font = "22px 'Press Start 2P', monospace";
+            ctx.font = `${Math.round(18 * ui)}px 'Press Start 2P', monospace`;
             ctx.fillStyle = "#ff00ff";
             ctx.shadowColor = "#ff00ff";
             ctx.fillText("CRASHED", this.w / 2, this.h * 0.32);
-            ctx.font = "14px 'Press Start 2P', monospace";
+            ctx.font = `${Math.round(12 * ui)}px 'Press Start 2P', monospace`;
             ctx.fillStyle = "#e8f6ff";
             ctx.shadowColor = "#00ffff";
             ctx.fillText(`SCORE ${this.score}`, this.w / 2, this.h * 0.44);
-            ctx.font = "10px 'Press Start 2P', monospace";
+            ctx.font = `${Math.round(9 * ui)}px 'Press Start 2P', monospace`;
             ctx.fillText("PRESS TO RETRY", this.w / 2, this.h * 0.58);
         }
 

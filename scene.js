@@ -505,7 +505,7 @@ function backToMenu() {
     duration: 1,
     delay: 0.5,
     onStart: () => {
-      document.querySelector(".hud").style.display = "block";
+      document.querySelector(".hud").style.display = "flex";
     },
   });
 }
@@ -840,21 +840,18 @@ function initLandingAnimation() {
       // Mostrar HUD con efecto
       if (hud) {
         hud.style.opacity = "0";
-        hud.style.display = "block";
+        hud.style.display = "flex";
         gsap.fromTo(
           hud,
           {
             opacity: 0,
-            y: -30,
-            scale: 0.9,
           },
           {
             opacity: 1,
-            y: 0,
-            scale: 1,
             duration: 1.2,
             delay: 0.3,
-            ease: "back.out(1.7)",
+            ease: "power2.out",
+            overwrite: "auto",
           }
         );
       }
@@ -886,8 +883,8 @@ window.addEventListener("load", () => {
     const hud = document.querySelector(".hud");
     if (hud) {
       hud.style.opacity = "1";
-      hud.style.display = "block";
-      gsap.fromTo(hud, { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 1 });
+      hud.style.display = "flex";
+      gsap.fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 1, overwrite: "auto" });
     }
 
     const sceneContainer = document.querySelector("#scene-container");

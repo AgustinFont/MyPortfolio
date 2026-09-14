@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (playMode) return; // en modo juego no navega secciones
         if (inSection) return;
         inSection = true;
+        document.body.classList.add("in-section");
 
         const content = document.getElementById(sectionId + "-content");
         if (!hud || !content) {
@@ -60,10 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
             opacity: 0,
             duration: 0.6,
             ease: "power2.in",
+            overwrite: "auto",
             onComplete: () => {
                 hud.style.display = "none";
                 content.style.display = "flex";
-                // Scroll al inicio de la sección
                 content.scrollTop = 0;
                 gsap.fromTo(content, 
                     { opacity: 0, y: 20 }, 
@@ -97,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (playMode) {
             // salir de modo juego
             playMode = false;
+            document.body.classList.remove("in-play");
             hud.classList.remove("play-mode");
             if (window.playgroundGame && typeof window.playgroundGame.destroy === "function") {
                 window.playgroundGame.destroy();
@@ -115,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
             hud.style.display = "flex";
-            gsap.fromTo(hud, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" });
+            gsap.fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out", overwrite: "auto" });
             if (playgroundTitle) {
                 playgroundTitle.style.display = "flex";
             }
@@ -127,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!inSection) return;
         inSection = false;
+        document.body.classList.remove("in-section");
 
         const contents = document.querySelectorAll(".section-content");
 
@@ -140,9 +143,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(() => {
             hud.style.display = "flex";
-            gsap.fromTo(hud, 
-                { opacity: 0, y: -10 }, 
-                { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
+            gsap.fromTo(hud,
+                { opacity: 0 },
+                { opacity: 1, duration: 0.6, ease: "power2.out", overwrite: "auto" }
             );
             if (playgroundTitle) {
                 playgroundTitle.style.display = "flex";
@@ -212,15 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedIndex = i;
                 updateMenu();
             });
-
-            // Click en un item
-            item.addEventListener("click", (e) => {
-                if (inSection || playMode) return;
-                e.preventDefault();
-                selectedIndex = i;
-                updateMenu();
-                goToSection(item.dataset.section);
-            });
         });
 
         // Quitar highlight al salir del área del menú tras un breve delay
@@ -242,18 +236,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // === NAVEGACIÓN TÁCTIL (MÓVILES) ===
-    if (isTouchDevice) {
-        menuItems.forEach((item, i) => {
-            item.addEventListener("touchstart", (e) => {
-                if (inSection || playMode) return;
-                e.preventDefault();
-                selectedIndex = i;
-                updateMenu();
-                goToSection(item.dataset.section);
-            });
+    menuItems.forEach((item, i) => {
+        item.addEventListener("click", (e) => {
+            if (inSection || playMode) return;
+            e.preventDefault();
+            selectedIndex = i;
+            updateMenu();
+            goToSection(item.dataset.section);
         });
-    }
+    });
 
     // === TILT 3D DESHABILITADO (comentado para evitar conflictos con el mouse) ===
     /*
@@ -321,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function enterPlayMode() {
         playMode = true;
+        document.body.classList.add("in-play");
         hud.classList.add("play-mode");
         hud.style.display = "flex";
         if (playgroundTitle) {
@@ -335,11 +327,19 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.fromTo(playModeOverlay, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" });
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
-                    if (typeof window.NeonHopGame === "function") {
+                    const boot = () => {
                         startPlaygroundGame();
+                        window.setTimeout(() => {
+                            if (window.playgroundGame && typeof window.playgroundGame.onResize === "function") {
+                                window.playgroundGame.onResize();
+                            }
+                        }, 80);
+                    };
+                    if (typeof window.NeonHopGame === "function") {
+                        boot();
                         return;
                     }
-                    loadPlaygroundGame().then(startPlaygroundGame).catch(() => {});
+                    loadPlaygroundGame().then(boot).catch(() => {});
                 });
             });
         }

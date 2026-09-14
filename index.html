@@ -3,14 +3,14 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes,viewport-fit=cover" />
     <title>Agus's Portfolio</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <meta name="theme-color" content="#0a0a15">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=r4" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
@@ -33,8 +33,10 @@
 
     <!-- === PLAYGROUND TITLE (outside HUD to avoid overlaps) === -->
     <div class="playground-title" id="playground-title" aria-label="Playground title">
-        <span class="title-prefix">WELCOME TO MY       </span>
-        <span class="title-full"><span class="play-text">PLAY</span><button class="play-btn-overlay" id="play-toggle" aria-label="Play mode"></button>GROUND</span>
+        <span class="title-prefix">WELCOME TO MY</span>
+        <button type="button" class="play-btn-overlay" id="play-toggle" aria-label="Open playground">
+            <span class="play-text">PLAY</span>GROUND
+        </button>
     </div>
 
     <!-- Game mode HUD overlay -->
@@ -69,32 +71,55 @@
     <!-- === SECTION CONTENTS === -->
     <div class="section-content" id="about-content" style="display:none;">
         <button class="back-btn" onclick="backToMenu()">← Back</button>
-        <div class="section-inner about-section">
-            <div class="about-header">
-                <div class="profile-photo-container">
-                    <img data-src="images/profile.jpg" alt="Agustin Gonzalez Font" class="profile-photo" loading="lazy" decoding="async" 
-                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27250%27 height=%27250%27%3E%3Crect fill=%27%23003333%27 width=%27250%27 height=%27250%27/%3E%3Ctext fill=%27%2300ffff%27 font-family=%27monospace%27 font-size=%2716%27 x=%2750%25%27 y=%2750%25%27 text-anchor=%27middle%27 dominant-baseline=%27middle%27%3EPHOTO%3C/text%3E%3C/svg%3E'">
+        <div class="section-inner about-section character-sheet">
+            <div class="avatar-stage" id="about-avatar-stage">
+                <div class="avatar-stage-frame">
+                    <div class="avatar-stage-scan" aria-hidden="true"></div>
+                    <div class="avatar-stage-viewport" id="about-avatar-viewport">
+                        <div class="avatar-placeholder" id="about-avatar-placeholder">
+                            <img class="avatar-hologram" data-src="images/profile.jpg" alt="" loading="lazy" decoding="async">
+                            <div class="avatar-placeholder-copy">
+                                <span class="avatar-placeholder-kicker">AVATAR SLOT</span>
+                                <span class="avatar-placeholder-title">3D MODEL PENDING</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <p class="avatar-stage-caption">SELECTED UNIT · ROTATE WHEN READY</p>
+            </div>
+
+            <div class="character-identity">
+                <p class="character-kicker">SELECT CHARACTER</p>
                 <h1 class="profile-name">Agustin Gonzalez Font</h1>
-            <h2>ABOUT ME</h2>
+                <h2 class="character-class">GAME DESIGNER</h2>
+                <dl class="character-stats">
+                    <div class="character-stat">
+                        <dt>STACK</dt>
+                        <dd>Unity / C#</dd>
+                    </div>
+                    <div class="character-stat">
+                        <dt>ORIGIN</dt>
+                        <dd>Argentina</dd>
+                    </div>
+                    <div class="character-stat">
+                        <dt>AGE</dt>
+                        <dd><span id="js-age">26</span></dd>
+                    </div>
+                    <div class="character-stat">
+                        <dt>FOCUS</dt>
+                        <dd>Gameplay systems</dd>
+                    </div>
+                </dl>
             </div>
-            <div class="about-scroll-buttons">
-                <button class="scroll-to-section-btn" id="scroll-to-skills-btn" data-target="skills-section" type="button">Skills & Abilities ↓</button>
+
+            <div class="character-lore">
+                <h3>UNIT FILE</h3>
+                <p>Gameplay-first developer trained across design, programming and art. Builds systems in Unity and C#, with Unreal when the project needs it. Ships prototypes and production work spanning VR, AR and mobile.</p>
+                <p>Comfortable owning a feature from mechanic to implementation, and fluent enough in the art pipeline — Substance, 3ds Max, Photoshop — to prototype without waiting on a full team.</p>
             </div>
-            <div class="cover-letter-container">
-                <h3>COVER LETTER</h3>
-                <div class="cover-letter-text">
-                    <p>I'm a <span id="js-age">26</span>-year-old game developer from Argentina, driven by a strong interest in creativity and interactive experiences. I studied videogame development at <span class="interactive-link" data-link="universidad" tabindex="0" role="button">Da Vinci Escuela Multimedial in Buenos Aires, Argentina</span>, where I built a solid foundation across the different areas of game creation.</p>
-                    
-                    <p>During my university years, I received training across the three core disciplines of videogame development: programming, art, and design. Although my main orientation leaned toward designing gameplay and player experiences, working on complete projects required me to actively participate in all areas. Over time, my strongest focus became shaping gameplay and interactive systems, followed closely by C# programming and work with game engines such as Unity and Unreal Engine. I also gained experience creating assets and materials using tools like Substance Painter, Substance Designer, Quixel, and 3ds Max, as well as a foundation in graphic design and animation using Adobe Photoshop, Illustrator, and After Effects.</p>
-                    
-                    <p>While studying, I worked as a freelancer on different projects. Together with two university colleagues, I co-founded <span class="interactive-link" data-link="nagma" tabindex="0" role="button">Nagma</span>, a small independent venture where we learned a lot and had the opportunity to work on large-scale projects, including VR, AR, and mobile applications.</p>
-                    
-                    <p>After graduating, I had the opportunity to travel and learn from different cultures, which gave me a broader perspective on how people engage with stories, spaces, and challenges. I enjoy bringing that perspective into the interactive experiences I build.</p>
-                </div>
-            </div>
+
             <div class="skills-section" id="skills-section">
-                <h3>SKILLS</h3>
+                <h3>LOADOUT</h3>
                 <div class="skills-grid" id="skills-grid">
                     <div class="skill-badge" data-tooltip="Game Engine">
                         <div class="skill-icon">
@@ -203,7 +228,7 @@
             </div>
             
             <div class="abilities-section" id="abilities-section">
-                <h3>ABILITIES</h3>
+                <h3>TRAITS</h3>
                 <div class="abilities-grid" id="abilities-grid">
                     <div class="ability-badge">
                         <div class="ability-icon">🧩</div>
@@ -279,6 +304,10 @@
         <div class="section-inner">
             <h2>WHAT I'M LOOKING FOR</h2>
             <div class="looking-block">
+                <p>I'm a game developer from Argentina, driven by a strong interest in creativity and interactive experiences. I studied videogame development at <span class="interactive-link" data-link="universidad" tabindex="0" role="button">Da Vinci Escuela Multimedial in Buenos Aires</span>, where I built a solid foundation across design, programming and art.</p>
+                <p>While studying I worked as a freelancer and, together with two university colleagues, co-founded <span class="interactive-link" data-link="nagma" tabindex="0" role="button">Nagma</span> — a small independent venture where we learned a lot and worked on large-scale VR, AR and mobile projects.</p>
+                <p>After graduating I travelled and learned from different cultures, which gave me a broader perspective on how people engage with stories, spaces and challenges. I enjoy bringing that into the experiences I build.</p>
+                <div class="looking-split" aria-hidden="true"></div>
                 <p>I’m looking for a job that allows me to keep improving as a developer and as a human being. I enjoy projects that challenge my technical thinking and give me space to take ownership of the work I deliver.</p>
                 <p>I’m confident in what I can bring — focus, adaptability, and a genuine drive to solve problems — and that’s why I look for environments where people take their work seriously but stay open, curious, and willing to help each other.</p>
                 <p>I work best with a healthy level of flexibility — remote or hybrid — as long as expectations are clear and communication flows well.</p>
@@ -429,15 +458,15 @@
     </script>
     <script defer src="gsap.min.js"></script>
     <script defer src="https://unpkg.com/gsap@3.12.5/ScrollTrigger.min.js"></script>
-    <script defer src="effects.js"></script>
+    <script defer src="effects.js?v=r4"></script>
     <script defer src="visits.js"></script>
     <script defer src="projects-data.js"></script>
-    <script type="module" src="scene.js"></script>
-    <script defer src="hud.js"></script>
+    <script type="module" src="scene.js?v=r2"></script>
+    <script defer src="hud.js?v=r2"></script>
     <script defer src="projects.js"></script>
-    <script defer src="easter-eggs.js"></script>
-    <script defer src="about-interactive.js"></script>
-    <script defer src="game.js"></script>
+    <script defer src="easter-eggs.js?v=r2"></script>
+    <script defer src="about-interactive.js?v=r4"></script>
+    <script defer src="game.js?v=r3"></script>
 
 </body>
 
