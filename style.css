@@ -900,7 +900,7 @@ body.in-section .hud {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 22px;
+    gap: 0;
     min-width: 0;
     align-self: start;
 }
@@ -1240,6 +1240,7 @@ body.in-section .hud {
     height: auto;
     align-self: start;
     padding-top: 0;
+    margin-top: clamp(52px, 7.5vh, 92px);
 }
 
 .character-sheet .abilities-section {
@@ -1388,7 +1389,7 @@ body.in-section .hud {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px 14px;
-    margin: 10px 0 0;
+    margin: clamp(56px, 8vh, 96px) 0 0;
     width: 100%;
     border: none;
     background: transparent;
@@ -2077,7 +2078,8 @@ body.in-section .hud {
         gap: 18px;
     }
     .character-sheet .character-identity { grid-area: identity; }
-    .character-sheet .skills-section { grid-area: stats; }
+    .character-sheet .skills-section,
+    #about-content .character-sheet .skills-section { grid-area: stats; margin-top: 18px; }
     .avatar-stage-frame {
         max-width: 360px;
         min-height: 320px;
@@ -2091,7 +2093,7 @@ body.in-section .hud {
     }
     .character-stats {
         max-width: 360px;
-        margin: 12px auto 0;
+        margin: 18px auto 0;
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     #about-content .core-stats,
@@ -2345,8 +2347,13 @@ body.in-section .hud {
 #about-content .character-sheet .abilities-section {
     width: 100%;
     max-width: none;
-    margin: 0;
+    margin-inline: 0;
+    margin-bottom: 0;
     align-self: start;
+}
+
+#about-content .character-sheet .skills-section {
+    margin-top: clamp(52px, 7.5vh, 92px);
 }
 
 #about-content .character-sheet .skills-section h3,
@@ -5126,8 +5133,13 @@ body.in-section .hud {
 #about-content .character-sheet .abilities-section {
     width: 100%;
     max-width: none;
-    margin: 0;
-    align-self: stretch;
+    margin-inline: 0;
+    margin-bottom: 0;
+    align-self: start;
+}
+
+#about-content .character-sheet .skills-section {
+    margin-top: clamp(52px, 7.5vh, 92px);
 }
 
 @media (min-width: 901px) and (max-width: 1180px) {
