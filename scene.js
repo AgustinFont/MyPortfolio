@@ -239,113 +239,111 @@ const envMat = new THREE.MeshBasicMaterial({
 const envCube = new THREE.Mesh(envGeo, envMat);
 scene.add(envCube);
 
-// --- Ambient visuals (fireworks) ---
-const ambientEntities = [];
-const ambientSchedule = {
-  nextFirework: 0,
-};
-
-const fireworkMat = new THREE.PointsMaterial({
-  size: 0.12,
-  transparent: true,
-  opacity: 1,
-  color: 0xffffff,
-  depthWrite: false,
-  blending: THREE.AdditiveBlending,
-  sizeAttenuation: true,
-});
-
+// --- Hologram orbs on the grid ---
 function randRange(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-function scheduleAmbient(timeNow) {
-  if (!ambientSchedule.nextFirework) ambientSchedule.nextFirework = timeNow + randRange(8, 14);
-}
+const hologramOrbs = [];
+const orbHomeDelta = new THREE.Vector3();
+const ORB_COUNT = isMobile ? 5 : 10;
+const ORB_COLORS = [0x00ffff, 0xff00ff, 0xff6f00, 0x39ff88, 0x66ccff, 0xff2d78, 0xa855f7];
 
-function spawnMeteor(timeNow) {
-  // meteoritos desactivados
-}
-
-function spawnFireworkAt(origin, power = 1) {
-  const count = Math.floor(48 * power); // más partículas
-  const positions = new Float32Array(count * 3);
-  const velocities = [];
-  const hue = Math.random();
-  const fwMat = fireworkMat.clone();
-  fwMat.color.setHSL(hue, 0.85, 0.65);
-  fwMat.opacity = 1.05;
-  for (let i = 0; i < count; i++) {
-    const dir = new THREE.Vector3(randRange(-1, 1), randRange(0.2, 1.2), randRange(-1, 1))
-      .normalize()
-      .multiplyScalar(randRange(2.4, 3.6) * power);
-    velocities.push(dir);
-    positions[i * 3 + 0] = 0;
-    positions[i * 3 + 1] = 0;
-    positions[i * 3 + 2] = 0;
+function randomOrbColor() {
+  if (Math.random() < 0.75) {
+    return ORB_COLORS[Math.floor(Math.random() * ORB_COLORS.length)];
   }
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-  const points = new THREE.Points(geo, fwMat);
-  points.position.copy(origin);
-  ambientEntities.push({
-    type: "firework",
-    obj: points,
-    velocities,
-    life: 1.6,
-    born: performance.now() * 0.001,
-  });
-  scene.add(points);
+  return new THREE.Color().setHSL(Math.random(), 0.9, 0.58);
+}
 
-  if (!isMobile && power > 0.8) {
-    setTimeout(() => {
-      if (!sceneActive) return;
-      const secondary = origin.clone().add(new THREE.Vector3(randRange(-0.4, 0.4), randRange(0.2, 0.6), randRange(-0.4, 0.4)));
-      spawnFireworkAt(secondary, power * 0.55);
-    }, 180);
+function createHologramOrbs() {
+  const geo = new THREE.SphereGeometry(1, 14, 12);
+  for (let i = 0; i < ORB_COUNT; i++) {
+    const color = randomOrbColor();
+    const radius = randRange(0.14, 0.26);
+    const wrap = new THREE.Group();
+
+    const shell = new THREE.Mesh(
+      geo,
+      new THREE.MeshBasicMaterial({
+        color,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.72,
+      })
+    );
+    shell.scale.setScalar(radius);
+
+    const core = new THREE.Mesh(
+      geo,
+      new THREE.MeshBasicMaterial({
+        color,
+        transparent: true,
+        opacity: 0.22,
+      })
+    );
+    core.scale.setScalar(radius * 0.58);
+
+    wrap.add(shell, core);
+
+    const home = new THREE.Vector3(
+      randRange(-6.2, 6.2),
+      -1.12 + randRange(-0.12, 0.28),
+      randRange(-5.2, 4.2)
+    );
+    wrap.position.copy(home);
+    scene.add(wrap);
+
+    hologramOrbs.push({
+      wrap,
+      shell,
+      home,
+      vel: new THREE.Vector3(),
+      lastPush: -999,
+      phase: Math.random() * Math.PI * 2,
+    });
   }
 }
 
-function spawnFirework(timeNow) {
-  const origin = new THREE.Vector3(randRange(-5, 5), randRange(2.8, 4.8), randRange(-10, -6));
-  spawnFireworkAt(origin, 1);
-}
+function updateHologramOrbs(delta, timeNow) {
+  const pushRadius = 2.7;
+  const returnDelay = 2.4;
 
-function updateAmbient(delta, timeNow) {
-  if (isMobile || !sceneActive) return;
-  scheduleAmbient(timeNow);
+  for (const orb of hologramOrbs) {
+    const pos = orb.wrap.position;
 
-  if (timeNow >= ambientSchedule.nextFirework) {
-    spawnFirework(timeNow);
-    ambientSchedule.nextFirework = timeNow + randRange(10, 16);
-  }
-
-  for (let i = ambientEntities.length - 1; i >= 0; i--) {
-    const e = ambientEntities[i];
-    const age = timeNow - e.born;
-    if (age > e.life) {
-      scene.remove(e.obj);
-      e.obj.geometry?.dispose();
-      e.obj.material?.dispose();
-      ambientEntities.splice(i, 1);
-      continue;
-    }
-    if (e.type === "firework") {
-    const positions = e.obj.geometry.attributes.position.array;
-      for (let p = 0; p < e.velocities.length; p++) {
-        const v = e.velocities[p];
-        positions[p * 3 + 0] += v.x * delta;
-        positions[p * 3 + 1] += v.y * delta;
-        positions[p * 3 + 2] += v.z * delta;
-      v.y -= 1.6 * delta;       // caída más rápida
-      v.multiplyScalar(Math.pow(0.9, delta * 60)); // drag ligero
+    if (hasPointer) {
+      const dx = pos.x - pointerWorld.x;
+      const dz = pos.z - pointerWorld.z;
+      const dist = Math.hypot(dx, dz);
+      if (dist < pushRadius && dist > 0.001) {
+        const accel = (1 - dist / pushRadius) * 85;
+        orb.vel.x += (dx / dist) * accel * delta;
+        orb.vel.z += (dz / dist) * accel * delta;
+        orb.lastPush = timeNow;
       }
-      e.obj.geometry.attributes.position.needsUpdate = true;
-      const fade = 1 - age / e.life;
-    e.obj.material.opacity = Math.max(0, fade * 1.1);
     }
+
+    orb.vel.multiplyScalar(Math.exp(-1.8 * delta));
+    pos.x += orb.vel.x * delta;
+    pos.z += orb.vel.z * delta;
+
+    if (timeNow - orb.lastPush > returnDelay) {
+      orbHomeDelta.copy(orb.home).sub(pos);
+      pos.addScaledVector(orbHomeDelta, 1 - Math.exp(-1.05 * delta));
+      orb.vel.multiplyScalar(Math.exp(-5 * delta));
+    }
+
+    pos.y = orb.home.y + Math.sin(timeNow * 1.35 + orb.phase) * 0.09;
+    pos.x = THREE.MathUtils.clamp(pos.x, -12, 12);
+    pos.z = THREE.MathUtils.clamp(pos.z, -12, 12);
+
+    orb.shell.rotation.y += delta * 0.55;
+    orb.shell.rotation.x += delta * 0.22;
   }
 }
+
+createHologramOrbs();
 
 // --- PartÃ­culas flotantes (optimizado para mÃ³viles) ---
 const particlesGeo = new THREE.BufferGeometry();
@@ -625,7 +623,7 @@ function animate() {
   camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.02;
   camera.lookAt(0, 0, 0);
 
-  updateAmbient(delta, timeNow);
+  updateHologramOrbs(delta, timeNow);
 
   // Deformación y color de la grid (onda + ruido para irregularidad)
   if (!isMobile && gridMesh) {
@@ -756,18 +754,7 @@ window.setSceneActive = function setSceneActive(active) {
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) clock.getDelta();
 });
-window.triggerSideFireworks = function triggerSideFireworks() {
-  if (!camera) return;
-  const dir = new THREE.Vector3();
-  camera.getWorldDirection(dir);
-  const left = new THREE.Vector3().crossVectors(camera.up, dir).normalize();
-  const up = new THREE.Vector3(0, 1, 0);
-  const base = camera.position.clone().add(dir.clone().multiplyScalar(-1.5)).add(up.clone().multiplyScalar(1.8));
-  [left, left.clone().multiplyScalar(-1)].forEach((off) => {
-    const origin = base.clone().add(off.multiplyScalar(4));
-    spawnFireworkAt(origin, 1.4);
-  });
-};
+window.triggerSideFireworks = function triggerSideFireworks() {};
 
 // === LANDING ANIMATION ===
 function initLandingAnimation() {
